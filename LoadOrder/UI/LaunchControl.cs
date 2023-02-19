@@ -265,7 +265,7 @@ namespace LoadOrderTool.UI {
                     args.Add("--loadSave=" + quote(path));
             }
 
-            var extraArgs = textBoxExtraArgs.Text.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+            var extraArgs = textBoxExtraArgs.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             args.AddRange(extraArgs);
 
             return args.ToArray();

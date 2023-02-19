@@ -65,7 +65,7 @@ namespace LoadOrderTool.Util {
         public static string ExtractPersonaNameFromHTML(string html) {
             Log.Called(/*html*/);
             var pattern = "<span class=\"actual_persona_name\">([^<>]+)</span>";
-            var match = Regex.Matches(html, "<span class=\"actual_persona_name\">([^<>]+)</span>").FirstOrDefault();
+            var match = Regex.Matches(html, "<span class=\"actual_persona_name\">([^<>]+)</span>").Cast<Match>().FirstOrDefault();
             if (match != null) {
                 var ret = match.Groups[1].Value;
                 ret.LogRet(match.Groups[0].Value);
@@ -78,13 +78,14 @@ namespace LoadOrderTool.Util {
             }
         }
 
-        public static async IAsyncEnumerable<PublishedFileDTO[]> LoadDataAsyncInChunks(PublishedFileId[] ids, int chunkSize = 1000) {
+        public static async Task<List<PublishedFileDTO[]>> LoadDataAsyncInChunks(PublishedFileId[] ids, int chunkSize = 1000) {
             int i;
-            for(i = 0; i + chunkSize < ids.Length; i += chunkSize) {
+            var list = new List<PublishedFileDTO[]>();
+            for (i = 0; i + chunkSize < ids.Length; i += chunkSize) {
                 var buffer = new PublishedFileId[chunkSize];
                 Array.Copy(ids, i, buffer, 0, chunkSize);
                 var data = await LoadDataAsync(buffer);
-                yield return data;
+                list.Add( data);
             }
             int r = ids.Length - i;
             if(r > 0) {
@@ -92,8 +93,10 @@ namespace LoadOrderTool.Util {
                 var buffer = new PublishedFileId[r];
                 Array.Copy(ids, i, buffer, 0, r);
                 var data = await LoadDataAsync(buffer);
-                yield return data;
+                list.Add( data);
             }
+
+            return list;
         }
 
         public static async Task<PublishedFileDTO[]> LoadDataAsync(PublishedFileId[] ids) {
@@ -216,7 +219,7 @@ namespace LoadOrderTool.Util {
                     UpdatedUTC = ToUTCTime((ulong)publishedfiledetail.time_updated);
                     Tags = (publishedfiledetail.tags as JArray)
                         ?.Select(item => (string)item["tag"])
-                        ?.Where(item => !item.Contains("compatible", StringComparison.OrdinalIgnoreCase))
+                        ?.Where(item => item.IndexOf("compatible", StringComparison.OrdinalIgnoreCase) >= 0)
                         ?.ToArray();
                     //Log.Debug($"item[{PublishedFileID}]: Date Updated = {publishedfiledetail.time_updated}ticks =>  {Updated}");
                     if (Tags.Any(tag => tag.ToLower() == "mod"))

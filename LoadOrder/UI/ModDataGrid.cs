@@ -10,7 +10,6 @@ namespace LoadOrderTool.UI {
     using System.Windows.Forms;
     using System.Windows.Forms.Design;
 
-    [Designer(typeof(ControlDesigner))]
     public class ModDataGrid : DataGridView {
         public ModList ModList;
         int prevSortCol_ = -1;
@@ -326,7 +325,7 @@ namespace LoadOrderTool.UI {
             LoadOrderWindow.Instance.ExecuteThreadSafe(delegate () {
                 var p = LoadOrderWindow.Instance.ModProgressBar;
                 p.Visible = percent >= 0;
-                p.Value = Math.Clamp((int)percent,0,100);
+                p.Value = Math.Min(Math.Max((int)percent,0),100);
                 p.SetColor(color);
             });
         }

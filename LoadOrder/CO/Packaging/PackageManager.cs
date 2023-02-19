@@ -309,7 +309,7 @@ namespace CO.Packaging {
             string included = ContentUtil.ToIncludedPath(fullFilePath);
             string excluded = ContentUtil.ToExcludedPath(fullFilePath);
             if (File.Exists(included) && File.Exists(excluded)) {
-                File.Move(included, excluded, overwrite: true);
+                File.Move(included, excluded);
                 fullFilePath = excluded;
             }
         }

@@ -524,8 +524,8 @@ namespace CO.IO {
                         void TryMoveFile(string fileName) {
                             var source = Path.Combine(localAppData, fileName);
                             var dest = Path.Combine(ret, fileName);
-                            if (File.Exists(source)) {
-                                File.Move(source, dest, false);
+                            if (File.Exists(source) && !File.Exists(dest)) {
+                                File.Move(source, dest);
                             }
                         }
                         void TryMoveDir(string dirName) {

@@ -140,7 +140,7 @@ namespace LoadOrderTool.Util {
 
         public static string[] SplitPath(string path) {
             return path.Split(
-                Path.DirectorySeparatorChar,
+               new[] { Path.DirectorySeparatorChar },
                 StringSplitOptions.RemoveEmptyEntries);
         }
 
@@ -149,11 +149,25 @@ namespace LoadOrderTool.Util {
                 id = 0;
                 return false;
             }
-            path = Path.GetRelativePath(DataLocation.WorkshopContentPath, path);
+            path = GetRelativePath(DataLocation.WorkshopContentPath, path);
             int i = path.IndexOf('\\');
             var dirname = i < 0 ? path : path.Substring(0, i);
             Log.Debug($"path={path} dirname={dirname}");
             return TryGetID(dirname, out id);
+        }
+
+        public static string GetRelativePath(string relativeTo, string path) {
+            var relativeToUri = new Uri(relativeTo.EndsWith(Path.DirectorySeparatorChar.ToString()) ? relativeTo : relativeTo + Path.DirectorySeparatorChar);
+            var pathUri = new Uri(path);
+
+            if (relativeToUri.Scheme != pathUri.Scheme) {
+                return path;
+            }
+
+            var relativeUri = relativeToUri.MakeRelativeUri(pathUri);
+            var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+
+            return relativePath.Replace('/', Path.DirectorySeparatorChar);
         }
 
         public static bool TryGetModID(string dir, out ulong id) {

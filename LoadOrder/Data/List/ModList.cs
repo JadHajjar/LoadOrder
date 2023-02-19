@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using static CO.Plugins.PluginManager;
 using LoadOrderTool.Data;
+using System.Runtime.InteropServices;
 
 namespace LoadOrderTool {
     public class ModList : List<PluginInfo> {
@@ -155,7 +156,7 @@ namespace LoadOrderTool {
 
         private int[] RandomNumber(int count) {
             var orderedList = Enumerable.Range(0, count);
-            int randomSeed = RandomNumberGenerator.GetInt32(0, int.MaxValue);
+            int randomSeed = new Random().Next(0, int.MaxValue);
             var rng = new Random(randomSeed);
             return orderedList.OrderBy(c => rng.Next()).ToArray();
         }
@@ -171,7 +172,7 @@ namespace LoadOrderTool {
         [Obsolete("Does not work if Load order is not pre-determined", true)]
         public void MoveItem(int oldIndex, int newIndex) {
             if (oldIndex == newIndex) return;
-            newIndex = Math.Clamp(newIndex, 0, Count - 1);
+            newIndex = Math.Min(Math.Max(newIndex, 0), Count - 1);
             var item = this[oldIndex];
             this.RemoveAt(oldIndex);
             this.Insert(newIndex, item);

@@ -13,8 +13,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <Deterministic>false</Deterministic>
-    <OutputType>Exe</OutputType> 
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType> 
+    <TargetFramework>net4.7.2</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PathMap>$(MSBuildProjectDirectory)\=$(ProjectName)\</PathMap>
@@ -75,6 +75,12 @@
   
   <ItemGroup>
     <EmbeddedResource Include="Resources\LoadOrder.ico" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   
   <ItemGroup>

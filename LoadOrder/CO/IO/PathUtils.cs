@@ -69,7 +69,7 @@ namespace CO.IO {
         }
 
         public static string CleanUpSlashes(string path) {
-            var ar = path.Split(Path.DirectorySeparatorChar, StringSplitOptions.RemoveEmptyEntries);
+            var ar = path.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
             return Path.Combine(ar);
         }
 

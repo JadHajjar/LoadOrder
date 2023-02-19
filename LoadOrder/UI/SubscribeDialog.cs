@@ -70,7 +70,7 @@ namespace LoadOrderTool.UI {
                     chars[i] = ' ';
             }
             text = new string(chars);
-            var entries = text.Split(" ", options: StringSplitOptions.RemoveEmptyEntries);
+            var entries = text.Split(new[] {' '}, options: StringSplitOptions.RemoveEmptyEntries);
             return entries.Distinct().ToArray();
         }
 
@@ -80,7 +80,7 @@ namespace LoadOrderTool.UI {
             // https://steamcommunity.com/sharedfiles/filedetails/\?id=([0-9]+)
             string pattern = "https://steamcommunity.com/sharedfiles/filedetails/\\?id=([0-9]+)";
             MatchCollection mc = Regex.Matches(html, pattern);
-            return mc.Select(m => m.Groups[1].Value).ToArray();
+            return mc.Cast<Match>().Select(m => m.Groups[1].Value).ToArray();
         }
 
         public static IEnumerable<string> GetMissingIDSFromLSMReport(string filePath) {

@@ -9,7 +9,6 @@ namespace LoadOrderTool.UI {
     using LoadOrderTool.Data;
     using CO.Packaging;
 
-    [Designer(typeof(ControlDesigner))]
     public class AssetDataGrid : DataGridView {
         int prevSortCol_ = -1;
         bool sortAssending_ = false;
@@ -143,7 +142,7 @@ namespace LoadOrderTool.UI {
             LoadOrderWindow.Instance.ExecuteThreadSafe(delegate () {
                 var p = LoadOrderWindow.Instance.AssetProgressBar;
                 p.Visible = percent >=0;
-                p.Value = Math.Clamp((int)percent, 0, 100);
+                p.Value = Math.Min(Math.Max((int)percent, 0), 100);
                 p.SetColor(color);
             });
         }

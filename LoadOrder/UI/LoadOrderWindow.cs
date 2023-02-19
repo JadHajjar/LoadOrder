@@ -363,7 +363,7 @@ namespace LoadOrderTool.UI {
             modIncludedFilter_ = ComboBoxIncluded.GetSelectedItem<IncludedFilter>();
             modEnabledFilter_ = ComboBoxEnabled.GetSelectedItem<EnabledFilter>();
             modWSFilter_ = ComboBoxWS.GetSelectedItem<WSFilter>();
-            modTextFilter_ = TextFilterMods.Text?.Split(" ");
+            modTextFilter_ = TextFilterMods.Text?.Split(' ');
         }
 
         public bool ModPredicate(PluginManager.PluginInfo p) {
@@ -588,7 +588,7 @@ namespace LoadOrderTool.UI {
             var wsFilter = ComboBoxAssetWS.GetSelectedItem<WSFilter>();
             var tagFilter = ComboBoxAssetTags.SelectedItem as string;
             if (tagFilter == NO_TAGS) tagFilter = null;
-            var words = TextFilterAsset.Text?.Split(" ");
+            var words = TextFilterAsset.Text?.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             assetList.FilterItems(item => AssetPredicateFast(item, includedFilter, wsFilter, tagFilter, words));
             UpdateStatus();
         }
@@ -627,7 +627,7 @@ namespace LoadOrderTool.UI {
             if (string.IsNullOrWhiteSpace(text))
                 return false;
             foreach (var word in words) {
-                if (!text.Contains(word, StringComparison.OrdinalIgnoreCase))
+                if (text.IndexOf(word, StringComparison.OrdinalIgnoreCase) >= 0)
                     return false;
             }
             return true;
@@ -810,7 +810,7 @@ namespace LoadOrderTool.UI {
                 try {
                     int i = 0;
                     List<Task> tasks = new List<Task>(32);
-                    await foreach (var data in SteamUtil.LoadDataAsyncInChunks(ids)) {
+                    foreach (var data in await SteamUtil.LoadDataAsyncInChunks(ids)) {
                         Assertion.NotNull(data, "Internet connection problem?");
                         var task = Task.Run(() => DTO2Cache(data));
                         tasks.Add(task);

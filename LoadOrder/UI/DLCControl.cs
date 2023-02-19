@@ -109,7 +109,7 @@ namespace LoadOrderTool.UI {
 
         public void FilterDLCs(DLCList DLCList) {
             var dlcTypes = ComboBoxDLCType.GetSelectedItem<DLCType>();
-            var words = TextFilterDLCs.Text?.Split(" ");
+            var words = TextFilterDLCs.Text?.Split(' ');
             DLCList.FilterItems(item => DLCPredicateFast(item, dlcTypes, words));
         }
 

@@ -35,7 +35,7 @@ namespace LoadOrderTool {
 
                 Console.WriteLine("Hello!");
                 IsMain = true;
-                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                //Application.SetHighDpiMode(HighDpiMode.SystemAware);
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
@@ -55,17 +55,17 @@ namespace LoadOrderTool {
                 }
 
 
-                var handle = GetConsoleWindow();
-                Console.WriteLine("command line args = " + Environment.GetCommandLineArgs().ToSTR());
-                bool commandLine = Parse.CommandLine;
-                if (commandLine) {
-                    ShowWindow(handle, SW_SHOW);// Show
-                    Console.WriteLine("showing terminal");
-                } else {
-                    ShowWindow(handle, SW_HIDE);// Hide
-                    Console.WriteLine("hiding terminal");
-                    //new UI.ProgressWindow().Show();
-                }
+                //var handle = GetConsoleWindow();
+                //Console.WriteLine("command line args = " + Environment.GetCommandLineArgs().ToSTR());
+                //bool commandLine = Parse.CommandLine;
+                //if (commandLine) {
+                //    ShowWindow(handle, SW_SHOW);// Show
+                //    Console.WriteLine("showing terminal");
+                //} else {
+                //    ShowWindow(handle, SW_HIDE);// Hide
+                //    Console.WriteLine("hiding terminal");
+                //    //new UI.ProgressWindow().Show();
+                //}
 
 
                 _ = DataLocation.GamePath; // run DataLocation static constructor
@@ -75,11 +75,11 @@ namespace LoadOrderTool {
 
                 CacheDLLs();
 
-                if (commandLine) {
-                    Entry.Start();
-                } else {
+                //if (commandLine) {
+                //    Entry.Start();
+                //} else {
                     Application.Run(new UI.LoadOrderWindow());
-                }
+                //}
             } catch (Exception ex) {
                 Log.Exception(ex);
             }

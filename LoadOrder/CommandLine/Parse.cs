@@ -13,7 +13,7 @@ namespace LoadOrderTool.CommandLine {
         /// </summary>
         public static bool ParseCommandLine(string prototypes, out string value) {
             foreach (string arg in Environment.GetCommandLineArgs()) {
-                foreach (string prototype in prototypes.Split("|")) {
+                foreach (string prototype in prototypes.Split('|')) {
                     if (MatchCommandLineArg(arg, prototype, out string val)) {
                         value = val;
                         return true;
