@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using CO.PlatformServices;
 using System.IO;
+using CO.IO;
 
 namespace LoadOrderTool.UI {
     public partial class LoadOrderWindow : Form {
@@ -78,7 +79,19 @@ namespace LoadOrderTool.UI {
                 Instance = this;
                 ConfigWrapper.Suspend();
                 InitializeComponent();
-                LoadSize();
+                if (DataLocation.isLinux)
+				{
+					label3.Text = "LINUX DETECTED";
+					label3.ForeColor = Color.Green;
+				}
+				else
+                {
+					label3.Text = "LINUX NOT DETECTED";
+					label3.ForeColor = Color.Red;
+				}
+                textBox2.Text = LoadOrderToolSettings.Instace.VirtualAppData;
+                textBox1.Text = LoadOrderToolSettings.Instace.VirtualGamePath;
+				LoadSize();
             } catch (Exception ex) {
                 ex.Log();
             }
@@ -955,6 +968,18 @@ namespace LoadOrderTool.UI {
                 RefreshAll();
             } catch(Exception ex) { ex.Log(); }
         }
-        #endregion steam cache
-    }
+		#endregion steam cache
+
+		private void textBox2_TextChanged(object sender, EventArgs e)
+		{
+			LoadOrderToolSettings.Instace.VirtualAppData = textBox2.Text;
+			LoadOrderToolSettings.Instace.Serialize();
+		}
+
+		private void textBox1_TextChanged(object sender, EventArgs e)
+		{
+			LoadOrderToolSettings.Instace.VirtualGamePath = textBox1.Text;
+			LoadOrderToolSettings.Instace.Serialize();
+		}
+	}
 }

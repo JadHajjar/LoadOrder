@@ -10,13 +10,13 @@ internal static class Program
 	[STAThread]
 	private static void Main(string[] args)
 	{
-		SlickControls.SlickCursors.Initialize();
-
-		if (Environment.OSVersion.Version.Major == 6)
-			SetProcessDPIAware();
-
 		try
 		{
+			SlickControls.SlickCursors.Initialize();
+
+			if (Environment.OSVersion.Version.Major == 6)
+				SetProcessDPIAware();
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());

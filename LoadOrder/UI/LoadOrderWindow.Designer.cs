@@ -46,8 +46,13 @@ namespace LoadOrderTool.UI
             this.ComboBoxEnabled = new System.Windows.Forms.ComboBox();
             this.ComboBoxWS = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.TextFilterMods = new System.Windows.Forms.TextBox();
-            this.AssetsTab = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+			this.TextFilterMods = new System.Windows.Forms.TextBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.textBox2 = new System.Windows.Forms.TextBox();
+			this.AssetsTab = new System.Windows.Forms.TabPage();
             this.dataGridAssets = new LoadOrderTool.UI.AssetDataGrid();
             this.AssetsActionPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.IncludeAllAssets = new System.Windows.Forms.Button();
@@ -209,19 +214,25 @@ namespace LoadOrderTool.UI
             this.tableLayoutPanelModFilters.ColumnCount = 5;
             this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(SizeType.Percent, 50));
             this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxIncluded);
-            this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxEnabled);
-            this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxWS);
-            this.tableLayoutPanelModFilters.Controls.Add(this.label1);
-            this.tableLayoutPanelModFilters.Controls.Add(this.TextFilterMods);
-            this.tableLayoutPanelModFilters.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanelModFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(SizeType.Percent, 50));
+			this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxEnabled, 1, 1);
+			this.tableLayoutPanelModFilters.Controls.Add(this.label1, 3, 1);
+			this.tableLayoutPanelModFilters.Controls.Add(this.TextFilterMods, 4, 1);
+			this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxWS, 2, 1);
+			this.tableLayoutPanelModFilters.Controls.Add(this.ComboBoxIncluded, 0, 1);
+			this.tableLayoutPanelModFilters.Controls.Add(this.label3, 0, 0);
+			this.tableLayoutPanelModFilters.Controls.Add(this.label4, 1, 0);
+			this.tableLayoutPanelModFilters.Controls.Add(this.label5, 3, 0);
+			this.tableLayoutPanelModFilters.Controls.Add(this.textBox1, 4, 0);
+			this.tableLayoutPanelModFilters.Controls.Add(this.textBox2, 2, 0);
+			this.tableLayoutPanelModFilters.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanelModFilters.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.AddColumns;
             this.tableLayoutPanelModFilters.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanelModFilters.Name = "tableLayoutPanelModFilters";
-            this.tableLayoutPanelModFilters.RowCount = 1;
+            this.tableLayoutPanelModFilters.RowCount = 2;
+            this.tableLayoutPanelModFilters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelModFilters.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelModFilters.Size = new System.Drawing.Size(942, 29);
             this.tableLayoutPanelModFilters.TabIndex = 0;
@@ -252,29 +263,68 @@ namespace LoadOrderTool.UI
             this.ComboBoxWS.Name = "ComboBoxWS";
             this.ComboBoxWS.Size = new System.Drawing.Size(150, 23);
             this.ComboBoxWS.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(471, 7);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(36, 15);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "Filter:";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // TextFilterMods
-            // 
-            this.TextFilterMods.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextFilterMods.Location = new System.Drawing.Point(513, 3);
-            this.TextFilterMods.Name = "TextFilterMods";
-            this.TextFilterMods.Size = new System.Drawing.Size(426, 23);
-            this.TextFilterMods.TabIndex = 4;
-            // 
-            // AssetsTab
-            // 
-            this.AssetsTab.BackColor = System.Drawing.SystemColors.Control;
+			// 
+			// label1
+			// 
+			this.label1.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.label1.AutoSize = true;
+			this.label1.Location = new System.Drawing.Point(471, 7);
+			this.label1.Name = "label1";
+			this.label1.Size = new System.Drawing.Size(36, 15);
+			this.label1.TabIndex = 3;
+			this.label1.Text = "Filter:";
+			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(471, 7);
+			this.label3.Name = "label1";
+			this.label3.Size = new System.Drawing.Size(36, 15);
+			this.label3.TabIndex = 3;
+			this.label3.Text = "Filter:";
+			this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			this.label4.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(471, 7);
+			this.label4.Size = new System.Drawing.Size(36, 15);
+			this.label4.TabIndex = 3;
+			this.label4.Text = "App Data:";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(471, 7);
+			this.label5.Size = new System.Drawing.Size(36, 15);
+			this.label5.TabIndex = 3;
+			this.label5.Text = "Game Path:";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// TextFilterMods
+			// 
+			this.TextFilterMods.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TextFilterMods.Location = new System.Drawing.Point(513, 3);
+			this.TextFilterMods.Name = "TextFilterMods";
+			this.TextFilterMods.Size = new System.Drawing.Size(426, 23);
+			this.TextFilterMods.TabIndex = 6;
+			// 
+			this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox1.Location = new System.Drawing.Point(513, 3);
+			this.textBox1.Name = "TextFilterMods";
+			this.textBox1.Size = new System.Drawing.Size(426, 23);
+			this.textBox1.TabIndex = 4;
+            this.textBox1.TextChanged += textBox1_TextChanged;
+			// 
+			this.textBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.textBox2.Location = new System.Drawing.Point(513, 3);
+			this.textBox2.Name = "TextFilterMods";
+			this.textBox2.Size = new System.Drawing.Size(426, 23);
+			this.textBox2.TabIndex = 5;
+            this.textBox2.TextChanged += textBox2_TextChanged;
+			// 
+			// AssetsTab
+			// 
+			this.AssetsTab.BackColor = System.Drawing.SystemColors.Control;
             AssetsTab.Controls.Add(AssetProgressBar);
             this.AssetsTab.Controls.Add(this.dataGridAssets);
             this.AssetsTab.Controls.Add(this.AssetsActionPanel);
@@ -596,9 +646,14 @@ namespace LoadOrderTool.UI
         private ComboBox ComboBoxIncluded;
         private ComboBox ComboBoxEnabled;
         private TextBox TextFilterMods;
-        private ComboBox ComboBoxWS;
+        private TextBox textBox1;
+        private TextBox textBox2;
+		private ComboBox ComboBoxWS;
         private Label label1;
-        private ComboBox ComboBoxAssetIncluded;
+        private Label label3;
+		private Label label5;
+        private Label label4;
+		private ComboBox ComboBoxAssetIncluded;
         private ComboBox ComboBoxAssetWS;
         private ComboBox ComboBoxAssetTags;
         private Label label2;

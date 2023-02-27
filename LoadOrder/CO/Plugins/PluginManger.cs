@@ -321,14 +321,31 @@ namespace CO.Plugins {
                 }
             }
             public string savedEnabledKey_ =>
-                name + GetLegacyHashCode(IncludedPath).ToString() + ".enabled";
+                name + GetLegacyHashCode(VirtualIncludedPath).ToString() + ".enabled";
             public SavedBool SavedEnabled => new SavedBool(savedEnabledKey_, assetStateSettingsFile, def: false, autoUpdate: true);
             public bool isEnabled {
                 get => SavedEnabled.value;
                 set => SavedEnabled.value = isEnabledPending_ = value;
             }
 
-            public LoadOrderShared.ModInfo ModInfo { get; private set; }
+            public string VirtualIncludedPath
+            {
+                get
+                {
+                    var path = IncludedPath;
+
+					if (!string.IsNullOrWhiteSpace(LoadOrderToolSettings.Instace.VirtualAppData))
+						path = path.Replace(DataLocation.localApplicationData, LoadOrderToolSettings.Instace.VirtualAppData);
+
+					if (!string.IsNullOrWhiteSpace(LoadOrderToolSettings.Instace.VirtualGamePath))
+						path = path.Replace(DataLocation.GamePath, LoadOrderToolSettings.Instace.VirtualGamePath);
+
+                    return path;
+				}
+            }
+
+
+			public LoadOrderShared.ModInfo ModInfo { get; private set; }
             public LoadOrderShared.ItemInfo ItemConfig => ModInfo;
 
             public LoadOrderTool.Data.SteamCache.Item SteamCache { get; private set; }

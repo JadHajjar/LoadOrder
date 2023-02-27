@@ -1,6 +1,6 @@
-﻿namespace LoadOrderToolTwo;
+﻿namespace LoadOrderToolTwo.UserInterface.Panels;
 
-partial class PC_MainPage
+partial class PC_Assets
 {
 	/// <summary> 
 	/// Required designer variable.

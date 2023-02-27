@@ -24,9 +24,11 @@ namespace LoadOrderTool {
         public string ExtraArgs;
 
         public string LastProfileName;
+        public string VirtualGamePath;
+        public string VirtualAppData;
 
 
-        const string FILE_NAME = "LoadOrderToolSettings.xml";
+		const string FILE_NAME = "LoadOrderToolSettings.xml";
         static string PATH => Path.Combine(DataLocation.LocalLOMData, FILE_NAME);
 
         static LoadOrderToolSettings instance_;

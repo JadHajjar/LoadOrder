@@ -10,10 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LoadOrderToolTwo;
-public partial class PC_MainPage : PanelContent
+namespace LoadOrderToolTwo.UserInterface.Panels;
+public partial class PC_Mods : PanelContent
 {
-	public PC_MainPage()
+	public PC_Mods()
 	{
 		InitializeComponent();
 	}
