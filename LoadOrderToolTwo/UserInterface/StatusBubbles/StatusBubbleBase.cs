@@ -35,7 +35,7 @@ internal abstract class StatusBubbleBase : SlickImageControl
 
 		SlickButton.GetColors(out var fore, out var back, HoverState);
 
-		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(back), ClientRectangle, Padding.Left);
+		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(back, 0.8F), ClientRectangle, Padding.Left);
 
 		var titleHeight = Math.Max(24, (int)e.Graphics.Measure(Text, UI.Font(9.75F, FontStyle.Bold), Width - Padding.Horizontal).Height);
 		var iconRectangle = new Rectangle(Padding.Left, Padding.Top + (titleHeight - 24) / 2, 24, 24);
