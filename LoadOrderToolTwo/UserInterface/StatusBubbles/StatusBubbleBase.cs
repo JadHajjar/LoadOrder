@@ -20,8 +20,6 @@ internal abstract class StatusBubbleBase : SlickImageControl
 
 	protected override void UIChanged()
 	{
-		base.UIChanged();
-
 		Margin = UI.Scale(new Padding(10), UI.FontScale);
 		Padding = UI.Scale(new Padding(7), UI.FontScale);
 		Width = (int)(180 * UI.FontScale);

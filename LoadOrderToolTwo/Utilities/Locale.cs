@@ -23,4 +23,5 @@ internal class Locale : LocaleHelper
 	public static string MultipleModsIncluded => _instance.GetText(nameof(MultipleModsIncluded));
 	public static string ModIncluded => _instance.GetText(nameof(ModIncluded));
 	public static string ModIncludedPlural => _instance.GetText(nameof(ModIncludedPlural));
+	public static object Mods => _instance.GetText(nameof(ModIncludedPlural));
 }

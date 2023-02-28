@@ -1,4 +1,7 @@
-﻿using SlickControls;
+﻿using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
+
+using SlickControls;
 
 using System;
 using System.Collections.Generic;
@@ -16,5 +19,7 @@ public partial class PC_Mods : PanelContent
 	public PC_Mods()
 	{
 		InitializeComponent();
+
+		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
 	}
 }
