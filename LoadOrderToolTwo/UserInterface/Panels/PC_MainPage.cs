@@ -42,7 +42,7 @@ public partial class PC_MainPage : PanelContent
 	{
 		if (e.Button == MouseButtons.Left)
 		{
-			Form.PushPanel<PC_Assets>((Form as MainForm)?.PI_Mods);
+			Form.PushPanel<PC_Mods>((Form as MainForm)?.PI_Mods);
 		}
 	}
 
