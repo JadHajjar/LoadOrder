@@ -1,9 +1,17 @@
+using Extensions;
+
+using LoadOrderToolTwo.Utilities.Assembly;
+
+using SlickControls;
+
 using System;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo;
 internal static class Program
 {
+	internal static bool Started { get; private set; }
+
 	/// <summary>
 	///  The main entry point for the application.
 	/// </summary>
@@ -12,10 +20,18 @@ internal static class Program
 	{
 		try
 		{
-			SlickControls.SlickCursors.Initialize();
+			Started = true;
+
+			SlickCursors.Initialize();
+			ConnectionHandler.Start();
 
 			if (Environment.OSVersion.Version.Major == 6)
 				SetProcessDPIAware();
+
+			//AppDomain.CurrentDomain.TypeResolve += AssemblyUtil.CurrentDomain_AssemblyResolve;
+			//AppDomain.CurrentDomain.AssemblyResolve += AssemblyUtil.CurrentDomain_AssemblyResolve;
+			//AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyUtil.ReflectionResolveInterface;
+			//AppDomain.CurrentDomain.AssemblyResolve += AssemblyUtil.ResolveInterface;
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

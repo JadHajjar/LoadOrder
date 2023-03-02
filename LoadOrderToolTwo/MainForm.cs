@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.UserInterface.Panels;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
@@ -24,6 +25,8 @@ namespace LoadOrderToolTwo
 			{ SetPanel<PC_MainPage>(PI_Dashboard); }
 			catch (Exception ex)
 			{ MessagePrompt.Show(ex.ToString(), "Error"); }
+
+			new Action(CentralManager.Start).RunInBackground();
 		}
 
 		protected override void UIChanged()

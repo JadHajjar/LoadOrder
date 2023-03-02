@@ -462,7 +462,7 @@ namespace CO.Plugins {
         public static string assetStateSettingsFile => "userGameState";
 
         //public static Type userModType => Type.GetType("ICities.IUserMod, ICities");
-        public const string kUserMod = "ICities.IUserMod";
+        public static string kUserMod => "ICities.IUserMod";
 
         //public static Type cameraScriptType => Type.GetType("ICities.ICameraExtension, ICities");
         public const string kCameraScript = "ICities.ICameraExtension";

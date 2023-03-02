@@ -31,9 +31,9 @@ public class ThreeOptionToggle : SlickControl
 
 	[Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 	public Value SelectedValue { get => _selectedValue; set { _selectedValue = value; Invalidate(); SelectedValueChanged?.Invoke(this, EventArgs.Empty); } }
-	[Category("Design"), DefaultValue("")]
+	[Category("Appearance"), DefaultValue("")]
 	public string Option1 { get; set; } = string.Empty;
-	[Category("Design"), DefaultValue("")]
+	[Category("Appearance"), DefaultValue("")]
 	public string Option2 { get; set; } = string.Empty;
 	[Category("Appearance"), DefaultValue(ColorStyle.Red)]
 	public ColorStyle OptionStyle1 { get; set; } = ColorStyle.Red;

@@ -30,4 +30,5 @@ internal class Locale : LocaleHelper
 	public static string Disabled => _instance.GetText(nameof(Disabled));
 	public static string Included => _instance.GetText(nameof(Included));
 	public static string Excluded => _instance.GetText(nameof(Excluded));
+	public static string Loading => _instance.GetText(nameof(Loading));
 }

@@ -30,11 +30,12 @@ partial class PC_Mods
 	{
 			this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
 			this.slickGroupBox1 = new SlickControls.SlickGroupBox();
-			this.slickTextBox1 = new SlickControls.SlickTextBox();
-			this.threeOptionToggle1 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.threeOptionToggle2 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.threeOptionToggle3 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.threeOptionToggle3 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
+			this.threeOptionToggle2 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
+			this.threeOptionToggle1 = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
+			this.slickTextBox1 = new SlickControls.SlickTextBox();
+			this.modsListControl1 = new LoadOrderToolTwo.UserInterface.ModsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -52,6 +53,7 @@ partial class PC_Mods
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
 			this.TLP_Main.Controls.Add(this.slickGroupBox1, 0, 0);
+			this.TLP_Main.Controls.Add(this.modsListControl1, 0, 2);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(5, 30);
 			this.TLP_Main.Name = "TLP_Main";
@@ -77,65 +79,6 @@ partial class PC_Mods
 			this.slickGroupBox1.TabStop = false;
 			this.slickGroupBox1.Text = "Filters";
 			// 
-			// slickTextBox1
-			// 
-			this.slickTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.slickTextBox1.Image = global::LoadOrderToolTwo.Properties.Resources.I_Search;
-			this.slickTextBox1.LabelText = "Search";
-			this.slickTextBox1.Location = new System.Drawing.Point(3, 48);
-			this.slickTextBox1.Name = "slickTextBox1";
-			this.slickTextBox1.Placeholder = "SearchMods";
-			this.slickTextBox1.SelectedText = "";
-			this.slickTextBox1.SelectionLength = 0;
-			this.slickTextBox1.SelectionStart = 0;
-			this.slickTextBox1.Size = new System.Drawing.Size(433, 39);
-			this.slickTextBox1.TabIndex = 0;
-			// 
-			// threeOptionToggle1
-			// 
-			this.threeOptionToggle1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.threeOptionToggle1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.threeOptionToggle1.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_Local;
-			this.threeOptionToggle1.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Steam;
-			this.threeOptionToggle1.Location = new System.Drawing.Point(3, 3);
-			this.threeOptionToggle1.Name = "threeOptionToggle1";
-			this.threeOptionToggle1.Option1 = "Local";
-			this.threeOptionToggle1.Option2 = "Workshop";
-			this.threeOptionToggle1.OptionStyle1 = Extensions.ColorStyle.Active;
-			this.threeOptionToggle1.OptionStyle2 = Extensions.ColorStyle.Active;
-			this.threeOptionToggle1.Size = new System.Drawing.Size(433, 36);
-			this.threeOptionToggle1.TabIndex = 1;
-			// 
-			// threeOptionToggle2
-			// 
-			this.threeOptionToggle2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.threeOptionToggle2.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.threeOptionToggle2.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_X;
-			this.threeOptionToggle2.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Check;
-			this.threeOptionToggle2.Location = new System.Drawing.Point(442, 3);
-			this.threeOptionToggle2.Name = "threeOptionToggle2";
-			this.threeOptionToggle2.Option1 = "Disabled";
-			this.threeOptionToggle2.Option2 = "Enabled";
-			this.threeOptionToggle2.Size = new System.Drawing.Size(433, 36);
-			this.threeOptionToggle2.TabIndex = 1;
-			// 
-			// threeOptionToggle3
-			// 
-			this.threeOptionToggle3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.threeOptionToggle3.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.threeOptionToggle3.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_X;
-			this.threeOptionToggle3.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Check;
-			this.threeOptionToggle3.Location = new System.Drawing.Point(442, 48);
-			this.threeOptionToggle3.Name = "threeOptionToggle3";
-			this.threeOptionToggle3.Option1 = "Excluded";
-			this.threeOptionToggle3.Option2 = "Included";
-			this.threeOptionToggle3.Size = new System.Drawing.Size(433, 36);
-			this.threeOptionToggle3.TabIndex = 1;
-			// 
 			// tableLayoutPanel1
 			// 
 			this.tableLayoutPanel1.AutoSize = true;
@@ -155,6 +98,75 @@ partial class PC_Mods
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(878, 90);
 			this.tableLayoutPanel1.TabIndex = 0;
+			// 
+			// threeOptionToggle3
+			// 
+			this.threeOptionToggle3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.threeOptionToggle3.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.threeOptionToggle3.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_X;
+			this.threeOptionToggle3.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Check;
+			this.threeOptionToggle3.Location = new System.Drawing.Point(442, 48);
+			this.threeOptionToggle3.Name = "threeOptionToggle3";
+			this.threeOptionToggle3.Option1 = "Excluded";
+			this.threeOptionToggle3.Option2 = "Included";
+			this.threeOptionToggle3.Size = new System.Drawing.Size(433, 36);
+			this.threeOptionToggle3.TabIndex = 1;
+			// 
+			// threeOptionToggle2
+			// 
+			this.threeOptionToggle2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.threeOptionToggle2.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.threeOptionToggle2.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_X;
+			this.threeOptionToggle2.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Check;
+			this.threeOptionToggle2.Location = new System.Drawing.Point(442, 3);
+			this.threeOptionToggle2.Name = "threeOptionToggle2";
+			this.threeOptionToggle2.Option1 = "Disabled";
+			this.threeOptionToggle2.Option2 = "Enabled";
+			this.threeOptionToggle2.Size = new System.Drawing.Size(433, 36);
+			this.threeOptionToggle2.TabIndex = 1;
+			// 
+			// threeOptionToggle1
+			// 
+			this.threeOptionToggle1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.threeOptionToggle1.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.threeOptionToggle1.Image1 = global::LoadOrderToolTwo.Properties.Resources.I_Local;
+			this.threeOptionToggle1.Image2 = global::LoadOrderToolTwo.Properties.Resources.I_Steam;
+			this.threeOptionToggle1.Location = new System.Drawing.Point(3, 3);
+			this.threeOptionToggle1.Name = "threeOptionToggle1";
+			this.threeOptionToggle1.Option1 = "Local";
+			this.threeOptionToggle1.Option2 = "Workshop";
+			this.threeOptionToggle1.OptionStyle1 = Extensions.ColorStyle.Active;
+			this.threeOptionToggle1.OptionStyle2 = Extensions.ColorStyle.Active;
+			this.threeOptionToggle1.Size = new System.Drawing.Size(433, 36);
+			this.threeOptionToggle1.TabIndex = 1;
+			// 
+			// slickTextBox1
+			// 
+			this.slickTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.slickTextBox1.Image = global::LoadOrderToolTwo.Properties.Resources.I_Search;
+			this.slickTextBox1.LabelText = "Search";
+			this.slickTextBox1.Location = new System.Drawing.Point(3, 48);
+			this.slickTextBox1.Name = "slickTextBox1";
+			this.slickTextBox1.Placeholder = "SearchMods";
+			this.slickTextBox1.SelectedText = "";
+			this.slickTextBox1.SelectionLength = 0;
+			this.slickTextBox1.SelectionStart = 0;
+			this.slickTextBox1.Size = new System.Drawing.Size(433, 39);
+			this.slickTextBox1.TabIndex = 0;
+			// 
+			// modsListControl1
+			// 
+			this.modsListControl1.AutoInvalidate = false;
+			this.TLP_Main.SetColumnSpan(this.modsListControl1, 3);
+			this.modsListControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.modsListControl1.Location = new System.Drawing.Point(3, 120);
+			this.modsListControl1.Name = "modsListControl1";
+			this.modsListControl1.Size = new System.Drawing.Size(884, 363);
+			this.modsListControl1.TabIndex = 3;
 			// 
 			// PC_Mods
 			// 
@@ -187,4 +199,5 @@ partial class PC_Mods
 	private ThreeOptionToggle threeOptionToggle3;
 	private SlickControls.SlickGroupBox slickGroupBox1;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+	private ModsListControl modsListControl1;
 }
