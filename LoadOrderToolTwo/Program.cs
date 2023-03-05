@@ -1,7 +1,5 @@
 using Extensions;
 
-using LoadOrderToolTwo.Utilities.Assembly;
-
 using SlickControls;
 
 using System;
@@ -10,7 +8,7 @@ using System.Windows.Forms;
 namespace LoadOrderToolTwo;
 internal static class Program
 {
-	internal static bool Started { get; private set; }
+	internal static bool IsRunning { get; private set; }
 
 	/// <summary>
 	///  The main entry point for the application.
@@ -20,13 +18,15 @@ internal static class Program
 	{
 		try
 		{
-			Started = true;
+			IsRunning = true;
 
 			SlickCursors.Initialize();
 			ConnectionHandler.Start();
 
 			if (Environment.OSVersion.Version.Major == 6)
+			{
 				SetProcessDPIAware();
+			}
 
 			//AppDomain.CurrentDomain.TypeResolve += AssemblyUtil.CurrentDomain_AssemblyResolve;
 			//AppDomain.CurrentDomain.AssemblyResolve += AssemblyUtil.CurrentDomain_AssemblyResolve;

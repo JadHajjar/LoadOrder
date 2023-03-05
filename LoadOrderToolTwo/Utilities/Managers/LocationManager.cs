@@ -1,13 +1,16 @@
-﻿using System.IO;
+﻿using System.Configuration;
+using System.IO;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 internal class LocationManager
 {
 	// Base Folders
-	public static string GamePath { get; set; } = @"C:\Program Files (x86)\Steam\steamapps\common\Cities_Skylines";
-	public static string AppDataPath { get; set; } = @"C:\Users\DotCa\AppData\Local\Colossal Order\Cities_Skylines";
-	public static string SteamPath { get; set; } = @"C:\Program Files (x86)\Steam";
+	public static string GamePath { get; set; } = ConfigurationManager.AppSettings[nameof(GamePath)];
+	public static string AppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(AppDataPath)];
+	public static string SteamPath { get; set; } = ConfigurationManager.AppSettings[nameof(SteamPath)];
+	public static string VirtualGamePath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualGamePath)];
+	public static string VirtualAppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)];
 
 	public static string DataPath => Path.Combine(GamePath, "Cities_Data");
 	public static string ManagedDLL => Path.Combine(DataPath, "Managed");
@@ -35,12 +38,42 @@ internal class LocationManager
 	{
 		get
 		{
-			if (/*isMacOSX*/false)
-			{
-				return Path.Combine(Path.Combine(GamePath, "Resources"), "Files");
-			}
+			//if (isMacOSX)
+			//{
+			//	return Path.Combine(Path.Combine(GamePath, "Resources"), "Files");
+			//}
 
 			return Path.Combine(GamePath, "Files");
+		}
+	}
+
+	public static string CitiesExe
+	{
+		get
+		{
+			//if (isWindows)
+				return "Cities.exe";
+			//else if (isLinux)
+			//	return "Cities.x64";
+			//else if (isMacOSX)
+			//	return "Cities";
+			//else
+			//	return "Cities"; // unknown platform.
+		}
+	}
+
+	public static string SteamExe
+	{
+		get
+		{
+			//if (isWindows)
+				return "Steam.exe";
+			//else if (isLinux)
+			//	return "Steam";
+			//else if (isMacOSX)
+			//	return "Steam";
+			//else
+			//	return "Steam"; // unknown platform.
 		}
 	}
 

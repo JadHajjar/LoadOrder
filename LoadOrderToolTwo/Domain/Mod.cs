@@ -1,59 +1,61 @@
 ﻿using Extensions;
 
+using LoadOrderToolTwo.ColossalOrder;
+using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Steam;
-
-using Mono.Cecil;
+using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
-using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoadOrderToolTwo.Domain;
-internal class Mod
+public class Mod : IPackage
 {
-	public Mod(string folder, bool builtIn, bool workshop,  string dllPath, Version version)
+	private readonly string _dllName;
+	public Mod(Package package, string dllPath, Version version)
 	{
+		Package = package;
 		FileName = dllPath;
-		Folder = folder;
-		BuiltIn = builtIn;
-		Workshop = workshop;
 		Version = version;
-		Name = Path.GetFileNameWithoutExtension(dllPath).FormatWords();
+		_dllName = Path.GetFileNameWithoutExtension(dllPath).FormatWords();
 
-		if (workshop)
-		{
-			SteamId = ulong.Parse(Path.GetFileName(folder));
-		}
+		_enabledSavedBool = ModsUtil.GetEnabledSetting(this);
 	}
 
-	public Version Version { get; }
-	public string Folder { get; }
-	public bool BuiltIn { get; }
-	public bool Workshop { get; }
+	private readonly SavedBool _enabledSavedBool;
+
 	public string FileName { get; }
-	public ulong SteamId { get; }
+	public Version Version { get; }
+	public Package Package { get; }
+	public string Name { get => Package.Name.IfEmpty(_dllName); set => Package.Name = value; }
 
-	public string Name { get; set; }
-	public SteamUser? Author { get; set; }
-	public DateTime LocalTime { get; set; }
-    public DateTime ServerTime { get; set; }
-	public long LocalSize { get; set; }
-    public long ServerSize { get; set; }
-    public string? IconUrl { get; set; }
-	public string[]? Tags { get; set; }
-	public string? Class { get; set; }
-	public bool Included { get; internal set; }
+	internal CompatibilityManager.ModInfo? CompatibilityReport { get; set; }
 
-	internal void SetSteamInformation(SteamWorkshopItem steamWorkshopItem)
-	{
-		Name = steamWorkshopItem.Title;
-		Author = steamWorkshopItem.Author;
-		ServerTime = steamWorkshopItem.UpdatedUTC;
-		Tags = steamWorkshopItem.Tags;
-		Class = steamWorkshopItem.Class;
-		IconUrl = steamWorkshopItem.PreviewURL;
-	}
+	public bool IsIncluded { get => ModsUtil.IsIncluded(this); set => ModsUtil.SetIncluded(this, value); }
+	public bool IsEnabled { get => _enabledSavedBool; set => _enabledSavedBool.value = value; }
+
+	public string Folder => ((IPackage)Package).Folder;
+	public string? VirtualFolder => ((IPackage)Package).VirtualFolder;
+	public bool BuiltIn => ((IPackage)Package).BuiltIn;
+	public ulong SteamId => ((IPackage)Package).SteamId;
+	public string? SteamPage => ((IPackage)Package).SteamPage;
+	public bool Workshop => ((IPackage)Package).Workshop;
+	public SteamUser? Author { get => ((IPackage)Package).Author; set => ((IPackage)Package).Author = value; }
+	public string? Class { get => ((IPackage)Package).Class; set => ((IPackage)Package).Class = value; }
+	public Bitmap? IconImage { get => ((IPackage)Package).IconImage; set => ((IPackage)Package).IconImage = value; }
+	public string? IconUrl { get => ((IPackage)Package).IconUrl; set => ((IPackage)Package).IconUrl = value; }
+	public long LocalSize { get => ((IPackage)Package).LocalSize; }
+	public DateTime LocalTime { get => ((IPackage)Package).LocalTime; }
+	public bool RemovedFromSteam { get => ((IPackage)Package).RemovedFromSteam; set => ((IPackage)Package).RemovedFromSteam = value; }
+	public long ServerSize { get => ((IPackage)Package).ServerSize; set => ((IPackage)Package).ServerSize = value; }
+	public DateTime ServerTime { get => ((IPackage)Package).ServerTime; set => ((IPackage)Package).ServerTime = value; }
+	public DownloadStatus Status { get => ((IPackage)Package).Status; set => ((IPackage)Package).Status = value; }
+	public string? StatusReason { get => ((IPackage)Package).StatusReason; set => ((IPackage)Package).StatusReason = value; }
+	public bool SteamInfoLoaded { get => ((IPackage)Package).SteamInfoLoaded; set => ((IPackage)Package).SteamInfoLoaded = value; }
+	public string[]? Tags { get => ((IPackage)Package).Tags; set => ((IPackage)Package).Tags = value; }
+	public string? SteamDescription { get => ((IPackage)Package).SteamDescription; set => ((IPackage)Package).SteamDescription = value; }
+
+	public override string ToString() => Name;
 }

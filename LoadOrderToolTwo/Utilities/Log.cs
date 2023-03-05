@@ -3,14 +3,10 @@
 using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.Utilities;
@@ -32,7 +28,7 @@ public static class Log
 	/// </summary>
 	private static readonly bool ShowTimestamp = true;
 
-	private static string assemblyName_ = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
+	private static readonly string assemblyName_ = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 
 	/// <summary>
 	/// File name for log file.
@@ -49,7 +45,7 @@ public static class Log
 	/// </summary>
 	private static readonly Stopwatch Timer;
 
-	private static object fileLock = new object();
+	private static readonly object fileLock = new object();
 	/// <summary>
 	/// Initializes static members of the <see cref="Log"/> class.
 	/// Resets log file on startup.
@@ -58,8 +54,10 @@ public static class Log
 	{
 		try
 		{
-			if (!Program.Started)
+			if (!Program.IsRunning)
+			{
 				return;
+			}
 
 			string logfileDir;
 			if (Directory.Exists(LocationManager.GamePath))
@@ -72,14 +70,16 @@ public static class Log
 			}
 			LogFilePath = Path.Combine(logfileDir, LogFileName);
 			if (File.Exists(LogFilePath))
+			{
 				File.Delete(LogFilePath);
+			}
 
 			if (ShowTimestamp)
 			{
 				Timer = Stopwatch.StartNew();
 			}
 
-			AssemblyName details = typeof(Log).Assembly.GetName();
+			var details = typeof(Log).Assembly.GetName();
 			Info($"{details.Name} v{details.Version}", true);
 			Info($"Now = {DateTime.Now}");
 		}
@@ -103,14 +103,17 @@ public static class Log
 
 
 	public const int MAX_WAIT_ID = 1000;
-	static DateTime[] times_ = new DateTime[MAX_WAIT_ID];
+	static readonly DateTime[] times_ = new DateTime[MAX_WAIT_ID];
 
 	[Conditional("DEBUG")]
 	public static void DebugWait(string message, int id, float seconds = 0.5f, bool copyToGameLog = true)
 	{
-		float diff = seconds + 1;
+		var diff = seconds + 1;
 		if (id < 0)
+		{
 			id = -id;
+		}
+
 		id = System.Math.Abs(id % MAX_WAIT_ID);
 		if (times_[id] != default)
 		{
@@ -128,7 +131,10 @@ public static class Log
 	public static void DebugWait(string message, object id = null, float seconds = 0.5f, bool copyToGameLog = true)
 	{
 		if (id == null)
+		{
 			id = Environment.StackTrace + message;
+		}
+
 		DebugWait(message, id.GetHashCode(), seconds, copyToGameLog);
 
 	}
@@ -182,9 +188,12 @@ public static class Log
 	{
 		try
 		{
-			string message = e.ToString() + $"\n\t-- {assemblyName_}:end of inner stack trace --";
+			var message = e.ToString() + $"\n\t-- {assemblyName_}:end of inner stack trace --";
 			if (!string.IsNullOrEmpty(m))
+			{
 				message = m + " -> \n" + message;
+			}
+
 			LogImpl(message, LogLevel.Exception, true);
 			if (showInPanel)
 			{
@@ -208,7 +217,7 @@ public static class Log
 		}
 	}
 
-	static string nl = Environment.NewLine;
+	static readonly string nl = Environment.NewLine;
 
 	/// <summary>
 	/// Write a message to log file.
@@ -221,35 +230,33 @@ public static class Log
 		try
 		{
 			var ticks = Timer?.ElapsedTicks ?? 0;
-			string m = "";
+			var m = "";
 			if (ShowLevel)
 			{
-				int maxLen = Enum.GetNames(typeof(LogLevel)).Select(str => str.Length).Max();
+				var maxLen = Enum.GetNames(typeof(LogLevel)).Select(str => str.Length).Max();
 				m += string.Format($"{{0, -{maxLen}}}", $"[{level}] ");
 			}
 
 			if (ShowTimestamp)
 			{
-				long secs = ticks / Stopwatch.Frequency;
-				long fraction = ticks % Stopwatch.Frequency;
-				m += string.Format($"{secs.ToString("n0")}.{fraction.ToString("D7")} | ");
+				var secs = ticks / Stopwatch.Frequency;
+				var fraction = ticks % Stopwatch.Frequency;
+				m += string.Format($"{secs:n0}.{fraction:D7} | ");
 			}
 
 			m += message + nl;
 
-			if (Program.Started)
+			if (Program.IsRunning)
 			{
-				if (level == LogLevel.Error || level == LogLevel.Exception)
+				if (level is LogLevel.Error or LogLevel.Exception)
 				{
 					m += new StackTrace(true).ToString() + nl + nl;
 				}
 
 				lock (fileLock)
 				{
-					using (StreamWriter w = File.AppendText(LogFilePath))
-					{
-						w.Write(m);
-					}
+					using var w = File.AppendText(LogFilePath);
+					w.Write(m);
 				}
 			}
 
@@ -268,16 +275,21 @@ public static class Log
 
 	internal static void LogToFileSimple(string file, string message)
 	{
-		using (StreamWriter w = File.AppendText(file))
-		{
-			w.WriteLine(message);
-			w.WriteLine(new StackTrace().ToString());
-			w.WriteLine();
-		}
+		using var w = File.AppendText(file);
+		w.WriteLine(message);
+		w.WriteLine(new StackTrace().ToString());
+		w.WriteLine();
 	}
 
-	internal static void Called(params object[] args) => Log.Info(CurrentMethod(2, args) + " called.", false);
-	internal static void Succeeded() => Log.Info(CurrentMethod(2) + " succeeded!", false);
+	internal static void Called(params object[] args)
+	{
+		Log.Info(CurrentMethod(2, args) + " called.", false);
+	}
+
+	internal static void Succeeded()
+	{
+		Log.Info(CurrentMethod(2) + " succeeded!", false);
+	}
 
 	[MethodImpl(MethodImplOptions.NoInlining)]
 	internal static string CurrentMethod(int i = 1, params object[] args)

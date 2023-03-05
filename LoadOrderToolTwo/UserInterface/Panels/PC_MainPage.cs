@@ -1,26 +1,35 @@
-﻿using LoadOrderToolTwo.Utilities;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_MainPage : PanelContent
 {
+	private readonly System.Timers.Timer _citiesMonitorTimer = new(1000);
+	private bool buttonStateRunning;
 	public PC_MainPage()
 	{
 		InitializeComponent();
 
 		Text = Locale.Dashboard;
-		B_StartStop.Text = Locale.StartCities;
+		B_StartStop.Enabled = CentralManager.IsContentLoaded;
+
+		if (!CentralManager.IsContentLoaded)
+		{
+			CentralManager.ContentLoaded += () => this.TryInvoke(() => B_StartStop.Enabled = true);
+		}
+
+		_citiesMonitorTimer.Elapsed += (s, e) => RefreshButtonState();
+		_citiesMonitorTimer.Start();
+
+		RefreshButtonState();
 	}
 
 	protected override void UIChanged()
@@ -51,6 +60,50 @@ public partial class PC_MainPage : PanelContent
 		if (e.Button == MouseButtons.Left)
 		{
 			Form.PushPanel<PC_Assets>((Form as MainForm)?.PI_Assets);
+		}
+	}
+
+	private void B_StartStop_Click(object sender, System.EventArgs e)
+	{
+		if (CitiesManager.IsRunning())
+		{
+			B_StartStop.Loading = true;
+			new Action(CitiesManager.Kill).RunInBackground();
+		}
+		else
+		{
+			B_StartStop.Loading = true;
+			new Action(CitiesManager.Launch).RunInBackground();
+		}
+	}
+
+	private void RefreshButtonState(bool firstTime = false)
+	{
+		var running = CitiesManager.IsRunning();
+
+		if (!running)
+		{
+			if (buttonStateRunning || firstTime)
+			{
+				this.TryInvoke(() =>
+				{
+					B_StartStop.Text = Locale.StartCities;
+					B_StartStop.Image = Properties.Resources.I_Launch;
+					buttonStateRunning = false;
+				});
+			}
+
+			return;
+		}
+		
+		if (!buttonStateRunning || firstTime)
+		{
+			this.TryInvoke(() =>
+			{
+				B_StartStop.Text = Locale.StopCities;
+				B_StartStop.Image = Properties.Resources.I_Stop;
+				buttonStateRunning = true;
+			});
 		}
 	}
 }

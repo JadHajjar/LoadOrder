@@ -1,17 +1,11 @@
-﻿using LoadOrderToolTwo.Utilities;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_Mods : PanelContent
@@ -20,25 +14,61 @@ public partial class PC_Mods : PanelContent
 	{
 		InitializeComponent();
 
+		LC_Mods.CanDrawItem += LC_Mods_CanDrawItem;
+
 		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
 
-		if (CentralManager.Mods == null)
+		if (!CentralManager.IsContentLoaded)
 		{
-			modsListControl1.Loading = true;
+			LC_Mods.Loading = true;
 
-			CentralManager.ModsLoaded += CentralManager_ModsLoaded;
+			CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 		}
 		else
-			modsListControl1.SetItems(CentralManager.Mods);
+		{
+			LC_Mods.SetItems(CentralManager.Mods);
+		}
 
-		CentralManager.ModsUpdated += CentralManager_ModsLoaded;
+		CentralManager.WorkshopInfoUpdated += LC_Mods.Invalidate;
 	}
 
-	private void CentralManager_ModsLoaded()
+	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Mod> e)
 	{
-		if (modsListControl1.Loading)
-			modsListControl1.Loading = true;
+		if (OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
+		{
+			e.DoNotDraw |= OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
+		}
 
-		modsListControl1.SetItems(CentralManager.Mods);
+		if (OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
+		{
+			e.DoNotDraw |= OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsIncluded;
+		}
+
+		if (OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
+		{
+			e.DoNotDraw |= OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsEnabled;
+		}
+
+		if (!string.IsNullOrWhiteSpace(TB_Search.Text))
+		{
+			e.DoNotDraw |= !(e.Item.Name.SearchCheck(TB_Search.Text)
+				|| (e.Item.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
+				|| e.Item.SteamId.ToString().SearchCheck(TB_Search.Text));
+		}
+	}
+
+	private void CentralManager_ContentLoaded()
+	{
+		if (LC_Mods.Loading)
+		{
+			LC_Mods.Loading = false;
+		}
+
+		LC_Mods.SetItems(CentralManager.Mods);
+	}
+
+	private void FilterChanged(object sender, EventArgs e)
+	{
+		LC_Mods.Invalidate();
 	}
 }

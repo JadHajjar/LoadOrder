@@ -38,7 +38,7 @@ namespace LoadOrderShared {
         public float StatusY = 10;
 
         public ModInfo[] Mods = new ModInfo[0];
-        public AssetInfo[] Assets = new AssetInfo[0];
+        public AssetInfo[] Assets { get; set; } = new AssetInfo[0];
         public string[] ExcludedDLCs = new string[0];
 
         public static string FilePath => Path.Combine(SharedUtil.LocalLOMData, FILE_NAME);

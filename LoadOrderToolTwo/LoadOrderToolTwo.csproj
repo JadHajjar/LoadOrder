@@ -10,7 +10,7 @@
     <DebugType>embedded</DebugType>
     <DebugSymbols>true</DebugSymbols>
     <Nullable>enable</Nullable>
-    <DefineConstants>$(DefineConstants);TOOL</DefineConstants>
+    <DefineConstants>$(DefineConstants);TOOL2</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <Deterministic>false</Deterministic>
@@ -30,11 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitInfo" Version="2.1.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
@@ -46,6 +41,8 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
@@ -56,6 +53,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Update="UserInterface\AssetsListControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +65,15 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<ItemGroup>
+		<Compile Include="..\LoadOrder\Shared\LoadOrderConfig.cs" Link="Shared\LoadOrderConfig.cs" />
+		<Compile Include="..\LoadOrder\Shared\CSCache.cs" Link="Shared\CSCache.cs" />
+		<Compile Include="..\LoadOrder\Shared\SharedUtil.cs" Link="Shared\SharedUtil.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Domain\CompatibilityReport\" />
+	</ItemGroup>
 
   <Target Name="DeployToModDirectory" AfterTargets="Build">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
@@ -77,7 +86,7 @@
     </PropertyGroup>
     <ItemGroup>
       <VersionNumber Include="@(Targets->'%(Version)')" />
-      <SideFiles Include="Resources\*._dll;Resources\Cities.exe.Profiler" />
+      <SideFiles Include="Resources\*._dll;" />
     </ItemGroup>
     <Copy SourceFiles="@(SideFiles)" DestinationFolder="$(DeployDir)" />
     <Copy SourceFiles="@(SideFiles)" DestinationFolder="$(TargetDir)" />

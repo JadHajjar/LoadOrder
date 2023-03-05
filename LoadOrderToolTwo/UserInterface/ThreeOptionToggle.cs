@@ -1,18 +1,13 @@
 ﻿using Extensions;
 
-using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
@@ -40,9 +35,9 @@ public class ThreeOptionToggle : SlickControl
 	[Category("Appearance"), DefaultValue(ColorStyle.Green)]
 	public ColorStyle OptionStyle2 { get; set; } = ColorStyle.Green;
 	[Category("Appearance"), DefaultValue(null)]
-	public Image? Image1 { get; set; }
+	public string? Image1 { get; set; }
 	[Category("Appearance"), DefaultValue(null)]
-	public Image? Image2 { get; set; }
+	public string? Image2 { get; set; }
 
 	public ThreeOptionToggle()
 	{
@@ -51,9 +46,10 @@ public class ThreeOptionToggle : SlickControl
 
 	protected override void UIChanged()
 	{
+		Font = UI.Font(9.75F);
 		Margin = UI.Scale(new Padding(5), UI.FontScale);
 		Padding = UI.Scale(new Padding(5), UI.FontScale);
-		Height = (int)(28 * UI.FontScale);
+		Height = (int)(28 * UI.UIScale);
 	}
 
 	protected override void OnMouseClick(MouseEventArgs e)
@@ -63,7 +59,7 @@ public class ThreeOptionToggle : SlickControl
 		var centerWidth = 50;
 		var option1Hovered = e.Location.X < (Width - centerWidth) / 2;
 		var option2Hovered = e.Location.X > (Width + centerWidth) / 2;
-		var noneHovered = e.Location.X.IsWithin(Width / 2 - centerWidth / 2 - 1, Width / 2 + centerWidth / 2 + 1);
+		var noneHovered = e.Location.X.IsWithin((Width / 2) - (centerWidth / 2) - 1, (Width / 2) + (centerWidth / 2) + 1);
 
 		if (option1Hovered)
 		{
@@ -85,7 +81,7 @@ public class ThreeOptionToggle : SlickControl
 		e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 		e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-		var iconSize = UI.FontScale >= 1.5 ? 24 : 16;
+		var iconSize = UI.FontScale >= 1.25 ? 24 : 16;
 		var centerWidth = (int)(40 * UI.FontScale);
 		var cursorLocation = PointToClient(Cursor.Position);
 		var rectangle1 = new Rectangle(0, 0, (Width - centerWidth) / 2, Height);
@@ -108,11 +104,15 @@ public class ThreeOptionToggle : SlickControl
 
 		if (Image1 != null)
 		{
-			using var img1 = new Bitmap(Image1).Color(textColor1);
-			e.Graphics.DrawImage(img1, new Rectangle(Padding.Left, (Height - iconSize) / 2, iconSize, iconSize));
+			using var img1 = ImageManager.GetIcon(Image1)?.Color(textColor1);
+
+			if (img1 != null)
+			{
+				e.Graphics.DrawImage(img1, new Rectangle(Padding.Left, (Height - iconSize) / 2, iconSize, iconSize));
+			}
 		}
 
-		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option1), Font, new SolidBrush(textColor1), rectangle1.Pad(Padding).Pad(Image1 != null ? (Image1.Width) : 0, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option1), Font, new SolidBrush(textColor1), rectangle1.Pad(Padding).Pad(Image1 != null ? iconSize : 0, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
 
 		// Option 2
 		if (option2Hovered || SelectedValue == Value.Option2)
@@ -122,11 +122,15 @@ public class ThreeOptionToggle : SlickControl
 
 		if (Image2 != null)
 		{
-			using var img2 = new Bitmap(Image2).Color(textColor2);
-			e.Graphics.DrawImage(img2, new Rectangle(Width - iconSize - Padding.Right, (Height - iconSize) / 2, iconSize, iconSize));
+			using var img2 = ImageManager.GetIcon(Image2)?.Color(textColor2);
+
+			if (img2 != null)
+			{
+				e.Graphics.DrawImage(img2, new Rectangle(Width - iconSize - Padding.Right, (Height - iconSize) / 2, iconSize, iconSize));
+			}
 		}
 
-		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option2), Font, new SolidBrush(textColor2), rectangle2.Pad(Padding).Pad(0, 0, Image2 != null ? (Image2.Width) : 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option2), Font, new SolidBrush(textColor2), rectangle2.Pad(Padding).Pad(0, 0, Image2 != null ? iconSize : 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
 
 		// Center
 		if (noneHovered || SelectedValue == Value.None)

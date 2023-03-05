@@ -1,17 +1,20 @@
 using Extensions;
 
+using LoadOrderToolTwo.Domain;
+using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Steam;
+using LoadOrderToolTwo.Utilities.IO;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using Newtonsoft.Json.Linq;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,80 +43,82 @@ public static class SteamUtil
 
 	public static void ExecuteSteam(string args)
 	{
-		//ContentUtil.Execute(DataLocation.SteamPath, DataLocation.SteamExe, args).WaitForExit();
-		Thread.Sleep(30);
+		IOUtil.Execute(LocationManager.SteamPath, LocationManager.SteamExe, args)?.WaitForExit();
 	}
 
-	public static void ReDownload(IEnumerable<ulong> ids)
+	public static void ReDownload(params ulong[] ids)
 	{
 		try
 		{
-			//Log.Called(ids);
-			ExecuteSteam("steam://open/console");// so that user can see what is happening.
-			Thread.Sleep(200); // wait for steam to be ready.
-			foreach (var id in ids)
+			var steamArguments = new StringBuilder("steam://open/console");
+
+			for (var i = 0; i < ids.Length; i++)
 			{
-				ExecuteSteam($"+workshop_download_item 255710 {id}");
+				steamArguments.AppendFormat(" +workshop_download_item 255710 {0}", ids[i]);
 			}
+
+			ExecuteSteam(steamArguments.ToString());
+
+			Thread.Sleep(100);
 
 			ExecuteSteam("steam://open/downloads");
 		}
 		catch (Exception) { }
 	}
-
-	public static string ExtractPersonaNameFromHTML(string html)
+	public static async Task<Dictionary<T1, T2>> ConvertInChunks<T1, T2>(	IEnumerable<T1> mainList,	int chunkSize,	Func<List<T1>, Task<Dictionary<T1, T2>>> converter)
 	{
-		//Log.Called(/*html*/);
-		var pattern = "<span class=\"actual_persona_name\">([^<>]+)</span>";
-		var match = Regex.Matches(html, "<span class=\"actual_persona_name\">([^<>]+)</span>").Cast<Match>().FirstOrDefault();
-		if (match != null)
+		var chunks = mainList.Chunk(chunkSize); // Split mainList into chunks of chunkSize
+		var tasks = new List<Task<Dictionary<T1, T2>>>(); // A list of tasks to convert the chunks
+		var results = new Dictionary<T1, T2>(); // A dictionary to store the results
+
+		foreach (var chunk in chunks)
 		{
-			var ret = match.Groups[1].Value;
-			//ret.LogRet(match.Groups[0].Value);
-			return ret;
+			tasks.Add(converter(chunk.ToList())); // Convert the current chunk and add the task to the list
 		}
-		else
+
+		await Task.WhenAll(tasks); // Wait for all tasks to complete
+
+		foreach (var task in tasks)
 		{
-			throw new Exception(
-				$"No match found!\n" +
-				$"Pattern= {pattern}\n" +
-				$"html={html}");
+			var chunkResults = await task; // Get the results of the completed task
+			
+			foreach (var kvp in chunkResults)
+			{
+				results[kvp.Key] = kvp.Value; // Add the results to the dictionary
+			}
 		}
+
+		return results;
 	}
 
-	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataAsyncInChunks(ulong[] ids, int chunkSize = 1000)
+	public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
 	{
-		int i;
-		var list = new Dictionary<ulong, SteamWorkshopItem>();
-		for (i = 0; i + chunkSize < ids.Length; i += chunkSize)
+		while (source.Any())
 		{
-			var buffer = new ulong[chunkSize];
-			Array.Copy(ids, i, buffer, 0, chunkSize);
-			var data = await LoadDataAsync(buffer);
-			list.AddRange(data);
+			yield return source.Take(chunkSize);
+			source = source.Skip(chunkSize);
 		}
-		var r = ids.Length - i;
-		if (r > 0)
-		{
-			var buffer = new ulong[r];
-			Array.Copy(ids, i, buffer, 0, r);
-			var data = await LoadDataAsync(buffer);
-			list.AddRange(data);
-		}
-
-		return list;
 	}
 
 	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataAsync(ulong[] ids)
+	{
+		var results = await ConvertInChunks(ids, 1000, LoadDataImplAsync);
+
+		SaveCache(results);
+
+		return results;
+	}
+
+	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataImplAsync(List<ulong> ids)
 	{
 		var url = @"https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/";
 
 		var bodyDictionary = new Dictionary<string, string>
 		{
-			["itemcount"] = ids.Length.ToString()
+			["itemcount"] = ids.Count.ToString()
 		};
 
-		for (var i = 0; i < ids.Length; ++i)
+		for (var i = 0; i < ids.Count; ++i)
 		{
 			bodyDictionary[$"publishedfileids[{i}]"] = ids[i].ToString();
 		}
@@ -127,16 +132,18 @@ public static class SteamUtil
 			var response = await httpResponse.Content.ReadAsStringAsync();
 
 			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopItemRootResponse>(response)?.response.publishedfiledetails
-				.Where(x => x.result == 1)
+				.Where(x => x.result is 1 or 17 or 86)
 				.Select(x => new SteamWorkshopItem(x))
 				.ToList() ?? new();
 
-			var users = await GetSteamUsers(data.Select(x => x.AuthorID));
+			var users = await ConvertInChunks(data.Select(x => x.AuthorID).Distinct(), 100, GetSteamUsers);
 
 			foreach (var item in data)
 			{
 				if (users.ContainsKey(item.AuthorID))
+				{
 					item.Author = new(users[item.AuthorID]);
+				}
 			}
 
 			return data.ToDictionary(x => ulong.Parse(x.PublishedFileID));
@@ -147,9 +154,9 @@ public static class SteamUtil
 		return new();
 	}
 
-	public static async Task<Dictionary<string, SteamUserEntry>> GetSteamUsers(IEnumerable<string> steamId64s)
+	public static async Task<Dictionary<string, SteamUserEntry>> GetSteamUsers(List<string> steamId64s)
 	{
-		var idString = string.Join(",", steamId64s.Distinct());
+		var idString = string.Join(",", steamId64s);
 		var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=706303B24FA0E63B1FB25965E081C2E1&steamids={idString}";
 
 		using var httpClient = new HttpClient();
@@ -165,5 +172,54 @@ public static class SteamUtil
 		Log.Error("failed to get steam author data: " + httpResponse.RequestMessage);
 
 		return new();
+	}
+
+	private static void SaveCache(Dictionary<ulong, SteamWorkshopItem> list)
+	{
+		ISave.Save(list, "SteamModsCache.json");
+	}
+
+	internal static Dictionary<ulong, SteamWorkshopItem>? GetCachedInfo()
+	{
+		var path = ISave.GetPath("SteamModsCache.json");
+
+		if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+		{
+			return null;
+		}
+
+		ISave.Load(out Dictionary<ulong, SteamWorkshopItem>? dic, "SteamModsCache.json");
+
+		return dic;
+	}
+
+	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem)
+	{
+		if (steamWorkshopItem.Removed)
+		{
+			package.RemovedFromSteam = true;
+			return;
+		}
+
+		package.SteamInfoLoaded = true;
+		package.Name = steamWorkshopItem.Title;
+		package.Author = steamWorkshopItem.Author;
+		package.ServerTime = steamWorkshopItem.UpdatedUTC;
+		package.Tags = steamWorkshopItem.Tags;
+		package.Class = steamWorkshopItem.Class;
+		package.ServerSize = steamWorkshopItem.Size;
+		package.SteamDescription = steamWorkshopItem.Description;
+
+		if (package.IconUrl != steamWorkshopItem.PreviewURL)
+		{
+			package.IconUrl = steamWorkshopItem.PreviewURL;
+			package.IconImage?.Dispose();
+			package.IconImage = null;
+		}
+
+		package.Status = ModsUtil.GetStatus(package, out var reason);
+		package.StatusReason = reason;
+
+		CentralManager.InformationUpdate(package);
 	}
 }

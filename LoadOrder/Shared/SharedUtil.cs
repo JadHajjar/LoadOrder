@@ -1,12 +1,16 @@
 namespace LoadOrderShared {
-    using System.IO;
+	using System.IO;
     using System.Xml;
     using System.Xml.Serialization;
 
-    internal class SharedUtil {
-#if TOOL
-        internal static string LocalApplicationData => CO.IO.DataLocation.localApplicationData;
-        internal static string LocalLOMData => CO.IO.DataLocation.LocalLOMData;
+    internal class SharedUtil
+	{
+#if TOOL2
+		internal static string LocalApplicationData => LoadOrderToolTwo.Utilities.Managers.LocationManager.AppDataPath;
+		internal static string LocalLOMData => Path.Combine(LocalApplicationData, "LoadOrder");
+#elif TOOL
+		internal static string LocalApplicationData => CO.IO.DataLocation.localApplicationData;
+		internal static string LocalLOMData => CO.IO.DataLocation.LocalLOMData;
 #elif IPATCH
         internal static string LocalApplicationData => LoadOrderIPatch.Patches.Entry.GamePaths.AppDataPath;
         internal static string LocalLOMData => LoadOrderIPatch.Patches.Entry.LocalLOMData;
@@ -14,7 +18,7 @@ namespace LoadOrderShared {
         internal static string LocalApplicationData => ColossalFramework.IO.DataLocation.localApplicationData;
         internal static string LocalLOMData => Path.Combine(LocalApplicationData, "LoadOrder");
 #endif
-        internal static XmlWriterSettings Indented => new XmlWriterSettings() { Indent = true };
+		internal static XmlWriterSettings Indented => new XmlWriterSettings() { Indent = true };
 
         internal static XmlSerializerNamespaces NoNamespaces =>
             new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
