@@ -11,6 +11,14 @@ using System.Windows.Forms;
 namespace LoadOrderToolTwo.Utilities.Managers;
 public static class CitiesManager
 {
+	public static bool CitiesAvailable()
+	{
+		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamExe : LocationManager.CitiesExe;
+		var dir = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamPath : LocationManager.GamePath;
+
+		return File.Exists(Path.Combine(dir, fileExe));
+	}
+
 	public static void Launch()
 	{
 		UpdateFiles(); // auto disabling FPS booster causes unsaved changes so this comes first.

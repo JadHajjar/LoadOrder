@@ -73,7 +73,7 @@ partial class PC_Mods
 			this.slickGroupBox1.Icon = global::LoadOrderToolTwo.Properties.Resources.I_Filter;
 			this.slickGroupBox1.Location = new System.Drawing.Point(3, 3);
 			this.slickGroupBox1.Name = "slickGroupBox1";
-			this.slickGroupBox1.Size = new System.Drawing.Size(438, 186);
+			this.slickGroupBox1.Size = new System.Drawing.Size(438, 190);
 			this.slickGroupBox1.TabIndex = 2;
 			this.slickGroupBox1.TabStop = false;
 			this.slickGroupBox1.Text = "Filters";
@@ -90,7 +90,7 @@ partial class PC_Mods
 			this.tableLayoutPanel1.Controls.Add(this.OT_Enabled, 0, 2);
 			this.tableLayoutPanel1.Controls.Add(this.OT_Included, 0, 1);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 18);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 22);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 4;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -138,8 +138,8 @@ partial class PC_Mods
 			this.OT_Enabled.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.OT_Enabled.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.OT_Enabled.Image1 = "I_X";
-			this.OT_Enabled.Image2 = "I_Check";
+			this.OT_Enabled.Image1 = "I_Disabled";
+			this.OT_Enabled.Image2 = "I_Enabled";
 			this.OT_Enabled.Location = new System.Drawing.Point(3, 88);
 			this.OT_Enabled.Name = "OT_Enabled";
 			this.OT_Enabled.Option1 = "Disabled";
@@ -169,17 +169,18 @@ partial class PC_Mods
 			this.LC_Mods.AutoScroll = true;
 			this.TLP_Main.SetColumnSpan(this.LC_Mods, 2);
 			this.LC_Mods.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LC_Mods.HighlightOnHover = true;
 			this.LC_Mods.ItemHeight = 28;
-			this.LC_Mods.Location = new System.Drawing.Point(0, 192);
+			this.LC_Mods.Location = new System.Drawing.Point(0, 196);
 			this.LC_Mods.Margin = new System.Windows.Forms.Padding(0);
 			this.LC_Mods.Name = "LC_Mods";
 			this.LC_Mods.SeparateWithLines = true;
-			this.LC_Mods.Size = new System.Drawing.Size(890, 294);
+			this.LC_Mods.Size = new System.Drawing.Size(890, 290);
 			this.LC_Mods.TabIndex = 3;
 			// 
 			// PC_Mods
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.TLP_Main);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));

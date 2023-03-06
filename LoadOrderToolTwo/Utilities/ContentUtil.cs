@@ -86,11 +86,13 @@ internal class ContentUtil
 			getPackage(folder, false, false);
 		}
 
+		if(Directory.Exists(gameModsPath))
 		foreach (var folder in Directory.GetDirectories(gameModsPath))
 		{
 			getPackage(folder, true, false);
 		}
 
+		if(Directory.Exists(addonsModsPath))
 		foreach (var folder in Directory.GetDirectories(addonsModsPath))
 		{
 			getPackage(folder, false, false);
@@ -107,6 +109,11 @@ internal class ContentUtil
 
 		void getPackage(string folder, bool builtIn, bool workshop)
 		{
+			if (!Directory.Exists(folder))
+			{
+				return;
+			}
+
 			var package = new Package(folder, builtIn, workshop);
 
 			package.Assets = AssetsUtil.GetAssets(package).ToArray();

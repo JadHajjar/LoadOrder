@@ -1,5 +1,7 @@
 using Extensions;
 
+using LoadOrderToolTwo.Utilities;
+
 using SlickControls;
 
 using System;
@@ -22,6 +24,7 @@ internal static class Program
 
 			SlickCursors.Initialize();
 			ConnectionHandler.Start();
+			BackgroundAction.BackgroundTaskError += (b, e) => Log.Exception(e, $"The background action ({b}) failed", false);
 
 			if (Environment.OSVersion.Version.Major == 6)
 			{
@@ -38,7 +41,10 @@ internal static class Program
 			Application.Run(new MainForm());
 		}
 		catch (Exception ex)
-		{ MessageBox.Show(ex.ToString(), "App failed to start"); }
+		{
+			MessagePrompt.GetError(ex, "App failed to start", out var message, out var details);
+			MessageBox.Show(details, message);
+		}
 	}
 
 	[System.Runtime.InteropServices.DllImport("user32.dll")]

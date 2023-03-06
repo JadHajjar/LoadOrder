@@ -8,16 +8,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using AssemblyClass = System.Reflection.Assembly;
-
-namespace LoadOrderToolTwo.Utilities.Assembly;
+namespace LoadOrderToolTwo.Utilities.IO;
 public static class AssemblyUtil
 {
 	public static AssemblyDefinition? ReadAssemblyDefinition(string dllpath)
 	{
 		try
 		{
-			var r = new MyAssemblyResolver();
+			var r = new AssemblyResolver();
 			r.AddSearchDirectory(LocationManager.ManagedDLL);
 			r.AddSearchDirectory(Path.GetDirectoryName(dllpath));
 			var readerParameters = new ReaderParameters
@@ -147,20 +145,20 @@ public static class AssemblyUtil
 		}
 	}
 
-	internal static AssemblyClass ResolveInterface(object sender, ResolveEventArgs args)
+	internal static Assembly ResolveInterface(object sender, ResolveEventArgs args)
 	{
 		var name = new AssemblyName(args.Name).Name + ".dll";
 		var managedPath = Path.Combine(LocationManager.ManagedDLL, name);
 
 		if (File.Exists(managedPath))
 		{
-			return AssemblyClass.LoadFrom(managedPath);
+			return Assembly.LoadFrom(managedPath);
 		}
 
 		return null;
 	}
 
-	internal static AssemblyClass ReflectionResolveInterface(object sender, ResolveEventArgs args)
+	internal static Assembly ReflectionResolveInterface(object sender, ResolveEventArgs args)
 	{
 		var name = new AssemblyName(args.Name).Name + ".dll";
 		var path = Path.Combine(Directory.GetParent(args.RequestingAssembly.Location).FullName, name);
@@ -168,12 +166,12 @@ public static class AssemblyUtil
 
 		if (File.Exists(path))
 		{
-			return AssemblyClass.ReflectionOnlyLoadFrom(path);
+			return Assembly.ReflectionOnlyLoadFrom(path);
 		}
 
 		if (File.Exists(managedPath))
 		{
-			return AssemblyClass.ReflectionOnlyLoadFrom(managedPath);
+			return Assembly.ReflectionOnlyLoadFrom(managedPath);
 		}
 
 		return null;
@@ -189,7 +187,7 @@ public static class AssemblyUtil
 		"MoneyPanel"
 	};
 
-	internal static AssemblyClass CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+	internal static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 	{
 		Log.Called();
 		var name0 = args.Name;
@@ -198,8 +196,8 @@ public static class AssemblyUtil
 			return null;
 		}
 
-		AssemblyClass[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-		AssemblyClass ret = null;
+		var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+		Assembly ret = null;
 		foreach (var asm in assemblies)
 		{
 			var name = asm.GetName().Name;

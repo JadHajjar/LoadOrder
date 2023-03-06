@@ -19,11 +19,11 @@ public partial class PC_MainPage : PanelContent
 		InitializeComponent();
 
 		Text = Locale.Dashboard;
-		B_StartStop.Enabled = CentralManager.IsContentLoaded;
+		B_StartStop.Enabled = CentralManager.IsContentLoaded && CitiesManager.CitiesAvailable();
 
 		if (!CentralManager.IsContentLoaded)
 		{
-			CentralManager.ContentLoaded += () => this.TryInvoke(() => B_StartStop.Enabled = true);
+			CentralManager.ContentLoaded += () => this.TryInvoke(() => B_StartStop.Enabled = CitiesManager.CitiesAvailable());
 		}
 
 		_citiesMonitorTimer.Elapsed += (s, e) => RefreshButtonState();
@@ -68,12 +68,12 @@ public partial class PC_MainPage : PanelContent
 		if (CitiesManager.IsRunning())
 		{
 			B_StartStop.Loading = true;
-			new Action(CitiesManager.Kill).RunInBackground();
+			new BackgroundAction("Stopping Cities: Skylines", CitiesManager.Kill).Run();
 		}
 		else
 		{
 			B_StartStop.Loading = true;
-			new Action(CitiesManager.Launch).RunInBackground();
+			new BackgroundAction("Starting Cities: Skylines", CitiesManager.Launch).Run();
 		}
 	}
 

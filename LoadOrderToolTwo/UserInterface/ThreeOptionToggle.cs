@@ -81,6 +81,7 @@ public class ThreeOptionToggle : SlickControl
 		e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 		e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
+		var iconOnly = Width < 200 * UI.FontScale;
 		var iconSize = UI.FontScale >= 1.25 ? 24 : 16;
 		var centerWidth = (int)(40 * UI.FontScale);
 		var cursorLocation = PointToClient(Cursor.Position);
@@ -112,7 +113,10 @@ public class ThreeOptionToggle : SlickControl
 			}
 		}
 
-		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option1), Font, new SolidBrush(textColor1), rectangle1.Pad(Padding).Pad(Image1 != null ? iconSize : 0, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		if (!iconOnly)
+		{
+			e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option1), Font, new SolidBrush(textColor1), rectangle1.Pad(Padding).Pad(Image1 != null ? iconSize : 0, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		}
 
 		// Option 2
 		if (option2Hovered || SelectedValue == Value.Option2)
@@ -130,7 +134,10 @@ public class ThreeOptionToggle : SlickControl
 			}
 		}
 
-		e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option2), Font, new SolidBrush(textColor2), rectangle2.Pad(Padding).Pad(0, 0, Image2 != null ? iconSize : 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		if (!iconOnly)
+		{
+			e.Graphics.DrawString(LocaleHelper.GetGlobalText(Option2), Font, new SolidBrush(textColor2), rectangle2.Pad(Padding).Pad(0, 0, Image2 != null ? iconSize : 0, 0), new StringFormat { LineAlignment = StringAlignment.Center, Alignment = StringAlignment.Center });
+		}
 
 		// Center
 		if (noneHovered || SelectedValue == Value.None)

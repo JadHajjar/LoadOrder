@@ -83,7 +83,7 @@ internal static class CentralManager
 
 		if (compatibilityReport != null)
 		{
-			new Action(() => CompatibilityManager.LoadCompatibilityReport(compatibilityReport)).RunInBackground();
+			new BackgroundAction("Loading compatibility report", () => CompatibilityManager.LoadCompatibilityReport(compatibilityReport)).Run();
 		}
 
 		lock (_packageLock)

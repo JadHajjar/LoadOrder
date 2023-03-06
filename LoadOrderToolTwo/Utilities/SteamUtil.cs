@@ -181,16 +181,20 @@ public static class SteamUtil
 
 	internal static Dictionary<ulong, SteamWorkshopItem>? GetCachedInfo()
 	{
-		var path = ISave.GetPath("SteamModsCache.json");
-
-		if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+		try
 		{
-			return null;
+			var path = ISave.GetPath("SteamModsCache.json");
+
+			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+			{
+				return null;
+			}
+
+			ISave.Load(out Dictionary<ulong, SteamWorkshopItem>? dic, "SteamModsCache.json");
+
+			return dic;
 		}
-
-		ISave.Load(out Dictionary<ulong, SteamWorkshopItem>? dic, "SteamModsCache.json");
-
-		return dic;
+		catch { return null; }
 	}
 
 	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem)

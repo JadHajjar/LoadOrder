@@ -3,8 +3,8 @@
 using System;
 using System.Collections.Generic;
 
-namespace LoadOrderToolTwo.Utilities.Assembly;
-public class MyAssemblyResolver : BaseAssemblyResolver
+namespace LoadOrderToolTwo.Utilities.IO;
+public class AssemblyResolver : BaseAssemblyResolver
 {
 	private readonly IDictionary<string, AssemblyDefinition> cache
 		= new Dictionary<string, AssemblyDefinition>(StringComparer.Ordinal);

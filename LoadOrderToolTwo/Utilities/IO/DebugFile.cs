@@ -5,6 +5,26 @@ using System.IO;
 
 namespace LoadOrderToolTwo.Utilities.IO;
 
+public class MonoFile : DebugFile
+{
+	public static MonoFile Instance = new MonoFile();
+
+	public override string FilePath => Path.Combine(LocationManager.MonoPath, "mono.dll");
+	public override string ReleaseFilePath => Path.Combine(LocationManager.MonoPath, "mono-orig.dll");
+	public override string DebugFilePath => Path.Combine(LocationManager.MonoPath, "mono-debug.dll");
+	public override string ResourceFileName => "mono-debug._dll";
+}
+
+public class CitiesFile : DebugFile
+{
+	public static CitiesFile Instance = new CitiesFile();
+
+	public override string FilePath => Path.Combine(LocationManager.GamePath, LocationManager.CitiesExe);
+	public override string ReleaseFilePath => FilePath + ".Orig";
+	public override string DebugFilePath => FilePath + ".Profiler";
+	public override string ResourceFileName => "Cities.exe.Profiler";
+}
+
 public abstract class DebugFile
 {
 	public abstract string ResourceFileName { get; }
@@ -110,24 +130,4 @@ public abstract class DebugFile
 
 		return null;
 	}
-}
-
-public class MonoFile : DebugFile
-{
-	public static MonoFile Instance = new MonoFile();
-
-	public override string FilePath => Path.Combine(LocationManager.MonoPath, "mono.dll");
-	public override string ReleaseFilePath => Path.Combine(LocationManager.MonoPath, "mono-orig.dll");
-	public override string DebugFilePath => Path.Combine(LocationManager.MonoPath, "mono-debug.dll");
-	public override string ResourceFileName => "mono-debug._dll";
-}
-
-public class CitiesFile : DebugFile
-{
-	public static CitiesFile Instance = new CitiesFile();
-
-	public override string FilePath => Path.Combine(LocationManager.GamePath, LocationManager.CitiesExe);
-	public override string ReleaseFilePath => FilePath + ".Orig";
-	public override string DebugFilePath => FilePath + ".Profiler";
-	public override string ResourceFileName => "Cities.exe.Profiler";
 }

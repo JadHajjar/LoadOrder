@@ -23,9 +23,9 @@ public partial class MainForm : BasePanelForm
 		try
 		{ SetPanel<PC_MainPage>(PI_Dashboard); }
 		catch (Exception ex)
-		{ MessagePrompt.Show(ex.ToString(), "Error"); }
+		{ MessagePrompt.Show(ex, "Failed to load the dashboard"); }
 
-		new Action(CentralManager.Start).RunInBackground();
+		new BackgroundAction("Loading content", CentralManager.Start).Run();
 	}
 
 	protected override void UIChanged()

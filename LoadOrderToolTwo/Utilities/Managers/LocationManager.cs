@@ -1,4 +1,6 @@
-﻿using System.Configuration;
+﻿using LoadOrderToolTwo.Utilities.IO;
+
+using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
 
@@ -38,44 +40,30 @@ internal class LocationManager
 	{
 		get
 		{
-			//if (isMacOSX)
-			//{
-			//	return Path.Combine(Path.Combine(GamePath, "Resources"), "Files");
-			//}
+			if (PlatformUtil.CurrentPlatform == PlatformUtil.Platform.MacOSX)
+			{
+				return Path.Combine(Path.Combine(GamePath, "Resources"), "Files");
+			}
 
 			return Path.Combine(GamePath, "Files");
 		}
 	}
 
-	public static string CitiesExe
+	public static string CitiesExe => PlatformUtil.CurrentPlatform switch
 	{
-		get
-		{
-			//if (isWindows)
-				return "Cities.exe";
-			//else if (isLinux)
-			//	return "Cities.x64";
-			//else if (isMacOSX)
-			//	return "Cities";
-			//else
-			//	return "Cities"; // unknown platform.
-		}
-	}
+		PlatformUtil.Platform.Windows => "Cities.exe",
+		PlatformUtil.Platform.MacOSX => "Cities",
+		PlatformUtil.Platform.WineOnLinux or PlatformUtil.Platform.Linux => "Cities.x64",
+		_ => "Cities",
+	};
 
-	public static string SteamExe
+	public static string SteamExe => PlatformUtil.CurrentPlatform switch
 	{
-		get
-		{
-			//if (isWindows)
-				return "Steam.exe";
-			//else if (isLinux)
-			//	return "Steam";
-			//else if (isMacOSX)
-			//	return "Steam";
-			//else
-			//	return "Steam"; // unknown platform.
-		}
-	}
+		PlatformUtil.Platform.Windows => "Steam.exe",
+		PlatformUtil.Platform.MacOSX => "Steam",
+		PlatformUtil.Platform.WineOnLinux or PlatformUtil.Platform.Linux => "Steam",
+		_ => "Steam",
+	};
 
 	public static string CurrentDirectory { get; } = Directory.GetParent(Application.ExecutablePath).FullName;
 }
