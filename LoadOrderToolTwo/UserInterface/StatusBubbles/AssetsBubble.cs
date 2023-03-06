@@ -12,10 +12,7 @@ namespace LoadOrderToolTwo.UserInterface.StatusBubbles;
 internal class AssetsBubble : StatusBubbleBase
 {
 	public AssetsBubble()
-	{
-		Image = Properties.Resources.I_Assets;
-		Text = Locale.AssetsBubble;
-	}
+	{ }
 
 	protected override void OnHandleCreated(EventArgs e)
 	{
@@ -25,6 +22,9 @@ internal class AssetsBubble : StatusBubbleBase
 		{
 			return;
 		}
+
+		Image = Properties.Resources.I_Assets;
+		Text = Locale.AssetsBubble;
 
 		if (!CentralManager.IsContentLoaded)
 		{

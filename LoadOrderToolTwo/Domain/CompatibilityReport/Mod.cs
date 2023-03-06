@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Utilities.Managers;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
 using System.Collections.Generic;
@@ -50,19 +52,20 @@ namespace CompatibilityReport.CatalogData
         [XmlArrayItem("ChangeNote")] public List<string> ChangeNotes { get; set; } = new List<string>();
 
         // Properties used by the Reporter for subscribed mods.
-        [XmlIgnore] public bool IsDisabled { get; set; }
-        [XmlIgnore] public bool IsCameraScript { get; set; }
-        [XmlIgnore] public string ModPath { get; set; }
-        [XmlIgnore] public DateTime DownloadedTime { get; set; }
-        [XmlIgnore] public Enums.ReportSeverity ReportSeverity { get; set; }
+        [CloneIgnore, XmlIgnore] public bool IsDisabled { get; set; }
+        [CloneIgnore, XmlIgnore] public bool IsIncluded { get; set; }
+		[CloneIgnore, XmlIgnore] public bool IsCameraScript { get; set; }
+        [CloneIgnore, XmlIgnore] public string ModPath { get; set; }
+        [CloneIgnore, XmlIgnore] public DateTime DownloadedTime { get; set; }
+        [CloneIgnore, XmlIgnore] public Enums.ReportSeverity ReportSeverity { get; set; }
 
         // Used by the Updater, to see if this mod was added or updated this session.
-        [XmlIgnore] public bool AddedThisSession { get; set; }
-        [XmlIgnore] public bool UpdatedThisSession { get; set; }
+        [CloneIgnore, XmlIgnore] public bool AddedThisSession { get; set; }
+        [CloneIgnore, XmlIgnore] public bool UpdatedThisSession { get; set; }
 
 
         /// <summary>Default constructor for deserialization.</summary>
-        private Mod()
+        public Mod()
         {
             // Nothing to do here
         }
@@ -267,9 +270,10 @@ namespace CompatibilityReport.CatalogData
 
 
         /// <summary>Updates the subscription properties.</summary>
-        public void UpdateSubscription(bool isDisabled, bool isCameraScript, string modPath, DateTime downloadedTime)
+        public void UpdateSubscription(bool isDisabled, bool isIncluded, bool isCameraScript, string modPath, DateTime downloadedTime)
         {
             IsDisabled = isDisabled;
+            IsIncluded = isIncluded;
             IsCameraScript = isCameraScript;
             ModPath = modPath;
             DownloadedTime = downloadedTime;

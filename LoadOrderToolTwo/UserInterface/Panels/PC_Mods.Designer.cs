@@ -35,7 +35,7 @@ partial class PC_Mods
 			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Enabled = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.LC_Mods = new LoadOrderToolTwo.UserInterface.ModsListControl();
+			this.LC_Mods = new LoadOrderToolTwo.UserInterface.ListControl.ModsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -209,5 +209,5 @@ partial class PC_Mods
 	private ThreeOptionToggle OT_Included;
 	private SlickControls.SlickGroupBox slickGroupBox1;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-	private ModsListControl LC_Mods;
+	private UserInterface.ListControl.ModsListControl LC_Mods;
 }

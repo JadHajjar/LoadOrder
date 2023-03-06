@@ -134,6 +134,6 @@ public class Catalog
 
     public List<Compatibility> GetSubscriptionCompatibilities(ulong steamID)
 	{
-		return GetSubscription(steamID) == null ? new List<Compatibility>() : subscriptionCompatibilityIndex[steamID];
+		return GetSubscription(steamID) == null || !subscriptionCompatibilityIndex.ContainsKey(steamID) ? new List<Compatibility>() : subscriptionCompatibilityIndex[steamID];
 	}
 }

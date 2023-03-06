@@ -123,6 +123,26 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_CompatibilityReport {
+            get {
+                object obj = ResourceManager.GetObject("I_CompatibilityReport", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_CompatibilityReport_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_CompatibilityReport_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_ContentRemoved_16 {
             get {
                 object obj = ResourceManager.GetObject("I_ContentRemoved_16", resourceCulture);

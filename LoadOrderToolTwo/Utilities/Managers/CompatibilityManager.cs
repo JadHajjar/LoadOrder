@@ -1,5 +1,7 @@
 ﻿using CompatibilityReport.CatalogData;
 
+using Extensions;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +14,7 @@ namespace LoadOrderToolTwo.Utilities.Managers;
 internal class CompatibilityManager
 {
 	internal static Catalog? Catalog { get; private set; }
+	internal static bool CatalogAvailable { get; private set; }
 
 	internal static void LoadCompatibilityReport(Domain.Package compatibilityReport)
 	{
@@ -30,19 +33,10 @@ internal class CompatibilityManager
 			{
 				Catalog.CreateIndexes();
 
-				CentralManager.WorkshopInfoUpdated -= LoadAllModReports;
-				CentralManager.WorkshopInfoUpdated += LoadAllModReports;
+				CatalogAvailable = true;
 			}
 		}
 		catch { }
-	}
-
-	private static void LoadAllModReports()
-	{
-		foreach (var item in CentralManager.Mods)
-		{
-			item.CompatibilityReport = GetCompatibilityReport(item);
-		}
 	}
 
 	private static Catalog? ReadGzFile(string filePath)
@@ -70,7 +64,9 @@ internal class CompatibilityManager
 			return null;
 		}
 
-		subscribedMod.UpdateSubscription(!mod.IsEnabled, false, mod.Folder, mod.LocalTime);
+		subscribedMod = subscribedMod.Clone();
+
+		subscribedMod.UpdateSubscription(!mod.IsEnabled, mod.IsIncluded, false, mod.Folder, mod.LocalTime);
 
 		var subscriptionAuthor = Catalog.GetAuthor(subscribedMod.AuthorID, subscribedMod.AuthorUrl);
 		var authorName = subscriptionAuthor == null ? mod.Author?.Name ?? "" : subscriptionAuthor.Name;
@@ -236,14 +232,13 @@ internal class CompatibilityManager
 
 	private static Version CurrentGameVersion()
 	{
-		throw new NotImplementedException();
+		return new Version(1, 16, 0, 3);
 	}
 
 	private static Version CurrentMajorGameVersion()
 	{
-		throw new NotImplementedException();
+		return new Version(1, 16);
 	}
-
 
 	/// <summary>Creates report MessageList object for the statuses of a mod and increases the report severity for the mod if appropriate.</summary>
 	/// <remarks>Also reported: retired author. DependencyMod has its own method. ModNamesDiffer is reported in the mod note (at Catalog.ScanSubscriptions()).
@@ -472,6 +467,11 @@ internal class CompatibilityManager
 	private static Message Disabled(Mod subscribedMod)
 	{
 		if (!subscribedMod.IsDisabled || subscribedMod.Statuses.Contains(Enums.Status.WorksWhenDisabled))
+		{
+			return null;
+		}
+
+		if (!subscribedMod.IsIncluded)
 		{
 			return null;
 		}
@@ -948,12 +948,14 @@ internal class CompatibilityManager
 		{
 			var elements = versionString.Split(new char[] { '.', '-', 'f' }, StringSplitOptions.RemoveEmptyEntries);
 
-			return new Version(Convert.ToInt32(elements[0]), Convert.ToInt32(elements[1]), Convert.ToInt32(elements[2]), Convert.ToInt32(elements[3]));
+			if (elements.Length >= 4)
+			{
+				return new Version(Convert.ToInt32(elements[0]), Convert.ToInt32(elements[1]), Convert.ToInt32(elements[2]), Convert.ToInt32(elements[3]));
+			}
 		}
-		catch
-		{
-			return new();
-		}
+		catch { }
+		
+		return new();
 	}
 
 	internal class ModInfo

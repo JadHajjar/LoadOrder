@@ -46,6 +46,26 @@ public static class SteamUtil
 		IOUtil.Execute(LocationManager.SteamPath, LocationManager.SteamExe, args)?.WaitForExit();
 	}
 
+	public static void Subscribe(params ulong[] ids)
+	{
+		try
+		{
+			var steamArguments = new StringBuilder("steam://open/console");
+
+			for (var i = 0; i < ids.Length; i++)
+			{
+				steamArguments.AppendFormat(" +subscribe {0}", ids[i]);
+			}
+
+			ExecuteSteam(steamArguments.ToString());
+
+			Thread.Sleep(100);
+
+			ReDownload(ids);
+		}
+		catch (Exception) { }
+	}
+
 	public static void ReDownload(params ulong[] ids)
 	{
 		try

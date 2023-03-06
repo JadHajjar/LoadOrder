@@ -2,6 +2,8 @@
 
 using LoadOrderToolTwo.Utilities.Managers;
 
+using SlickControls;
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -184,7 +186,7 @@ public static class Log
 		LogImpl(message, LogLevel.Error, copyToGameLog);
 	}
 
-	internal static void Exception(Exception e, string m = "", bool showInPanel = true)
+	internal static void Exception(Exception e, string m = "", bool showInPanel = false)
 	{
 		try
 		{
@@ -195,20 +197,9 @@ public static class Log
 			}
 
 			LogImpl(message, LogLevel.Exception, true);
-			if (showInPanel)
-			{
-				message += "\n" + new StackTrace(1, true).ToString();
-				message = message.Replace("\r", ""); // avoid /r/r/n 
-				message = message.Replace("\n", Environment.NewLine);
-				var res = SlickControls.MessagePrompt.Show(e.ToString(), message);
-				Log.Info("ThreadExceptionDialog result = " + res);
-				if (res == DialogResult.Abort)
-				{
-					Log.Info("Killing process");
-					Process.GetCurrentProcess().Kill();
-				}
-				Log.Info("Continuing after ThreadExceptionDialog ...");
-			}
+
+			if(showInPanel)
+			MessagePrompt.Show(e, m);
 		}
 		catch (Exception ex)
 		{

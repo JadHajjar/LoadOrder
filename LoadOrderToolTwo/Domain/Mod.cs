@@ -31,7 +31,7 @@ public class Mod : IPackage
 	public Package Package { get; }
 	public string Name { get => Package.Name.IfEmpty(_dllName); set => Package.Name = value; }
 
-	internal CompatibilityManager.ModInfo? CompatibilityReport { get; set; }
+	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
 
 	public bool IsIncluded { get => ModsUtil.IsIncluded(this); set => ModsUtil.SetIncluded(this, value); }
 	public bool IsEnabled { get => _enabledSavedBool; set => _enabledSavedBool.value = value; }

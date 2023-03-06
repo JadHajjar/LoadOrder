@@ -55,4 +55,6 @@ internal class Locale : LocaleHelper
 	public static string StatusUnknown => _instance.GetText(nameof(StatusUnknown));
 	public static string OutOfDate => _instance.GetText(nameof(OutOfDate));
 	public static string PartiallyDownloaded => _instance.GetText(nameof(PartiallyDownloaded));
+
+	public static string CompatibilityReport => _instance.GetText(nameof(CompatibilityReport));
 }

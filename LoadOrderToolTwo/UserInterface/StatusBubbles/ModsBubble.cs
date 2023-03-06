@@ -12,10 +12,7 @@ namespace LoadOrderToolTwo.UserInterface.StatusBubbles;
 internal class ModsBubble : StatusBubbleBase
 {
 	public ModsBubble()
-	{
-		Image = Properties.Resources.I_Mods;
-		Text = Locale.ModsBubble;
-	}
+	{ }
 
 	protected override void OnHandleCreated(EventArgs e)
 	{
@@ -25,6 +22,9 @@ internal class ModsBubble : StatusBubbleBase
 		{
 			return;
 		}
+
+		Image = Properties.Resources.I_Mods;
+		Text = Locale.ModsBubble;
 
 		if (!CentralManager.IsContentLoaded)
 		{
@@ -56,20 +56,21 @@ internal class ModsBubble : StatusBubbleBase
 			return;
 		}
 
+		var allIncludedModsAreAlsoEnabled = CentralManager.Mods.All(x => x.IsIncluded == x.IsEnabled);
 		var modsIncluded = CentralManager.Mods.Count(x => x.IsIncluded);
 		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled);
 		var modsOutOfDate = CentralManager.Mods.Count(x => x.IsIncluded && x.Status == Domain.DownloadStatus.OutOfDate);
 		var modsIncomplete = CentralManager.Mods.Count(x => x.IsIncluded && x.Status == Domain.DownloadStatus.PartiallyDownloaded);
 		var multipleModsIncluded = ModsUtil.GetDuplicateMods().Any();
 
-		if (modsEnabled != modsIncluded)
+		if (allIncludedModsAreAlsoEnabled)
 		{
-			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural);
-			DrawValue(e, ref targetHeight, modsEnabled.ToString(), modsEnabled == 1 ? Locale.ModEnabled : Locale.ModEnabledPlural);
+			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural);
 		}
 		else
 		{
-			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural);
+			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural);
+			DrawValue(e, ref targetHeight, modsEnabled.ToString(), modsEnabled == 1 ? Locale.ModEnabled : Locale.ModEnabledPlural);
 		}
 
 		if (modsOutOfDate > 0)

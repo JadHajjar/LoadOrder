@@ -21,6 +21,9 @@ internal abstract class StatusBubbleBase : SlickImageControl
 		Width = (int)(180 * UI.FontScale);
 	}
 
+	protected override void OnMouseMove(MouseEventArgs e)
+	{ }
+
 	protected sealed override void OnPaint(PaintEventArgs e)
 	{
 		e.Graphics.Clear(BackColor);
@@ -38,7 +41,7 @@ internal abstract class StatusBubbleBase : SlickImageControl
 		{
 			DrawLoader(e.Graphics, iconRectangle);
 		}
-		else
+		else if (Image != null)
 		{
 			using var icon = new Bitmap(Image);
 

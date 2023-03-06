@@ -1,4 +1,6 @@
-﻿namespace LoadOrderToolTwo.UserInterface.Panels;
+﻿using LoadOrderToolTwo.UserInterface.ListControl;
+
+namespace LoadOrderToolTwo.UserInterface.Panels;
 
 partial class PC_Assets
 {
@@ -34,7 +36,7 @@ partial class PC_Assets
 			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.TB_Search = new SlickControls.SlickTextBox();
-			this.LC_Assets = new LoadOrderToolTwo.UserInterface.AssetsListControl();
+			this.LC_Assets = new LoadOrderToolTwo.UserInterface.ListControl.AssetsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();

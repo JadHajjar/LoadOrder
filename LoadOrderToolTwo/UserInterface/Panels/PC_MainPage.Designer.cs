@@ -29,13 +29,13 @@ partial class PC_MainPage
 	/// </summary>
 	private void InitializeComponent()
 	{
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PC_MainPage));
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.B_StartStop = new SlickControls.SlickButton();
 			this.profileBubble = new LoadOrderToolTwo.UserInterface.StatusBubbles.ProfileBubble();
 			this.modsBubble = new LoadOrderToolTwo.UserInterface.StatusBubbles.ModsBubble();
 			this.assetsBubble = new LoadOrderToolTwo.UserInterface.StatusBubbles.AssetsBubble();
+			this.compatibilityReportBubble = new LoadOrderToolTwo.UserInterface.StatusBubbles.CompatibilityReportBubble();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
@@ -69,6 +69,7 @@ partial class PC_MainPage
 			this.flowLayoutPanel1.Controls.Add(this.profileBubble);
 			this.flowLayoutPanel1.Controls.Add(this.modsBubble);
 			this.flowLayoutPanel1.Controls.Add(this.assetsBubble);
+			this.flowLayoutPanel1.Controls.Add(this.compatibilityReportBubble);
 			this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
@@ -95,7 +96,6 @@ partial class PC_MainPage
 			// profileBubble
 			// 
 			this.profileBubble.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.profileBubble.Image = ((System.Drawing.Image)(resources.GetObject("profileBubble.Image")));
 			this.profileBubble.Location = new System.Drawing.Point(3, 3);
 			this.profileBubble.Name = "profileBubble";
 			this.profileBubble.Size = new System.Drawing.Size(150, 44);
@@ -105,7 +105,6 @@ partial class PC_MainPage
 			// modsBubble
 			// 
 			this.modsBubble.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.modsBubble.Image = ((System.Drawing.Image)(resources.GetObject("modsBubble.Image")));
 			this.modsBubble.Location = new System.Drawing.Point(159, 3);
 			this.modsBubble.Name = "modsBubble";
 			this.modsBubble.Size = new System.Drawing.Size(150, 44);
@@ -115,12 +114,19 @@ partial class PC_MainPage
 			// assetsBubble
 			// 
 			this.assetsBubble.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.assetsBubble.Image = ((System.Drawing.Image)(resources.GetObject("assetsBubble.Image")));
 			this.assetsBubble.Location = new System.Drawing.Point(315, 3);
 			this.assetsBubble.Name = "assetsBubble";
 			this.assetsBubble.Size = new System.Drawing.Size(150, 44);
 			this.assetsBubble.TabIndex = 2;
 			this.assetsBubble.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AssetsBubble_MouseClick);
+			// 
+			// compatibilityReportBubble
+			// 
+			this.compatibilityReportBubble.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.compatibilityReportBubble.Location = new System.Drawing.Point(471, 3);
+			this.compatibilityReportBubble.Name = "compatibilityReportBubble";
+			this.compatibilityReportBubble.Size = new System.Drawing.Size(150, 44);
+			this.compatibilityReportBubble.TabIndex = 3;
 			// 
 			// PC_MainPage
 			// 
@@ -148,4 +154,5 @@ partial class PC_MainPage
 	private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 	private UserInterface.StatusBubbles.ModsBubble modsBubble;
 	private UserInterface.StatusBubbles.AssetsBubble assetsBubble;
+	private StatusBubbles.CompatibilityReportBubble compatibilityReportBubble;
 }

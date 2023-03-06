@@ -37,17 +37,17 @@
 			// 
 			// base_P_Content
 			// 
-			this.base_P_Content.Size = new System.Drawing.Size(837, 487);
+			this.base_P_Content.Size = new System.Drawing.Size(987, 562);
 			// 
 			// base_P_SideControls
 			// 
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
-			this.base_P_SideControls.Location = new System.Drawing.Point(0, 351);
+			this.base_P_SideControls.Location = new System.Drawing.Point(0, 426);
 			this.base_P_SideControls.Size = new System.Drawing.Size(202, 50);
 			// 
 			// base_P_Container
 			// 
-			this.base_P_Container.Size = new System.Drawing.Size(839, 489);
+			this.base_P_Container.Size = new System.Drawing.Size(989, 564);
 			// 
 			// PI_Dashboard
 			// 
@@ -82,7 +82,7 @@
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(850, 500);
+			this.ClientSize = new System.Drawing.Size(1000, 575);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.FormIcon = ((System.Drawing.Image)(resources.GetObject("$this.FormIcon")));
 			this.IconBounds = new System.Drawing.Rectangle(94, 22, 14, 42);
@@ -94,7 +94,7 @@
         this.PI_Dashboard,
         this.PI_Mods,
         this.PI_Assets};
-			this.Text = "Thumbnail Maker";
+			this.Text = "Load Order Tool";
 			this.base_P_Container.ResumeLayout(false);
 			this.ResumeLayout(false);
 
