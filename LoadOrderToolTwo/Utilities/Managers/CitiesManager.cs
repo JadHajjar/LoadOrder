@@ -1,16 +1,35 @@
 ﻿using LoadOrderToolTwo.Utilities.IO;
 
+using SlickControls;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Windows.Forms;
+using System.Timers;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 public static class CitiesManager
 {
+	public static event MonitorTickDelegate? MonitorTick;
+
+	public delegate void MonitorTickDelegate(bool isAvailable, bool isRunning);
+
+	static CitiesManager()
+	{
+		var citiesMonitorTimer = new Timer(1000);
+
+		citiesMonitorTimer.Elapsed += CitiesMonitorTimer_Elapsed;
+		citiesMonitorTimer.Start();
+	}
+
+	private static void CitiesMonitorTimer_Elapsed(object sender, ElapsedEventArgs e)
+	{
+		MonitorTick?.Invoke(CitiesAvailable(), IsRunning());
+	}
+
 	public static bool CitiesAvailable()
 	{
 		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamExe : LocationManager.CitiesExe;
@@ -66,12 +85,12 @@ public static class CitiesManager
 					fpsBooster.IsEnabled &&
 					fpsBooster.IsIncluded)
 				{
-					var result = MessageBox.Show(
-						caption: "Disable FPS Booster",
-						text:
+					var result = MessagePrompt.Show(
 						"Disable FPS Booster to show logs?",
-						buttons: MessageBoxButtons.YesNoCancel);
-					if (result == DialogResult.Yes)
+						"Disable FPS Booster",
+						buttons: PromptButtons.YesNo);
+					
+					if (result == System.Windows.Forms.DialogResult.Yes)
 					{
 						fpsBooster.IsIncluded = false;
 					}

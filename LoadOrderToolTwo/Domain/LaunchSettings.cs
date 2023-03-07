@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace LoadOrderToolTwo.Domain;
-internal class LaunchSettings
+public class LaunchSettings
 {
 	public LaunchSettings()
 	{

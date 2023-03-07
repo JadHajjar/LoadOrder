@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Domain.Interfaces;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Steam;
 using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
@@ -66,4 +68,15 @@ public class Package : IPackage
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
 	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
+
+	internal string GetName()
+	{
+		if (!string.IsNullOrEmpty(Name))
+		{ return Name; }
+
+		if (!string.IsNullOrEmpty(Mod?.Name))
+		{ return Mod!.Name; }
+
+		return Path.GetFileNameWithoutExtension(Folder).FormatWords();
+	}
 }

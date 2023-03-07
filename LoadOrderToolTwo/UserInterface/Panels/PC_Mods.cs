@@ -39,17 +39,17 @@ public partial class PC_Mods : PanelContent
 			e.DoNotDraw |= OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
 		}
 
-		if (OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!e.DoNotDraw && OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			e.DoNotDraw |= OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsIncluded;
 		}
 
-		if (OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!e.DoNotDraw && OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			e.DoNotDraw |= OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsEnabled;
 		}
 
-		if (!string.IsNullOrWhiteSpace(TB_Search.Text))
+		if (!e.DoNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
 			e.DoNotDraw |= !(e.Item.Name.SearchCheck(TB_Search.Text)
 				|| (e.Item.Author?.Name.SearchCheck(TB_Search.Text) ?? false)

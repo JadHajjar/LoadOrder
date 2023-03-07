@@ -12,7 +12,6 @@ using System.Windows.Forms;
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_MainPage : PanelContent
 {
-	private readonly System.Timers.Timer _citiesMonitorTimer = new(1000);
 	private bool buttonStateRunning;
 	public PC_MainPage()
 	{
@@ -26,10 +25,16 @@ public partial class PC_MainPage : PanelContent
 			CentralManager.ContentLoaded += () => this.TryInvoke(() => B_StartStop.Enabled = CitiesManager.CitiesAvailable());
 		}
 
-		_citiesMonitorTimer.Elapsed += (s, e) => RefreshButtonState();
-		_citiesMonitorTimer.Start();
+		CitiesManager.MonitorTick += CitiesManager_MonitorTick;
 
-		RefreshButtonState();
+		RefreshButtonState(CitiesManager.IsRunning(), true);
+	}
+
+	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
+	{
+		this.TryInvoke(() => B_StartStop.Enabled = isAvailable);
+
+		RefreshButtonState(isRunning);
 	}
 
 	protected override void UIChanged()
@@ -77,10 +82,8 @@ public partial class PC_MainPage : PanelContent
 		}
 	}
 
-	private void RefreshButtonState(bool firstTime = false)
+	private void RefreshButtonState(bool running, bool firstTime = false)
 	{
-		var running = CitiesManager.IsRunning();
-
 		if (!running)
 		{
 			if (buttonStateRunning || firstTime)

@@ -154,7 +154,7 @@ public static class SteamUtil
 			var response = await httpResponse.Content.ReadAsStringAsync();
 
 			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopItemRootResponse>(response)?.response.publishedfiledetails
-				.Where(x => x.result is 1 or 17 or 86)
+				.Where(x => x.result is 1 or 17 or 86 or 9)
 				.Select(x => new SteamWorkshopItem(x))
 				.ToList() ?? new();
 
@@ -162,7 +162,7 @@ public static class SteamUtil
 
 			foreach (var item in data)
 			{
-				if (users.ContainsKey(item.AuthorID))
+				if (!string.IsNullOrEmpty(item.AuthorID) && users.ContainsKey(item.AuthorID))
 				{
 					item.Author = new(users[item.AuthorID]);
 				}
@@ -198,7 +198,7 @@ public static class SteamUtil
 		catch (Exception) { }
 	}
 
-	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem)
+	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem, bool cache)
 	{
 		if (steamWorkshopItem.Removed)
 		{
@@ -222,9 +222,12 @@ public static class SteamUtil
 			package.IconImage = null;
 		}
 
-		package.Status = ModsUtil.GetStatus(package, out var reason);
-		package.StatusReason = reason;
+		if (!cache)
+		{
+			package.Status = ModsUtil.GetStatus(package, out var reason);
+			package.StatusReason = reason;
 
-		CentralManager.InformationUpdate(package);
+			CentralManager.InformationUpdate(package);
+		}
 	}
 }

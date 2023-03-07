@@ -32,6 +32,11 @@ internal abstract class StatusBubbleBase : SlickImageControl
 
 		SlickButton.GetColors(out var fore, out var back, HoverState);
 
+		if (!HoverState.HasFlag(HoverState.Pressed) && FormDesign.Design.Type == FormDesignType.Light)
+		{
+			back = back.Tint(Lum: 1.5F);
+		}
+
 		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(back, 0.8F), ClientRectangle, Padding.Left);
 
 		var titleHeight = Math.Max(24, (int)e.Graphics.Measure(Text, UI.Font(9.75F, FontStyle.Bold), Width - Padding.Horizontal).Height);

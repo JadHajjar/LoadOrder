@@ -11,6 +11,8 @@ using System.Xml.Serialization;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 #nullable disable
+#pragma warning disable CS0649 // Never Used
+#pragma warning disable IDE1006 // Naming Styles
 internal class CompatibilityManager
 {
 	internal static Catalog? Catalog { get; private set; }
@@ -1045,4 +1047,6 @@ internal class CompatibilityManager
 		public string detailsValue;
 	}
 }
+#pragma warning restore IDE1006 // Naming Styles
+#pragma warning restore CS0649 // Never Used
 #nullable enable

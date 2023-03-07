@@ -24,7 +24,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		HighlightOnHover = true;
 		SeparateWithLines = true;
 
-		CentralManager.ModInformationUpdated += Invalidate;
+		CentralManager.ModInformationUpdated += (_) => Invalidate();
 	}
 
 	protected override void UIChanged()
@@ -89,6 +89,12 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 				Redownload(item.Item);
 				return;
 			}
+
+			if (rects.SteamIdRect.Contains(e.Location))
+			{
+				Clipboard.SetText(item.Item.SteamId.ToString());
+				return;
+			}
 		}
 	}
 
@@ -146,7 +152,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?"), UI.Font(9F, FontStyle.Bold | (textHovered ? FontStyle.Underline : FontStyle.Regular)), new SolidBrush(textHovered ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
 		var versionRect = DrawLabel(e, e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Version.GetString(), null, FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(textRect.X, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
-		var timeRect = DrawLabel(e, e.Item.LocalTime.ToLocalTime().ToString("g"), null, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.BackColor, 75), new Rectangle(versionRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
+		var timeRect = DrawLabel(e, e.Item.LocalTime.ToLocalTime().ToString("g"), Properties.Resources.I_UpdateTime, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.BackColor, 75), new Rectangle(versionRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 		
 		GetStatusDescriptors(e.Item, out var text, out var icon, out var color);
 		var statusRect = string.IsNullOrEmpty(text) ? timeRect : DrawLabel(e, text, icon, color.MergeColor(FormDesign.Design.BackColor, 60), new Rectangle(timeRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
@@ -154,7 +160,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		if (e.Item.Workshop)
 		{
 			DrawLabel(e, e.Item.Author?.Name, Properties.Resources.I_Developer_16, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.ActiveColor, 75).MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(rects.RedownloadRect.X - (int)(100 * UI.FontScale), e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.TopLeft);
-			DrawLabel(e, e.Item.SteamId.ToString(), Properties.Resources.I_Steam_16, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.ActiveColor, 75).MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(rects.RedownloadRect.X - (int)(100 * UI.FontScale), e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
+			DrawLabel(e, e.Item.SteamId.ToString(), Properties.Resources.I_Steam_16, rects.SteamIdRect.Contains(CursorLocation) ? FormDesign.Design.ActiveColor : FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.ActiveColor, 75).MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(rects.RedownloadRect.X - (int)(100 * UI.FontScale), e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 		}
 
 		if (e.Item.Package.CompatibilityReport is not null)
@@ -164,9 +170,9 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
 				ReportSeverity.Unsubscribe => FormDesign.Design.RedColor,
-				ReportSeverity.Remarks => FormDesign.Design.ForeColor,
+				ReportSeverity.Remarks => FormDesign.Design.ButtonColor,
 				_ => FormDesign.Design.GreenColor
-			}, rects.CompatibilityRect, ContentAlignment.MiddleRight);
+			}, new Rectangle(statusRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 		}
 
 		if (!isIncluded)
@@ -217,6 +223,14 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 
 	private void GetStatusDescriptors(Mod mod, out string text, out Bitmap? icon, out Color color)
 	{
+		if (!mod.Workshop && !mod.BuiltIn)
+		{
+			text = Locale.Local;
+			icon = Properties.Resources.I_Local_16;
+			color = FormDesign.Design.YellowColor;
+			return;
+		}
+
 		switch (mod.Status)
 		{
 			case DownloadStatus.OK:
@@ -284,6 +298,8 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 
 			buttonRectangle.X -= Padding.Left + buttonRectangle.Width;
 			rects.RedownloadRect = buttonRectangle;
+
+			rects.SteamIdRect = new Rectangle(rects.RedownloadRect.X - (int)(100 * UI.FontScale), rectangle.Y + rectangle.Height / 2, (int)(100 * UI.FontScale), rectangle.Height / 2);
 		}
 
 		rects.CompatibilityRect = new Rectangle(buttonRectangle.X - (int)(200 * UI.FontScale), rectangle.Y, (int)(100 * UI.FontScale), rectangle.Height);
@@ -301,6 +317,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		internal Rectangle SteamRect;
 		internal Rectangle RedownloadRect;
 		internal Rectangle CompatibilityRect;
+		internal Rectangle SteamIdRect;
 
 		internal bool Contain(Point location)
 		{
@@ -312,7 +329,8 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 				TextRect.Contains(location) ||
 				SteamRect.Contains(location) ||
 				RedownloadRect.Contains(location) ||
-				CompatibilityRect.Contains(location);
+				CompatibilityRect.Contains(location) ||
+				SteamIdRect.Contains(location);
 		}
 	}
 }

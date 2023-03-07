@@ -38,14 +38,16 @@ public partial class PC_Assets : PanelContent
 			e.DoNotDraw |= OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
 		}
 
-		if (OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!e.DoNotDraw && OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			e.DoNotDraw |= OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsIncluded;
 		}
 
-		if (!string.IsNullOrWhiteSpace(TB_Search.Text))
+		if (!e.DoNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
-			e.DoNotDraw |= !e.Item.Name.SearchCheck(TB_Search.Text);
+			e.DoNotDraw |= !(e.Item.Name.SearchCheck(TB_Search.Text)
+				|| (e.Item.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
+				|| e.Item.SteamId.ToString().SearchCheck(TB_Search.Text));
 		}
 	}
 

@@ -21,12 +21,12 @@ public class SteamWorkshopItem
 	public SteamWorkshopItem(SteamWorkshopItemEntry entry)
 	{
 		Removed = entry.result != 1;
-		Title = entry.title;
+		Title = entry.title ?? string.Empty;
 		PublishedFileID = entry.publishedfileid;
 		Size = entry.file_size;
-		PreviewURL = entry.preview_url;
-		AuthorID = entry.creator;
-		Description = entry.description;
+		PreviewURL = entry.preview_url ?? string.Empty;
+		AuthorID = entry.creator ?? string.Empty;
+		Description = entry.description ?? string.Empty;
 		UpdatedUTC = _epoch.AddSeconds((ulong)entry.time_updated);
 		Tags = (entry.tags
 			?.Select(item => item.tag)

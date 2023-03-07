@@ -73,7 +73,7 @@ internal class CompatibilityReportBubble : StatusBubbleBase
 
 		if (!CompatibilityManager.CatalogAvailable)
 		{
-			DrawText(e, ref targetHeight, "Compatibility report is not available, click to subscribe to the mod", FormDesign.Design.RedColor);
+			DrawText(e, ref targetHeight, "Compatibility report is not available, click here to subscribe to the mod", FormDesign.Design.RedColor);
 			return;
 		}
 

@@ -19,16 +19,3 @@ internal class CachedModInclusion : CachedSaveItem<Mod, bool>
 		ModsUtil.SetIncluded(Key, ValueToSave);
 	}
 }
-
-internal class CachedModEnabled : CachedSaveItem<Mod, bool>
-{
-	public CachedModEnabled(Mod key, bool value) : base(key, value)
-	{ }
-
-	public override bool CurrentValue => ModsUtil.IsLocallyEnabled(Key);
-
-	protected override void OnSave()
-	{
-		ModsUtil.SetEnabled(Key, ValueToSave);
-	}
-}

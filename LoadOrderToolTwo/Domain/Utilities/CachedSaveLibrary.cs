@@ -40,4 +40,9 @@ internal class CachedSaveLibrary<TItem, TKey, TValue> where TItem : CachedSaveIt
 
 		_dictionary.Clear();
 	}
+
+	public bool Any()
+	{
+		return _dictionary.Count > 0;
+	}
 }

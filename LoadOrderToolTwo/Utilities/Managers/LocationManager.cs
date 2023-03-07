@@ -19,6 +19,8 @@ internal class LocationManager
 	public static string ManagedDLL => Path.Combine(DataPath, "Managed");
 	public static string MonoPath => Path.Combine(DataPath, "Mono");
 	public static string AddonsPath => Path.Combine(AppDataPath, "Addons");
+	public static string LotAppDataPath => Path.Combine(AppDataPath, "LoadOrder");
+	public static string LotProfilesAppDataPath => Path.Combine(LotAppDataPath, "LOMProfiles");
 	public static string ModsPath => Path.Combine(AddonsPath, "Mods");
 	public static string AssetsPath => Path.Combine(AddonsPath, "Assets");
 	public static string MapThemesPath => Path.Combine(AddonsPath, "MapThemes");

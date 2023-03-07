@@ -13,6 +13,8 @@ namespace LoadOrderToolTwo;
 
 public partial class MainForm : BasePanelForm
 {
+	private bool startBoundsSet;
+
 	public MainForm()
 	{
 		InitializeComponent();
@@ -37,6 +39,36 @@ public partial class MainForm : BasePanelForm
 	protected override void UIChanged()
 	{
 		base.UIChanged();
+
+		if (!startBoundsSet)
+		{
+			if (CentralManager.SessionSettings.WindowBounds != null)
+			{
+				DefaultBounds = Bounds = CentralManager.SessionSettings.WindowBounds.Value;
+			}
+
+			if (CentralManager.SessionSettings.WindowIsMaximized)
+			{
+				WindowState = FormWindowState.Maximized;
+			}
+
+			startBoundsSet = true;
+		}
+	}
+
+	protected override void OnResizeEnd(EventArgs e)
+	{
+		base.OnResizeEnd(e);
+
+		if (!TopMost)
+		{
+			if (!(CentralManager.SessionSettings.WindowIsMaximized = WindowState == FormWindowState.Maximized))
+			{
+				CentralManager.SessionSettings.WindowBounds = Bounds;
+			}
+
+			CentralManager.SessionSettings.Save();
+		}
 	}
 
 	private void PI_Dashboard_OnClick(object sender, MouseEventArgs e)

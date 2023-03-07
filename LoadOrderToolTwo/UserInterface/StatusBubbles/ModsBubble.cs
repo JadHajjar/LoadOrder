@@ -34,6 +34,7 @@ internal class ModsBubble : StatusBubbleBase
 		}
 
 		CentralManager.WorkshopInfoUpdated += CentralManager_WorkshopInfoUpdated;
+		CentralManager.ModInformationUpdated += _ => Invalidate();
 	}
 
 	private void CentralManager_WorkshopInfoUpdated()

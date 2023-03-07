@@ -13,8 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace LoadOrderToolTwo.Utilities;
 internal class ModsUtil
@@ -22,6 +20,19 @@ internal class ModsUtil
 	private static readonly CachedSaveLibrary<CachedModInclusion, Mod, bool> _includedLibrary = new();
 	private static readonly CachedSaveLibrary<CachedModEnabled, Mod, bool> _enabledLibrary = new();
 	private static readonly Dictionary<Mod, SavedBool> _enabledValues = new();
+
+	static ModsUtil()
+	{
+		CitiesManager.MonitorTick += CitiesManager_MonitorTick;
+	}
+
+	private static void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
+	{
+		if (!isRunning && (_includedLibrary.Any() || _enabledLibrary.Any()))
+		{
+			SavePendingValues();
+		}
+	}
 
 	public static Mod? GetMod(Package package)
 	{
@@ -71,7 +82,9 @@ internal class ModsUtil
 	internal static bool IsLocallyEnabled(Mod mod)
 	{
 		if (_enabledValues.ContainsKey(mod))
+		{
 			return _enabledValues[mod];
+		}
 
 		return _enabledValues[mod] = GetEnabledSetting(mod);
 	}
@@ -86,6 +99,8 @@ internal class ModsUtil
 		{
 			SetLocallyIncluded(mod, value);
 		}
+
+		CentralManager.InformationUpdate(mod.Package);
 	}
 
 	internal static void SetLocallyIncluded(Mod mod, bool value)
@@ -110,14 +125,16 @@ internal class ModsUtil
 		{
 			SetLocallyEnabled(mod, value);
 		}
+
+		CentralManager.InformationUpdate(mod.Package);
 	}
 
 	internal static void SetLocallyEnabled(Mod mod, bool value)
 	{
 		if (_enabledValues.ContainsKey(mod))
+		{
 			_enabledValues[mod].value = value;
-
-		(_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
+		} (_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
 	}
 
 	private static SavedBool GetEnabledSetting(Mod mod)

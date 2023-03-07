@@ -47,9 +47,10 @@
 			// base_P_SideControls
 			// 
 			this.base_P_SideControls.Controls.Add(this.tableLayoutPanel1);
+			this.base_P_SideControls.Font = new System.Drawing.Font("Nirmala UI", 10.5F);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
-			this.base_P_SideControls.Location = new System.Drawing.Point(0, 426);
-			this.base_P_SideControls.Size = new System.Drawing.Size(202, 50);
+			this.base_P_SideControls.Location = new System.Drawing.Point(0, 411);
+			this.base_P_SideControls.Size = new System.Drawing.Size(239, 50);
 			// 
 			// base_P_Container
 			// 
@@ -89,13 +90,11 @@
 			// 
 			this.L_Version.Anchor = System.Windows.Forms.AnchorStyles.Right;
 			this.L_Version.AutoSize = true;
-			this.L_Version.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.L_Version.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
-			this.L_Version.Location = new System.Drawing.Point(164, 0);
+			this.L_Version.Location = new System.Drawing.Point(181, 0);
 			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Version.Name = "L_Version";
 			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
-			this.L_Version.Size = new System.Drawing.Size(38, 16);
+			this.L_Version.Size = new System.Drawing.Size(58, 23);
 			this.L_Version.TabIndex = 30;
 			this.L_Version.Text = "Version";
 			// 
@@ -103,13 +102,11 @@
 			// 
 			this.L_Text.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.L_Text.AutoSize = true;
-			this.L_Text.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.L_Text.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
 			this.L_Text.Location = new System.Drawing.Point(0, 0);
 			this.L_Text.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Text.Name = "L_Text";
 			this.L_Text.Padding = new System.Windows.Forms.Padding(2);
-			this.L_Text.Size = new System.Drawing.Size(71, 16);
+			this.L_Text.Size = new System.Drawing.Size(112, 23);
 			this.L_Text.TabIndex = 31;
 			this.L_Text.Text = "Load Order Tool";
 			// 
@@ -123,11 +120,11 @@
 			this.tableLayoutPanel1.Controls.Add(this.L_Text, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.L_Version, 1, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 34);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(202, 16);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(239, 23);
 			this.tableLayoutPanel1.TabIndex = 32;
 			// 
 			// MainForm
@@ -136,7 +133,7 @@
 			this.ClientSize = new System.Drawing.Size(1000, 575);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.FormIcon = ((System.Drawing.Image)(resources.GetObject("$this.FormIcon")));
-			this.IconBounds = new System.Drawing.Rectangle(94, 22, 14, 42);
+			this.IconBounds = new System.Drawing.Rectangle(112, 29, 14, 42);
 			this.MaximizeBox = true;
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 1920, 1032);
 			this.MinimizeBox = true;

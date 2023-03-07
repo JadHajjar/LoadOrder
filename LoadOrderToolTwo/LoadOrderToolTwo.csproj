@@ -58,6 +58,9 @@
     <Compile Update="UserInterface\ListControl\AssetsListControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserInterface\PackageDescription.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserInterface\StatusBubbles\CompatibilityReportBubble.cs">
       <SubType>UserControl</SubType>
     </Compile>

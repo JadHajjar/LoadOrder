@@ -4,6 +4,7 @@ using LoadOrderShared;
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
+using LoadOrderToolTwo.Domain.Utilities;
 
 using System;
 using System.Collections.Generic;
@@ -23,9 +24,9 @@ internal static class CentralManager
 	public static event Action<Mod>? ModInformationUpdated;
 	public static event Action<Asset>? AssetInformationUpdated;
 
-	public static Profile CurrentProfile { get; private set; } = new("Asset Editor");
+	public static Profile CurrentProfile => ProfileManager.CurrentProfile;
 	public static bool IsContentLoaded { get; private set; }
-	public static LoadOrderConfig? Config { get; private set; }
+	public static SessionSettings SessionSettings { get; set; } = ISave.Load<SessionSettings>(nameof(SessionSettings) + ".tf");
 	public static IEnumerable<Package> Packages => packages ?? new(); 
 	public static IEnumerable<Mod> Mods
 	{
@@ -103,16 +104,26 @@ internal static class CentralManager
 			{
 				if (cachedSteamInfo.ContainsKey(package.SteamId))
 				{
-					package.SetSteamInformation(cachedSteamInfo[package.SteamId]);
-				}
-
-				if (!string.IsNullOrWhiteSpace(package.IconUrl))
-				{
-					package.IconImage = ImageManager.GetImage(package.IconUrl!, true);
+					package.SetSteamInformation(cachedSteamInfo[package.SteamId], true);
 				}
 			}
 
 			WorkshopInfoUpdated?.Invoke();
+
+			Parallel.ForEach(Packages, (package, state) =>
+			{
+				package.Status = ModsUtil.GetStatus(package, out var reason);
+				package.StatusReason = reason;
+
+				InformationUpdate(package);
+
+				if (!string.IsNullOrWhiteSpace(package.IconUrl))
+				{
+					package.IconImage = ImageManager.GetImage(package.IconUrl!, true);
+
+					InformationUpdate(package);
+				}
+			});
 		}
 
 		ConnectionHandler.WhenConnected(async () =>
@@ -123,7 +134,7 @@ internal static class CentralManager
 			{
 				if (result.ContainsKey(package.SteamId))
 				{
-					package.SetSteamInformation(result[package.SteamId]);
+					package.SetSteamInformation(result[package.SteamId], false);
 				}
 			}
 
@@ -157,7 +168,6 @@ internal static class CentralManager
 				foreach (var asset in package.Assets)
 				{
 					AssetInformationUpdated?.Invoke(asset);
-
 				}
 			}
 		}

@@ -232,4 +232,10 @@
   <data name="I_CompatibilityReport_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_CompatibilityReport_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="I_UpdateTime" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_UpdateTime.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_AssetIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_AssetIcon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
