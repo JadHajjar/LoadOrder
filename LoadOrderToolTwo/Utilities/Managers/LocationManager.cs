@@ -1,5 +1,6 @@
 ﻿using LoadOrderToolTwo.Utilities.IO;
 
+using System;
 using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
@@ -8,11 +9,11 @@ namespace LoadOrderToolTwo.Utilities.Managers;
 internal class LocationManager
 {
 	// Base Folders
-	public static string GamePath { get; set; } = ConfigurationManager.AppSettings[nameof(GamePath)];
-	public static string AppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(AppDataPath)];
-	public static string SteamPath { get; set; } = ConfigurationManager.AppSettings[nameof(SteamPath)];
-	public static string VirtualGamePath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualGamePath)];
-	public static string VirtualAppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)];
+	public static string GamePath { get; set; } = ConfigurationManager.AppSettings[nameof(GamePath)].TrimEnd('/', '\\');
+	public static string AppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(AppDataPath)].TrimEnd('/', '\\');
+	public static string SteamPath { get; set; } = ConfigurationManager.AppSettings[nameof(SteamPath)].TrimEnd('/', '\\');
+	public static string VirtualGamePath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualGamePath)].TrimEnd('/', '\\');
+	public static string VirtualAppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)].TrimEnd('/', '\\');
 
 	public static string DataPath => Path.Combine(GamePath, "Cities_Data");
 	public static string ManagedDLL => Path.Combine(DataPath, "Managed");
@@ -33,6 +34,22 @@ internal class LocationManager
 			}
 
 			return Path.Combine(Directory.GetParent(GamePath).Parent.FullName, "workshop", "content", "255710");
+		}
+	}
+
+	public static string VirtualWorkshopContentPath
+	{
+		get
+		{
+			if (string.IsNullOrWhiteSpace(VirtualGamePath))
+			{
+				return string.Empty;
+			}
+
+			var parent = VirtualGamePath.Substring(0, VirtualGamePath.LastIndexOfAny(new[] { '/', '\\' }));
+			parent = parent.Substring(0, parent.LastIndexOfAny(new[] { '/', '\\' }));
+
+			return Path.Combine(parent, "workshop", "content", "255710");
 		}
 	}
 

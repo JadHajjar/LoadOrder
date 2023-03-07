@@ -66,7 +66,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 
 		if (rects.TextRect.Contains(e.Location) || rects.IconRect.Contains(e.Location))
 		{
-			(FindForm() as BasePanelForm)?.PushPanel(null, new PC_ModPage(item.Item));
+			(FindForm() as BasePanelForm)?.PushPanel(null, new PC_PackagePage(item.Item.Package));
 			return;
 		}
 
@@ -146,11 +146,10 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?"), UI.Font(9F, FontStyle.Bold | (textHovered ? FontStyle.Underline : FontStyle.Regular)), new SolidBrush(textHovered ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
 		var versionRect = DrawLabel(e, e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Version.GetString(), null, FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(textRect.X, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
-
+		var timeRect = DrawLabel(e, e.Item.LocalTime.ToLocalTime().ToString("g"), null, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.BackColor, 75), new Rectangle(versionRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
+		
 		GetStatusDescriptors(e.Item, out var text, out var icon, out var color);
-		var statusRect = string.IsNullOrEmpty(text) ? versionRect : DrawLabel(e, text, icon, color.MergeColor(FormDesign.Design.BackColor, 60), new Rectangle(versionRect.X + versionRect.Width + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
-
-		DrawLabel(e, e.Item.LocalTime.ToLocalTime().ToString("g"), null, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.BackColor, 75), new Rectangle(statusRect.X + statusRect.Width + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
+		var statusRect = string.IsNullOrEmpty(text) ? timeRect : DrawLabel(e, text, icon, color.MergeColor(FormDesign.Design.BackColor, 60), new Rectangle(timeRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 
 		if (e.Item.Workshop)
 		{
@@ -158,9 +157,9 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 			DrawLabel(e, e.Item.SteamId.ToString(), Properties.Resources.I_Steam_16, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.ActiveColor, 75).MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(rects.RedownloadRect.X - (int)(100 * UI.FontScale), e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 		}
 
-		if (e.Item.CompatibilityReport is not null)
+		if (e.Item.Package.CompatibilityReport is not null)
 		{
-			DrawLabel(e, e.Item.CompatibilityReport.reportSeverity.ToString().FormatWords(), Properties.Resources.I_CompatibilityReport_16, e.Item.CompatibilityReport.reportSeverity switch
+			DrawLabel(e, e.Item.Package.CompatibilityReport.reportSeverity.ToString().FormatWords(), Properties.Resources.I_CompatibilityReport_16, e.Item.Package.CompatibilityReport.reportSeverity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
@@ -273,7 +272,7 @@ internal class ModsListControl : SlickStackedListControl<Mod>
 		rects.IconRect = rectangle.Pad(rects.EnabledRect.Right + (4 * Padding.Left)).Align(new Size(iconSize, iconSize), ContentAlignment.MiddleLeft);
 		rects.TextRect = rectangle.Pad(rects.IconRect.X + rects.IconRect.Width + Padding.Left, 0, (item.Workshop ? (2 * Padding.Left) + (2 * buttonRectangle.Width) + (int)(100 * UI.FontScale) : 0) + rectangle.Width - buttonRectangle.X, rectangle.Height / 2);
 
-		if (item.CompatibilityReport != null)
+		if (item.Package.CompatibilityReport != null)
 		{
 			rects.TextRect.Width -= (int)(100 * UI.FontScale);
 		}

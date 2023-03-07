@@ -1,15 +1,11 @@
 using Extensions;
 
-using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Steam;
 using LoadOrderToolTwo.Utilities.IO;
 using LoadOrderToolTwo.Utilities.Managers;
 
-using Newtonsoft.Json.Linq;
-
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +18,29 @@ namespace LoadOrderToolTwo.Utilities;
 
 public static class SteamUtil
 {
-	public static async Task<bool> CheckForInternetConnectionAsync()
+	private static string STEAM_CACHE_FILE = "SteamModsCache.json";
+
+	private static void SaveCache(Dictionary<ulong, SteamWorkshopItem> list)
 	{
-		return await Task.Run(CheckForInternetConnection);
+		ISave.Save(list, STEAM_CACHE_FILE);
+	}
+
+	internal static Dictionary<ulong, SteamWorkshopItem>? GetCachedInfo()
+	{
+		try
+		{
+			var path = ISave.GetPath(STEAM_CACHE_FILE);
+
+			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+			{
+				return null;
+			}
+
+			ISave.Load(out Dictionary<ulong, SteamWorkshopItem>? dic, STEAM_CACHE_FILE);
+
+			return dic;
+		}
+		catch { return null; }
 	}
 
 	public static bool CheckForInternetConnection()
@@ -41,51 +57,21 @@ public static class SteamUtil
 		}
 	}
 
-	public static void ExecuteSteam(string args)
+	public static async Task<bool> CheckForInternetConnectionAsync()
 	{
-		IOUtil.Execute(LocationManager.SteamPath, LocationManager.SteamExe, args)?.WaitForExit();
+		return await Task.Run(CheckForInternetConnection);
 	}
 
-	public static void Subscribe(params ulong[] ids)
+	public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
 	{
-		try
+		while (source.Any())
 		{
-			var steamArguments = new StringBuilder("steam://open/console");
-
-			for (var i = 0; i < ids.Length; i++)
-			{
-				steamArguments.AppendFormat(" +subscribe {0}", ids[i]);
-			}
-
-			ExecuteSteam(steamArguments.ToString());
-
-			Thread.Sleep(100);
-
-			ReDownload(ids);
+			yield return source.Take(chunkSize);
+			source = source.Skip(chunkSize);
 		}
-		catch (Exception) { }
 	}
 
-	public static void ReDownload(params ulong[] ids)
-	{
-		try
-		{
-			var steamArguments = new StringBuilder("steam://open/console");
-
-			for (var i = 0; i < ids.Length; i++)
-			{
-				steamArguments.AppendFormat(" +workshop_download_item 255710 {0}", ids[i]);
-			}
-
-			ExecuteSteam(steamArguments.ToString());
-
-			Thread.Sleep(100);
-
-			ExecuteSteam("steam://open/downloads");
-		}
-		catch (Exception) { }
-	}
-	public static async Task<Dictionary<T1, T2>> ConvertInChunks<T1, T2>(	IEnumerable<T1> mainList,	int chunkSize,	Func<List<T1>, Task<Dictionary<T1, T2>>> converter)
+	public static async Task<Dictionary<T1, T2>> ConvertInChunks<T1, T2>(IEnumerable<T1> mainList, int chunkSize, Func<List<T1>, Task<Dictionary<T1, T2>>> converter)
 	{
 		var chunks = mainList.Chunk(chunkSize); // Split mainList into chunks of chunkSize
 		var tasks = new List<Task<Dictionary<T1, T2>>>(); // A list of tasks to convert the chunks
@@ -101,7 +87,7 @@ public static class SteamUtil
 		foreach (var task in tasks)
 		{
 			var chunkResults = await task; // Get the results of the completed task
-			
+
 			foreach (var kvp in chunkResults)
 			{
 				results[kvp.Key] = kvp.Value; // Add the results to the dictionary
@@ -111,13 +97,29 @@ public static class SteamUtil
 		return results;
 	}
 
-	public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
+	public static void ExecuteSteam(string args)
 	{
-		while (source.Any())
+		IOUtil.Execute(LocationManager.SteamPath, LocationManager.SteamExe, args)?.WaitForExit();
+	}
+
+	public static async Task<Dictionary<string, SteamUserEntry>> GetSteamUsers(List<string> steamId64s)
+	{
+		var idString = string.Join(",", steamId64s);
+		var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=706303B24FA0E63B1FB25965E081C2E1&steamids={idString}";
+
+		using var httpClient = new HttpClient();
+		var httpResponse = await httpClient.GetAsync(url);
+
+		if (httpResponse.IsSuccessStatusCode)
 		{
-			yield return source.Take(chunkSize);
-			source = source.Skip(chunkSize);
+			var response = await httpResponse.Content.ReadAsStringAsync();
+
+			return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamUserRootResponse>(response)?.response.players.ToDictionary(x => x.steamid) ?? new();
 		}
+
+		Log.Error("failed to get steam author data: " + httpResponse.RequestMessage);
+
+		return new();
 	}
 
 	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataAsync(ulong[] ids)
@@ -174,47 +176,26 @@ public static class SteamUtil
 		return new();
 	}
 
-	public static async Task<Dictionary<string, SteamUserEntry>> GetSteamUsers(List<string> steamId64s)
-	{
-		var idString = string.Join(",", steamId64s);
-		var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=706303B24FA0E63B1FB25965E081C2E1&steamids={idString}";
-
-		using var httpClient = new HttpClient();
-		var httpResponse = await httpClient.GetAsync(url);
-
-		if (httpResponse.IsSuccessStatusCode)
-		{
-			var response = await httpResponse.Content.ReadAsStringAsync();
-
-			return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamUserRootResponse>(response)?.response.players.ToDictionary(x => x.steamid) ?? new();
-		}
-
-		Log.Error("failed to get steam author data: " + httpResponse.RequestMessage);
-
-		return new();
-	}
-
-	private static void SaveCache(Dictionary<ulong, SteamWorkshopItem> list)
-	{
-		ISave.Save(list, "SteamModsCache.json");
-	}
-
-	internal static Dictionary<ulong, SteamWorkshopItem>? GetCachedInfo()
+	public static void ReDownload(params ulong[] ids)
 	{
 		try
 		{
-			var path = ISave.GetPath("SteamModsCache.json");
+			var steamArguments = new StringBuilder("'steam://open/console");
 
-			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+			for (var i = 0; i < ids.Length; i++)
 			{
-				return null;
+				steamArguments.AppendFormat(" +workshop_download_item 255710 {0}", ids[i]);
 			}
 
-			ISave.Load(out Dictionary<ulong, SteamWorkshopItem>? dic, "SteamModsCache.json");
+			steamArguments.Append('\'');
 
-			return dic;
+			ExecuteSteam(steamArguments.ToString());
+
+			Thread.Sleep(100);
+
+			ExecuteSteam("steam://open/downloads");
 		}
-		catch { return null; }
+		catch (Exception) { }
 	}
 
 	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem)

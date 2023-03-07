@@ -29,6 +29,11 @@ public class Package : IPackage
 			VirtualFolder = Folder.Replace(LocationManager.GamePath, LocationManager.VirtualGamePath).Replace("\\", "/");
 		}
 
+		if (!string.IsNullOrWhiteSpace(LocationManager.VirtualWorkshopContentPath) && Folder.Contains(LocationManager.WorkshopContentPath))
+		{
+			VirtualFolder = Folder.Replace(LocationManager.WorkshopContentPath, LocationManager.VirtualWorkshopContentPath).Replace("\\", "/");
+		}
+
 		if (!string.IsNullOrWhiteSpace(LocationManager.VirtualAppDataPath) && Folder.Contains(LocationManager.AppDataPath))
 		{
 			VirtualFolder = Folder.Replace(LocationManager.AppDataPath, LocationManager.VirtualAppDataPath).Replace("\\", "/");
@@ -60,4 +65,5 @@ public class Package : IPackage
 	public bool SteamInfoLoaded { get; set; }
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
+	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
 }

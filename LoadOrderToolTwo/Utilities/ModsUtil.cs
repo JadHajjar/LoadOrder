@@ -3,6 +3,7 @@
 using LoadOrderToolTwo.ColossalOrder;
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
+using LoadOrderToolTwo.Domain.Utilities;
 using LoadOrderToolTwo.Utilities.IO;
 using LoadOrderToolTwo.Utilities.Managers;
 
@@ -18,26 +19,9 @@ using System.Threading.Tasks;
 namespace LoadOrderToolTwo.Utilities;
 internal class ModsUtil
 {
-	public static IEnumerable<Mod> GetMods()
-	{
-		var gameModsPath = Path.Combine(LocationManager.GameContentPath, "Mods");
-		var addonsModsPath = LocationManager.ModsPath;
-
-		foreach (var mod in LoadModsInPath(gameModsPath, true))
-		{
-			yield return mod;
-		}
-
-		foreach (var mod in LoadModsInPath(addonsModsPath, false))
-		{
-			yield return mod;
-		}
-
-		foreach (var mod in LoadWorkshopMods())
-		{
-			yield return mod;
-		}
-	}
+	private static readonly CachedSaveLibrary<CachedModInclusion, Mod, bool> _includedLibrary = new();
+	private static readonly CachedSaveLibrary<CachedModEnabled, Mod, bool> _enabledLibrary = new();
+	private static readonly Dictionary<Mod, SavedBool> _enabledValues = new();
 
 	public static Mod? GetMod(Package package)
 	{
@@ -47,44 +31,6 @@ internal class ModsUtil
 		}
 
 		return null;
-	}
-
-	private static IEnumerable<Mod> LoadModsInPath(string path, bool builtIn)
-	{
-		if (!Directory.Exists(path))
-		{
-			yield break;
-		}
-
-		foreach (var dir in Directory.EnumerateDirectories(path))
-		{
-			if (IsValidModFolder(dir, out var dllPath, out var version))
-			{
-				//yield return new Mod(dir, builtIn, false, dllPath!, version!);
-			}
-		}
-	}
-
-	private static IEnumerable<Mod> LoadWorkshopMods()
-	{
-		var potentialMods = ContentUtil.GetSubscribedItemPaths();
-		var lockObj = new object();
-		var mods = new List<Mod>();
-
-		Parallel.ForEach(potentialMods, (path, state) =>
-		{
-			if (IsValidModFolder(path, out var dllPath, out var version))
-			{
-				//var mod = new Mod(path, false, true, dllPath!, version!);
-
-				//lock (lockObj)
-				//{
-				//	mods.Add(mod);
-				//}
-			}
-		});
-
-		return mods;
 	}
 
 	private static bool IsValidModFolder(string dir, out string? dllPath, out Version? version)
@@ -101,12 +47,48 @@ internal class ModsUtil
 		return false;
 	}
 
+	internal static void SavePendingValues()
+	{
+		_includedLibrary.Save();
+		_enabledLibrary.Save();
+	}
+
 	internal static bool IsIncluded(Mod mod)
+	{
+		return _includedLibrary.GetValue(mod, out var included) ? included : IsLocallyIncluded(mod);
+	}
+
+	internal static bool IsEnabled(Mod mod)
+	{
+		return _enabledLibrary.GetValue(mod, out var enabled) ? enabled : IsLocallyEnabled(mod);
+	}
+
+	internal static bool IsLocallyIncluded(Mod mod)
 	{
 		return !File.Exists(Path.Combine(mod.Folder, ContentUtil.EXCLUDED_FILE_NAME));
 	}
 
+	internal static bool IsLocallyEnabled(Mod mod)
+	{
+		if (_enabledValues.ContainsKey(mod))
+			return _enabledValues[mod];
+
+		return _enabledValues[mod] = GetEnabledSetting(mod);
+	}
+
 	internal static void SetIncluded(Mod mod, bool value)
+	{
+		if (CitiesManager.IsRunning())
+		{
+			_includedLibrary.SetValue(mod, value);
+		}
+		else
+		{
+			SetLocallyIncluded(mod, value);
+		}
+	}
+
+	internal static void SetLocallyIncluded(Mod mod, bool value)
 	{
 		if (value)
 		{
@@ -118,7 +100,27 @@ internal class ModsUtil
 		}
 	}
 
-	internal static SavedBool GetEnabledSetting(Mod mod)
+	internal static void SetEnabled(Mod mod, bool value)
+	{
+		if (CitiesManager.IsRunning())
+		{
+			_enabledLibrary.SetValue(mod, value);
+		}
+		else
+		{
+			SetLocallyEnabled(mod, value);
+		}
+	}
+
+	internal static void SetLocallyEnabled(Mod mod, bool value)
+	{
+		if (_enabledValues.ContainsKey(mod))
+			_enabledValues[mod].value = value;
+
+		(_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
+	}
+
+	private static SavedBool GetEnabledSetting(Mod mod)
 	{
 		var savedEnabledKey_ = $"{Path.GetFileNameWithoutExtension(mod.Folder)}{GetLegacyHashCode(mod.VirtualFolder ?? mod.Folder)}.enabled";
 

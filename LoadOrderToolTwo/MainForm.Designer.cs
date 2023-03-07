@@ -32,7 +32,12 @@
 			this.PI_Dashboard = new SlickControls.PanelItem();
 			this.PI_Mods = new SlickControls.PanelItem();
 			this.PI_Assets = new SlickControls.PanelItem();
+			this.L_Version = new System.Windows.Forms.Label();
+			this.L_Text = new System.Windows.Forms.Label();
+			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.base_P_SideControls.SuspendLayout();
 			this.base_P_Container.SuspendLayout();
+			this.tableLayoutPanel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// base_P_Content
@@ -41,6 +46,7 @@
 			// 
 			// base_P_SideControls
 			// 
+			this.base_P_SideControls.Controls.Add(this.tableLayoutPanel1);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
 			this.base_P_SideControls.Location = new System.Drawing.Point(0, 426);
 			this.base_P_SideControls.Size = new System.Drawing.Size(202, 50);
@@ -79,6 +85,51 @@
 			this.PI_Assets.Text = "Assets";
 			this.PI_Assets.OnClick += new System.Windows.Forms.MouseEventHandler(this.PI_Assets_OnClick);
 			// 
+			// L_Version
+			// 
+			this.L_Version.Anchor = System.Windows.Forms.AnchorStyles.Right;
+			this.L_Version.AutoSize = true;
+			this.L_Version.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.L_Version.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
+			this.L_Version.Location = new System.Drawing.Point(164, 0);
+			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
+			this.L_Version.Name = "L_Version";
+			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
+			this.L_Version.Size = new System.Drawing.Size(38, 16);
+			this.L_Version.TabIndex = 30;
+			this.L_Version.Text = "Version";
+			// 
+			// L_Text
+			// 
+			this.L_Text.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.L_Text.AutoSize = true;
+			this.L_Text.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.L_Text.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
+			this.L_Text.Location = new System.Drawing.Point(0, 0);
+			this.L_Text.Margin = new System.Windows.Forms.Padding(0);
+			this.L_Text.Name = "L_Text";
+			this.L_Text.Padding = new System.Windows.Forms.Padding(2);
+			this.L_Text.Size = new System.Drawing.Size(71, 16);
+			this.L_Text.TabIndex = 31;
+			this.L_Text.Text = "Load Order Tool";
+			// 
+			// tableLayoutPanel1
+			// 
+			this.tableLayoutPanel1.AutoSize = true;
+			this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.tableLayoutPanel1.ColumnCount = 2;
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Controls.Add(this.L_Text, 0, 0);
+			this.tableLayoutPanel1.Controls.Add(this.L_Version, 1, 0);
+			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 34);
+			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+			this.tableLayoutPanel1.RowCount = 1;
+			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(202, 16);
+			this.tableLayoutPanel1.TabIndex = 32;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -95,7 +146,11 @@
         this.PI_Mods,
         this.PI_Assets};
 			this.Text = "Load Order Tool";
+			this.base_P_SideControls.ResumeLayout(false);
+			this.base_P_SideControls.PerformLayout();
 			this.base_P_Container.ResumeLayout(false);
+			this.tableLayoutPanel1.ResumeLayout(false);
+			this.tableLayoutPanel1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -105,5 +160,8 @@
 		internal SlickControls.PanelItem PI_Dashboard;
 		internal SlickControls.PanelItem PI_Mods;
 		internal SlickControls.PanelItem PI_Assets;
+		private System.Windows.Forms.Label L_Version;
+		private System.Windows.Forms.Label L_Text;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 	}
 }

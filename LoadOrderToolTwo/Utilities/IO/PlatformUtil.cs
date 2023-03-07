@@ -24,19 +24,15 @@ internal static class PlatformUtil
 			return;
 		}
 
+		var winePrefix = Environment.GetEnvironmentVariable("WINEPREFIX");
+		if (!string.IsNullOrEmpty(winePrefix))
+		{
+			CurrentPlatform = Platform.WineOnLinux;
+		}
+
 		if (Environment.OSVersion.Platform == PlatformID.Unix)
 		{
-			// Check for Wine environment
-			var winePrefix = Environment.GetEnvironmentVariable("WINEPREFIX");
-
-			if (!string.IsNullOrEmpty(winePrefix))
-			{
-				CurrentPlatform = Platform.WineOnLinux;
-			}
-			else
-			{
-				CurrentPlatform = Platform.Linux;
-			}
+			CurrentPlatform = Platform.Linux;
 		}
 	}
 

@@ -50,33 +50,33 @@ internal class CompatibilityManager
 		return ser.Deserialize(reader) as Catalog;
 	}
 
-	internal static ModInfo? GetCompatibilityReport(Domain.Mod mod)
+	internal static ModInfo? GetCompatibilityReport(Domain.Package package)
 	{
 		if (Catalog is null)
 		{
 			return null;
 		}
 
-		var subscribedMod = Catalog.GetMod(mod.SteamId);
+		var subscribedMod = Catalog.GetMod(package.SteamId);
 
-		if (subscribedMod is null)
+		if (subscribedMod is null || package.Mod is null)
 		{
 			return null;
 		}
 
 		subscribedMod = subscribedMod.Clone();
 
-		subscribedMod.UpdateSubscription(!mod.IsEnabled, mod.IsIncluded, false, mod.Folder, mod.LocalTime);
+		subscribedMod.UpdateSubscription(!package.Mod.IsEnabled, package.Mod.IsIncluded, false, package.Folder, package.LocalTime);
 
 		var subscriptionAuthor = Catalog.GetAuthor(subscribedMod.AuthorID, subscribedMod.AuthorUrl);
-		var authorName = subscriptionAuthor == null ? mod.Author?.Name ?? "" : subscriptionAuthor.Name;
+		var authorName = subscriptionAuthor == null ? package.Author?.Name ?? "" : subscriptionAuthor.Name;
 
 		var modInfo = new ModInfo
 		{
 			authorName = authorName,
 			modName = subscribedMod.Name,
 			isDisabled = subscribedMod.IsDisabled,
-			isLocal = !mod.Workshop,
+			isLocal = !package.Workshop,
 			isCameraScript = subscribedMod.IsCameraScript
 		};
 
@@ -99,7 +99,7 @@ internal class CompatibilityManager
 			modInfo.recommendations = subscribedMod.ReportSeverity <= Enums.ReportSeverity.MajorIssues ? Recommendations2(subscribedMod) : null;
 			modInfo.anyIssues = subscribedMod.ReportSeverity == Enums.ReportSeverity.NothingToReport && subscribedMod.Stability > Enums.Stability.NotReviewed;
 			modInfo.isCameraScript = subscribedMod.IsCameraScript;
-			modInfo.steamUrl = mod.SteamPage;
+			modInfo.steamUrl = package.SteamPage;
 		}
 
 		return modInfo;

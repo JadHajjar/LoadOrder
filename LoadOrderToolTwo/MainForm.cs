@@ -6,6 +6,7 @@ using LoadOrderToolTwo.Utilities.Managers;
 using SlickControls;
 
 using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo;
@@ -16,6 +17,11 @@ public partial class MainForm : BasePanelForm
 	{
 		InitializeComponent();
 
+#if DEBUG
+		L_Version.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
+#else
+		L_Version.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+#endif
 		try
 		{ FormDesign.Initialize(this, DesignChanged); }
 		catch { }

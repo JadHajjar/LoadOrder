@@ -20,21 +20,15 @@ public class Mod : IPackage
 		FileName = dllPath;
 		Version = version;
 		_dllName = Path.GetFileNameWithoutExtension(dllPath).FormatWords();
-
-		_enabledSavedBool = ModsUtil.GetEnabledSetting(this);
 	}
-
-	private readonly SavedBool _enabledSavedBool;
 
 	public string FileName { get; }
 	public Version Version { get; }
 	public Package Package { get; }
 	public string Name { get => Package.Name.IfEmpty(_dllName); set => Package.Name = value; }
 
-	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
-
 	public bool IsIncluded { get => ModsUtil.IsIncluded(this); set => ModsUtil.SetIncluded(this, value); }
-	public bool IsEnabled { get => _enabledSavedBool; set => _enabledSavedBool.value = value; }
+	public bool IsEnabled { get => ModsUtil.IsEnabled(this); set => ModsUtil.SetEnabled(this, value); }
 
 	public string Folder => ((IPackage)Package).Folder;
 	public string? VirtualFolder => ((IPackage)Package).VirtualFolder;

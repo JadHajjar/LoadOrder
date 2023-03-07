@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace LoadOrderToolTwo.Utilities.IO;
 internal class IOUtil
@@ -12,7 +9,12 @@ internal class IOUtil
 	{
 		try
 		{
-			ProcessStartInfo startInfo = new ProcessStartInfo
+			if (!File.Exists(Path.Combine(dir, exeFile)))
+			{
+				return null;
+			}
+
+			var startInfo = new ProcessStartInfo
 			{
 				WorkingDirectory = dir,
 				FileName = exeFile,

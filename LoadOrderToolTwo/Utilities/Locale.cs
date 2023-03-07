@@ -57,4 +57,6 @@ internal class Locale : LocaleHelper
 	public static string PartiallyDownloaded => _instance.GetText(nameof(PartiallyDownloaded));
 
 	public static string CompatibilityReport => _instance.GetText(nameof(CompatibilityReport));
+
+	public static string Back { get; internal set; }
 }
