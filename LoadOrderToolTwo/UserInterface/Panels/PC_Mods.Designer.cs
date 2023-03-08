@@ -180,8 +180,7 @@ partial class PC_Mods
 			// 
 			// PC_Mods
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.TLP_Main);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.Name = "PC_Mods";

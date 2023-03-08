@@ -163,6 +163,51 @@
         /TP9Dc59ADywed41tnHRAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="PI_Profiles.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>342, 17</value>
+  </metadata>
+  <data name="PI_Profiles.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAFDSURBVDhPrZGtTkNBEIUvYEBgIBBeAIUETA0CLHJx8Axtcv8FuW8AhpQ6HEkFwYDB11dAUiSB
+        BMETVADf2cwmbWmbNmGSkztn5pzZ2b3RPJGm6V6e57tGh2KhKIoDmm4UWZbtSNBoNFbgL+C5qqpl7wpB
+        MQGvoD0G+6AHvsCPQXmPoWthQJuTTjwZCTbboP8hI5oLvpfKwbt6XgTRSc6TMUHvXiYM6zZQA+6sPX1A
+        kiTb9Ppm0lV0VeV99bwIMnGAc26J1c85+RrNt6GpGo+56EXTBgwGmkfwoJxfuuqLilkHhCjL8pCNbo3O
+        P0BaeYz6QhPcWMMx/RTUB3hdtcCBtFdm9y+9RaEFtInQwfAWuOWdwEErjuNNs/8NBEMrmmm2KyLUel1O
+        /eT7JFjeVc9kk4P/WwPH4AzDkaDcajWT/VdE0S+kYfbupY+I2wAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <metadata name="PI_Options.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>449, 17</value>
+  </metadata>
+  <data name="PI_Options.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAEhSURBVDhPtZM7TgNBEETXIUjmGnwsUkA+AhzBkiMSHACb7CfbEyDjHAJ/MgOSL2JzAT4hIoWc
+        V0MZo7WQ1iBKak13VW3P7E5v9G9I0/Qky7K+Qrnpyqjx4Dtx7Hgz/zOKotjAOGS3dp7np+QzSxH5vU/U
+        IgZJktQtLcBDI8RbYqzAtG1J2o61CY3uWAeWPoFhC/IljuM1U/oGDfge/KUamNZJ1+Vlg01TwdyEfMV4
+        6HpXNesZ3LnzhrUj103VX6DjAeSDcgxdIg0CgKfMLpSzPtJ0PwjfIRLxyXmPSIIA3KCrnPWZzfaCMIeO
+        g7D0CgRUhVfA9LePKGCaX6Ou6malaxQ0SIjXiBqWDvnUUnmQrmi+PEglrD7KZXjHX/9MFRFFH5893MYP
+        OFVUAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <metadata name="PI_Compatibility.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>559, 17</value>
+  </metadata>
+  <metadata name="PI_ModReview.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>700, 18</value>
+  </metadata>
+  <data name="PI_ModReview.Icon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAFLSURBVDhPvZLPKwRhGMdnOOCyxUkKZY9ycHBQDlp/w/wFQtG05jC/U3P1B6BNshz3vntZHJwc
+        aA9OWyIl5UopB+XzzDwHZBgHvvXt+fF+v+/7zvOO8edIkqTHdd1yEAQVOK3tYojjeBzTKbyBx/AFJrr8
+        PWzb7kN86ft+ldIkbsILx3GGiFPEgUyZgzAMF9mgITmGiPwcDkZRtEB8preWCvOAqAaXNX9kDsPEefgA
+        d2E9FeYBwQ6n2Jq34Bm8pzfH7dbhdir8Cky+H+ERhg2pZR5ydYY6Kmv0u7CSij9Dhycn7ssTep43Qj5j
+        WVYvm07CE+qayj9CzU1YF7M8I4ZrIb1X2CWXzzIzxzvIsyBowy1KU3+eW751KVP8AMQH8FCvOobxSk8r
+        BsxPXLskgxIz9aouFQOGPU7sEO+IK9r+FUxOnmWDCa3/A4bxBvHSrhDVgiMhAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="$this.FormIcon" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAABblJREFUaEPt

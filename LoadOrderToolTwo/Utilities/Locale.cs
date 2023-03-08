@@ -58,4 +58,9 @@ internal class Locale : LocaleHelper
 
 	public static string CompatibilityReport => _instance.GetText(nameof(CompatibilityReport));
 	public static string Back => _instance.GetText(nameof(Back));
+	public static string Profiles => _instance.GetText(nameof(Profiles));
+	public static string AutoProfileSaveOn => _instance.GetText(nameof(AutoProfileSaveOn));
+	public static string AutoProfileSaveOff => _instance.GetText(nameof(AutoProfileSaveOff));
+
+	public static string NoProfileSelected { get; internal set; }
 }

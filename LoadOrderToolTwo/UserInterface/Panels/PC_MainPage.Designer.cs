@@ -89,7 +89,7 @@ partial class PC_MainPage
 			this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-			this.flowLayoutPanel1.Size = new System.Drawing.Size(773, 123);
+			this.flowLayoutPanel1.Size = new System.Drawing.Size(773, 108);
 			this.flowLayoutPanel1.TabIndex = 1;
 			// 
 			// profileBubble
@@ -97,7 +97,7 @@ partial class PC_MainPage
 			this.profileBubble.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.profileBubble.Location = new System.Drawing.Point(3, 3);
 			this.profileBubble.Name = "profileBubble";
-			this.profileBubble.Size = new System.Drawing.Size(150, 117);
+			this.profileBubble.Size = new System.Drawing.Size(150, 102);
 			this.profileBubble.TabIndex = 0;
 			this.profileBubble.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ProfileBubble_MouseClick);
 			// 
@@ -106,7 +106,7 @@ partial class PC_MainPage
 			this.modsBubble.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.modsBubble.Location = new System.Drawing.Point(159, 3);
 			this.modsBubble.Name = "modsBubble";
-			this.modsBubble.Size = new System.Drawing.Size(150, 48);
+			this.modsBubble.Size = new System.Drawing.Size(150, 44);
 			this.modsBubble.TabIndex = 1;
 			this.modsBubble.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ModsBubble_MouseClick);
 			// 
@@ -115,7 +115,7 @@ partial class PC_MainPage
 			this.assetsBubble.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.assetsBubble.Location = new System.Drawing.Point(315, 3);
 			this.assetsBubble.Name = "assetsBubble";
-			this.assetsBubble.Size = new System.Drawing.Size(150, 48);
+			this.assetsBubble.Size = new System.Drawing.Size(150, 44);
 			this.assetsBubble.TabIndex = 2;
 			this.assetsBubble.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AssetsBubble_MouseClick);
 			// 
@@ -124,13 +124,12 @@ partial class PC_MainPage
 			this.compatibilityReportBubble.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.compatibilityReportBubble.Location = new System.Drawing.Point(471, 3);
 			this.compatibilityReportBubble.Name = "compatibilityReportBubble";
-			this.compatibilityReportBubble.Size = new System.Drawing.Size(150, 48);
+			this.compatibilityReportBubble.Size = new System.Drawing.Size(150, 44);
 			this.compatibilityReportBubble.TabIndex = 3;
 			// 
 			// PC_MainPage
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 23F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.tableLayoutPanel1);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.Name = "PC_MainPage";

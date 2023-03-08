@@ -36,9 +36,9 @@ public partial class MainForm : BasePanelForm
 		new BackgroundAction("Loading content", CentralManager.Start).Run();
 	}
 
-	protected override void UIChanged()
+	protected override void OnCreateControl()
 	{
-		base.UIChanged();
+		base.OnCreateControl();
 
 		if (!startBoundsSet)
 		{
@@ -60,13 +60,24 @@ public partial class MainForm : BasePanelForm
 	{
 		base.OnResizeEnd(e);
 
-		if (!TopMost)
+		if (!TopMost && startBoundsSet)
 		{
 			if (!(CentralManager.SessionSettings.WindowIsMaximized = WindowState == FormWindowState.Maximized))
 			{
 				CentralManager.SessionSettings.WindowBounds = Bounds;
 			}
 
+			CentralManager.SessionSettings.Save();
+		}
+	}
+
+	protected override void OnResize(EventArgs e)
+	{
+		base.OnResize(e);
+
+		if (!TopMost && startBoundsSet)
+		{
+			CentralManager.SessionSettings.WindowIsMaximized = WindowState == FormWindowState.Maximized;
 			CentralManager.SessionSettings.Save();
 		}
 	}

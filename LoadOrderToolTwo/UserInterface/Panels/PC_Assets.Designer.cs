@@ -33,9 +33,9 @@ partial class PC_Assets
 			this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
 			this.slickGroupBox1 = new SlickControls.SlickGroupBox();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.TB_Search = new SlickControls.SlickTextBox();
+			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
+			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.LC_Assets = new LoadOrderToolTwo.UserInterface.ListControl.AssetsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
@@ -92,20 +92,21 @@ partial class PC_Assets
 			this.tableLayoutPanel1.Size = new System.Drawing.Size(376, 129);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
-			// OT_Included
+			// TB_Search
 			// 
-			this.OT_Included.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.TB_Search.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.OT_Included.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.OT_Included.Image1 = "I_X";
-			this.OT_Included.Image2 = "I_Check";
-			this.OT_Included.Location = new System.Drawing.Point(3, 48);
-			this.OT_Included.Name = "OT_Included";
-			this.OT_Included.Option1 = "Excluded";
-			this.OT_Included.Option2 = "Included";
-			this.OT_Included.Size = new System.Drawing.Size(370, 36);
-			this.OT_Included.TabIndex = 1;
-			this.OT_Included.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
+			this.TB_Search.Image = global::LoadOrderToolTwo.Properties.Resources.I_Search;
+			this.TB_Search.LabelText = "Search";
+			this.TB_Search.Location = new System.Drawing.Point(3, 3);
+			this.TB_Search.Name = "TB_Search";
+			this.TB_Search.Placeholder = "SearchMods";
+			this.TB_Search.SelectedText = "";
+			this.TB_Search.SelectionLength = 0;
+			this.TB_Search.SelectionStart = 0;
+			this.TB_Search.Size = new System.Drawing.Size(370, 39);
+			this.TB_Search.TabIndex = 0;
+			this.TB_Search.TextChanged += new System.EventHandler(this.FilterChanged);
 			// 
 			// OT_Workshop
 			// 
@@ -124,21 +125,20 @@ partial class PC_Assets
 			this.OT_Workshop.TabIndex = 1;
 			this.OT_Workshop.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
 			// 
-			// TB_Search
+			// OT_Included
 			// 
-			this.TB_Search.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.OT_Included.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.TB_Search.Image = global::LoadOrderToolTwo.Properties.Resources.I_Search;
-			this.TB_Search.LabelText = "Search";
-			this.TB_Search.Location = new System.Drawing.Point(3, 3);
-			this.TB_Search.Name = "TB_Search";
-			this.TB_Search.Placeholder = "SearchMods";
-			this.TB_Search.SelectedText = "";
-			this.TB_Search.SelectionLength = 0;
-			this.TB_Search.SelectionStart = 0;
-			this.TB_Search.Size = new System.Drawing.Size(370, 39);
-			this.TB_Search.TabIndex = 0;
-			this.TB_Search.TextChanged += new System.EventHandler(this.FilterChanged);
+			this.OT_Included.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.OT_Included.Image1 = "I_X";
+			this.OT_Included.Image2 = "I_Check";
+			this.OT_Included.Location = new System.Drawing.Point(3, 48);
+			this.OT_Included.Name = "OT_Included";
+			this.OT_Included.Option1 = "Excluded";
+			this.OT_Included.Option2 = "Included";
+			this.OT_Included.Size = new System.Drawing.Size(370, 36);
+			this.OT_Included.TabIndex = 1;
+			this.OT_Included.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
 			// 
 			// LC_Assets
 			// 
@@ -146,6 +146,7 @@ partial class PC_Assets
 			this.LC_Assets.AutoScroll = true;
 			this.TLP_Main.SetColumnSpan(this.LC_Assets, 2);
 			this.LC_Assets.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.LC_Assets.HighlightOnHover = true;
 			this.LC_Assets.ItemHeight = 28;
 			this.LC_Assets.Location = new System.Drawing.Point(0, 160);
 			this.LC_Assets.Margin = new System.Windows.Forms.Padding(0);
@@ -156,8 +157,7 @@ partial class PC_Assets
 			// 
 			// PC_Assets
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.TLP_Main);
 			this.Name = "PC_Assets";
 			this.Padding = new System.Windows.Forms.Padding(5, 30, 0, 0);
