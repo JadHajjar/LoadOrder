@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Domain;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Domain;
 
 using System;
 using System.Collections.Generic;
@@ -8,8 +10,23 @@ using System.Linq;
 namespace LoadOrderToolTwo.Utilities.Managers;
 public static class ProfileManager
 {
+	private const string LOCAL_APP_DATA_PATH = "%LOCALAPPDATA%";
+	private const string CITIES_PATH = "%CITIES%";
+	private const string WS_CONTENT_PATH = "%WORKSHOP%";
 	private static readonly List<Profile> _profiles;
 	public static Profile CurrentProfile { get; private set; }
+	public static IEnumerable<Profile> Profiles
+	{
+		get
+		{
+			foreach (var profile in _profiles)
+			{
+				yield return profile;
+			}
+		}
+	}
+
+	public static event Action<Profile>? ProfileChanged;
 
 	static ProfileManager()
 	{
@@ -28,6 +45,22 @@ public static class ProfileManager
 		{
 			CurrentProfile = Profile.TransitoryProfile;
 		}
+
+		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
+	}
+
+	private static void CentralManager_ContentLoaded() => new BackgroundAction(() =>
+	{
+		foreach (var profile in _profiles)
+		{
+			profile.IsMissingItems = profile.Mods.Any(x => GetMod(x) is null) || profile.Assets.Any(x => GetAsset(x) is null);
+		}
+	}).Run();
+
+	internal static void SetProfile(Profile profile)
+	{
+		CurrentProfile = profile;
+		ProfileChanged?.Invoke(CurrentProfile);
 	}
 
 	private static List<Profile> LoadProfiles()
@@ -91,5 +124,31 @@ public static class ProfileManager
 		{ Log.Exception(ex, $"Failed to save profile ({profile.Name}) to {Path.Combine(LocationManager.LotProfilesAppDataPath, $"{profile.Name}.json")}"); }
 
 		return false;
+	}
+
+	internal static Mod GetMod(Profile.Mod mod)
+	{
+		return ModsUtil.GetMod(ToLocalPath(mod.RelativePath));
+	}
+
+	internal static Asset GetAsset(Profile.Asset asset)
+	{
+		return AssetsUtil.GetAsset(ToLocalPath(asset.RelativePath));
+	}
+
+	internal static string? ToRelativePath(string? localPath)
+	{
+		return localPath?
+			.Replace(LocationManager.AppDataPath, LOCAL_APP_DATA_PATH)
+			.Replace(LocationManager.GamePath, CITIES_PATH)
+			.Replace(LocationManager.WorkshopContentPath, WS_CONTENT_PATH);
+	}
+
+	internal static string? ToLocalPath(string? relativePath)
+	{
+		return relativePath?
+			.Replace(LOCAL_APP_DATA_PATH, LocationManager.AppDataPath)
+			.Replace(CITIES_PATH, LocationManager.GamePath)
+			.Replace(WS_CONTENT_PATH, LocationManager.WorkshopContentPath);
 	}
 }

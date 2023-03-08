@@ -96,4 +96,9 @@ public partial class MainForm : BasePanelForm
 	{
 		SetPanel<PC_Assets>(PI_Assets);
 	}
+
+	private void PI_Profiles_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_Profiles>(PI_Profiles);
+	}
 }

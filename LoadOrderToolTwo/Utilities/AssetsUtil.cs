@@ -67,4 +67,9 @@ internal class AssetsUtil
 
 		_config.Serialize();
 	}
+
+	internal static Asset GetAsset(string? v)
+	{
+		return CentralManager.Assets.FirstOrDefault(x => x.FileName.Equals(v, StringComparison.InvariantCultureIgnoreCase));
+	}
 }

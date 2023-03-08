@@ -68,6 +68,7 @@ public class Package : IPackage
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
 	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
+	Package IPackage.Package => this;
 
 	internal string GetName()
 	{

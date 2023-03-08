@@ -16,7 +16,7 @@ using System.Windows.Forms;
 using static CompatibilityReport.CatalogData.Enums;
 
 namespace LoadOrderToolTwo.UserInterface;
-internal class PackageDescription : SlickImageControl
+internal class PackageDescriptionControl : SlickImageControl
 {
 	public Package? Package { get; private set; }
 
@@ -37,7 +37,7 @@ internal class PackageDescription : SlickImageControl
 
 	protected override void OnPaint(PaintEventArgs e)
 	{
-		e.Graphics.Clear(FormDesign.Design.AccentBackColor);
+		e.Graphics.Clear(FormDesign.Design.BackColor);
 		e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 		e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
@@ -57,16 +57,17 @@ internal class PackageDescription : SlickImageControl
 			DrawLabel(e, Package.SteamId.ToString(), Properties.Resources.I_Steam_16, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.ActiveColor, 75).MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(0, Padding.Top, e.ClipRectangle.Width, e.ClipRectangle.Height), ContentAlignment.TopRight);
 		}
 
-		if (Package.CompatibilityReport is not null)
+		var report = Package.CompatibilityReport;
+		if (report is not null)
 		{
-			DrawLabel(e, Package.CompatibilityReport.reportSeverity.ToString().FormatWords(), Properties.Resources.I_CompatibilityReport_16, Package.CompatibilityReport.reportSeverity switch
+			DrawLabel(e, report.reportSeverity.ToString().FormatWords(), Properties.Resources.I_CompatibilityReport_16, (report.reportSeverity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
 				ReportSeverity.Unsubscribe => FormDesign.Design.RedColor,
 				ReportSeverity.Remarks => FormDesign.Design.ForeColor,
 				_ => FormDesign.Design.GreenColor
-			}, new Rectangle(statusRect.Right + Padding.Left, Padding.Top, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.TopLeft);
+			}).MergeColor(FormDesign.Design.BackColor, 60), new Rectangle(statusRect.Right + Padding.Left, Padding.Top, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.TopLeft);
 		}
 
 		if (Package.Author is not null)

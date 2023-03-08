@@ -1,6 +1,4 @@
-﻿using LoadOrderToolTwo.UserInterface.ListControl;
-
-namespace LoadOrderToolTwo.UserInterface.Panels;
+﻿namespace LoadOrderToolTwo.UserInterface.Panels;
 
 partial class PC_Assets
 {
@@ -36,7 +34,6 @@ partial class PC_Assets
 			this.TB_Search = new SlickControls.SlickTextBox();
 			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.LC_Assets = new LoadOrderToolTwo.UserInterface.ListControl.AssetsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -48,7 +45,6 @@ partial class PC_Assets
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33334F));
 			this.TLP_Main.Controls.Add(this.slickGroupBox1, 0, 0);
-			this.TLP_Main.Controls.Add(this.LC_Assets, 0, 2);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(5, 30);
 			this.TLP_Main.Name = "TLP_Main";
@@ -142,19 +138,6 @@ partial class PC_Assets
 			// 
 			// LC_Assets
 			// 
-			this.LC_Assets.AutoInvalidate = false;
-			this.LC_Assets.AutoScroll = true;
-			this.TLP_Main.SetColumnSpan(this.LC_Assets, 2);
-			this.LC_Assets.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LC_Assets.HighlightOnHover = true;
-			this.LC_Assets.ItemHeight = 28;
-			this.LC_Assets.Location = new System.Drawing.Point(0, 160);
-			this.LC_Assets.Margin = new System.Windows.Forms.Padding(0);
-			this.LC_Assets.Name = "LC_Assets";
-			this.LC_Assets.SeparateWithLines = true;
-			this.LC_Assets.Size = new System.Drawing.Size(778, 248);
-			this.LC_Assets.TabIndex = 3;
-			// 
 			// PC_Assets
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -181,5 +164,4 @@ partial class PC_Assets
 	private ThreeOptionToggle OT_Included;
 	private ThreeOptionToggle OT_Workshop;
 	private SlickControls.SlickTextBox TB_Search;
-	private AssetsListControl LC_Assets;
 }

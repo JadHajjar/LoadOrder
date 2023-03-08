@@ -10,6 +10,7 @@ public class Profile
 	public static readonly Profile TransitoryProfile = new("Temporary Profile") { Temporary = true, AutoSave = false };
 
 	[JsonIgnore] public bool Temporary { get; private set; }
+	[JsonIgnore] public bool IsMissingItems { get; set; }
 
 	public Profile(string name) : this()
 	{
@@ -40,7 +41,20 @@ public class Profile
 	{
 		public string? Name { get; set; }
 		public string? RelativePath { get; set; }
-	}
+        public ulong SteamId { get; set; }
+
+        public Asset(Domain.Asset asset)
+        {
+			SteamId = asset.SteamId;
+			Name = asset.Name;
+			RelativePath = ProfileManager.ToRelativePath(asset.FileName);
+		}
+
+        public Asset()
+        {
+            
+        }
+    }
 
 	public class Mod
 	{
@@ -48,5 +62,18 @@ public class Profile
 		public string? RelativePath { get; set; }
 		public ulong SteamId { get; set; }
 		public bool Enabled { get; set; }
-	}
+
+        public Mod(Domain.Mod mod)
+		{
+			SteamId = mod.SteamId;
+			Name = mod.Name;
+			Enabled = mod.IsEnabled;
+			RelativePath = ProfileManager.ToRelativePath(mod.Folder);
+		}
+
+        public Mod()
+        {
+            
+        }
+    }
 }

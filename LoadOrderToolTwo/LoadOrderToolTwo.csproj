@@ -20,7 +20,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PathMap>$(MSBuildProjectDirectory)\=$(ProjectName)\</PathMap>
     <StartupObject>LoadOrderToolTwo.Program</StartupObject>
-    <ApplicationIcon>Resources\LoadOrder.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\LOT2.ico</ApplicationIcon>
     <AssemblyVersion>2.0.0.*</AssemblyVersion>
     <FileVersion>2.0</FileVersion>
   </PropertyGroup>
@@ -55,10 +55,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="UserInterface\ListControl\AssetsListControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="UserInterface\PackageDescription.cs">
+    <Compile Update="UserInterface\PackageDescriptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UserInterface\StatusBubbles\CompatibilityReportBubble.cs">
@@ -77,6 +74,10 @@
 		<Compile Include="..\LoadOrder\Shared\LoadOrderConfig.cs" Link="Shared\LoadOrderConfig.cs" />
 		<Compile Include="..\LoadOrder\Shared\CSCache.cs" Link="Shared\CSCache.cs" />
 		<Compile Include="..\LoadOrder\Shared\SharedUtil.cs" Link="Shared\SharedUtil.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\LOT2.ico" />
 	</ItemGroup>
 
 	<ItemGroup>

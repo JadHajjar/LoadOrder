@@ -1,23 +1,22 @@
 ﻿using Extensions;
 
+using LoadOrderToolTwo.Domain;
+
 using SlickControls;
 
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
 internal class PackageIcon : SlickImageControl
 {
+	public Package? Package { get; set; }
+
 	protected override void OnPaint(PaintEventArgs e)
 	{
-		e.Graphics.Clear(BackColor);
+		e.Graphics.Clear(FormDesign.Design.BackColor);
 
-		e.Graphics.FillRectangle(new SolidBrush(FormDesign.Design.AccentBackColor), new Rectangle(0, Height / 2, Width, Height / 2));
+		e.Graphics.FillRectangle(new SolidBrush(FormDesign.Design.AccentBackColor), new Rectangle(0, 0, Width, Height / 2));
 
 		if (Loading)
 		{
@@ -29,7 +28,7 @@ internal class PackageIcon : SlickImageControl
 
 		if (Image == null)
 		{
-			using var image = new Bitmap(Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor));
+			using var image = new Bitmap((Package?.Mod is not null ? Properties.Resources.I_ModIcon : Properties.Resources.I_AssetIcon).Color(FormDesign.Design.IconColor));
 			using var texture = new TextureBrush(image);
 			var iconRect = ClientRectangle.CenterR(image.Size);
 
@@ -41,10 +40,10 @@ internal class PackageIcon : SlickImageControl
 		}
 		else
 		{
-			using var image = new Bitmap(Image ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), Size);
+			using var image = new Bitmap(Image, Size);
 			using var texture = new TextureBrush(image);
 
-			e.Graphics.FillRoundedRectangle(texture, ClientRectangle, (int)(10 * UI.FontScale)); 
+			e.Graphics.FillRoundedRectangle(texture, ClientRectangle, (int)(10 * UI.FontScale));
 		}
 	}
 }

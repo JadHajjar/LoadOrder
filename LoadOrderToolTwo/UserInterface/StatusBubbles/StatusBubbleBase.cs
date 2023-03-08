@@ -67,7 +67,7 @@ internal abstract class StatusBubbleBase : SlickImageControl
 
 	protected abstract void CustomDraw(PaintEventArgs e, ref int targetHeight);
 
-	protected void DrawValue(PaintEventArgs e, ref int targetHeight, string value, string descriptor, Color? foreColor = null)
+	protected void DrawValue(PaintEventArgs e, ref int targetHeight, string value, string descriptor, Color? foreColor = null, int x = 0)
 	{
 		SlickButton.GetColors(out var fore, out _, HoverState);
 
@@ -79,9 +79,9 @@ internal abstract class StatusBubbleBase : SlickImageControl
 		var valueSize = e.Graphics.Measure(value, UI.Font(8.25F, FontStyle.Bold), Width - Padding.Horizontal).ToSize();
 		var descriptorSize = e.Graphics.Measure(descriptor, UI.Font(8.25F), Width - valueSize.Width - Padding.Right + 3).ToSize();
 
-		e.Graphics.DrawString(value, UI.Font(8.25F, FontStyle.Bold), new SolidBrush(fore), new Rectangle(Padding.Left, targetHeight, valueSize.Width + 3, valueSize.Height));
+		e.Graphics.DrawString(value, UI.Font(8.25F, FontStyle.Bold), new SolidBrush(fore), new Rectangle(x + Padding.Left, targetHeight, valueSize.Width + 3, valueSize.Height));
 
-		e.Graphics.DrawString(descriptor, UI.Font(8.25F), new SolidBrush(fore), new Rectangle(valueSize.Width + Padding.Left, targetHeight, Width - valueSize.Width - Padding.Right + 3, Height));
+		e.Graphics.DrawString(descriptor, UI.Font(8.25F), new SolidBrush(fore), new Rectangle(x + valueSize.Width + Padding.Left, targetHeight, Width - valueSize.Width - Padding.Right + 3, Height));
 
 		targetHeight += Math.Max(valueSize.Height, descriptorSize.Height) + Padding.Bottom;
 	}

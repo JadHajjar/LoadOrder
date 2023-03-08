@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 namespace LoadOrderToolTwo.Domain;
 public class LaunchSettings
 {
-	public LaunchSettings()
-	{
-		UseSteamExe = true;
-	}
-
-	public bool UseSteamExe { get; set; }
+	public bool UseCitiesExe { get; set; }
 	public bool DebugMono { get; set; }
 	public bool ProfilerCities { get; set; }
 	public bool NoWorkshop { get; set; }

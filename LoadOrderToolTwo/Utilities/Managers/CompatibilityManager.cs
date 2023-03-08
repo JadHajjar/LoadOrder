@@ -688,7 +688,7 @@ internal class CompatibilityManager
 
 					s.message = "Unsubscribe this. It is succeeded by a mod you already have:";
 					s.messageLocaleId = "HRTC_S_U";
-					s.details = Catalog.GetMod(steamID).ToString();
+					s.details = steamID.ToString();
 					s.detailsLocaleId = " ";
 					s.detailsLocalized = Catalog.GetMod(steamID).ToString();
 					s.detailsValue = Catalog.GetMod(steamID).ToString();
@@ -745,7 +745,7 @@ internal class CompatibilityManager
 
 			if (Catalog.IsValidID(steamID))
 			{
-				result.messages.Add(new Message() { message = Catalog.GetMod(steamID).ToString() });
+				result.messages.Add(new Message() { message = Catalog.GetMod(steamID).ToString(), details = steamID.ToString() });
 			}
 			else
 			{

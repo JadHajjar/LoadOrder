@@ -7,6 +7,7 @@ namespace LoadOrderToolTwo.Domain.Interfaces;
 
 public interface IPackage
 {
+	Package Package { get; }
 	SteamUser? Author { get; set; }
 	bool BuiltIn { get; }
 	string? Class { get; set; }

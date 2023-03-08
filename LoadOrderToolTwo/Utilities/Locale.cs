@@ -61,6 +61,9 @@ internal class Locale : LocaleHelper
 	public static string Profiles => _instance.GetText(nameof(Profiles));
 	public static string AutoProfileSaveOn => _instance.GetText(nameof(AutoProfileSaveOn));
 	public static string AutoProfileSaveOff => _instance.GetText(nameof(AutoProfileSaveOff));
-
-	public static string NoProfileSelected { get; internal set; }
+	public static string TemporaryProfileCanNotBeEdited => _instance.GetText(nameof(TemporaryProfileCanNotBeEdited));
+	public static string LaunchSettings => _instance.GetText(nameof(LaunchSettings));
+	public static string IncludesItemsYouDoNotHave => _instance.GetText(nameof(IncludesItemsYouDoNotHave));
+	public static string ContentAndInfo => _instance.GetText(nameof(ContentAndInfo));
+	public static string OtherProfiles => _instance.GetText(nameof(OtherProfiles));
 }

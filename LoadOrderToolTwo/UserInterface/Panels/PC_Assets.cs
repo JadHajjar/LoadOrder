@@ -5,13 +5,24 @@ using LoadOrderToolTwo.Utilities;
 using SlickControls;
 
 using System;
+using LoadOrderToolTwo.Domain;
+using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_Assets : PanelContent
 {
+	private ItemListControl<Asset> LC_Assets;
+
 	public PC_Assets()
 	{
 		InitializeComponent();
+
+		LC_Assets = new() { Dock = DockStyle.Fill };
+
+		TLP_Main.Controls.Add(LC_Assets, 0, 2);
+		TLP_Main.SetColumnSpan(LC_Assets, 2);
+
+		OT_Workshop.Visible = !CentralManager.CurrentProfile.LaunchSettings.NoWorkshop;
 
 		LC_Assets.CanDrawItem += LC_Assets_CanDrawItem;
 
@@ -33,7 +44,12 @@ public partial class PC_Assets : PanelContent
 
 	private void LC_Assets_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Asset> e)
 	{
-		if (OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
+		if (CentralManager.CurrentProfile.LaunchSettings.NoWorkshop)
+		{
+			e.DoNotDraw = e.Item.Workshop;
+		}
+
+		if (!e.DoNotDraw && OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			e.DoNotDraw |= OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
 		}
@@ -63,6 +79,6 @@ public partial class PC_Assets : PanelContent
 
 	private void FilterChanged(object sender, EventArgs e)
 	{
-		LC_Assets.Invalidate();
+		LC_Assets.FilterChanged();
 	}
 }

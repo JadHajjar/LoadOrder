@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.Domain;
+using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Utilities;
 
 using SlickControls;
@@ -26,12 +27,24 @@ public partial class PC_PackagePage : PanelContent
 		Package = package;
 
 		Text = Locale.Back;
+		T_Info.Text = Locale.ContentAndInfo;
+		T_CR.Text = Locale.CompatibilityReport;
+		T_Profiles.Text = Locale.OtherProfiles;
 		L_Title.Text = package.GetName().RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?");
+		PB_Icon.Package = package;
 
 		if (!string.IsNullOrWhiteSpace(package.IconUrl))
 			PB_Icon.LoadImage(package.IconUrl);
 
 		P_Info.SetPackage(package);
+
+		var c = new ItemListControl<IPackage>();
+		c.Dock = DockStyle.Fill;
+		T_Info.LinkedControl = c;
+		
+		if (Package.Mod != null)
+		c.Add(Package.Mod);
+		c.AddRange(Package.Assets!);
 	}
 
 	public Package Package { get; }
@@ -49,7 +62,8 @@ public partial class PC_PackagePage : PanelContent
 	{
 		base.DesignChanged(design);
 
-		TLP_Content.BackColor = P_Back.BackColor = design.AccentBackColor;
+		BackColor = design.AccentBackColor;
+		P_Content.BackColor = P_Back.BackColor = design.BackColor;
 	}
 
 	private void B_Redownload_Click(object sender, EventArgs e)

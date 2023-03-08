@@ -35,7 +35,6 @@ partial class PC_Mods
 			this.OT_Workshop = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Enabled = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
 			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
-			this.LC_Mods = new LoadOrderToolTwo.UserInterface.ListControl.ModsListControl();
 			this.TLP_Main.SuspendLayout();
 			this.slickGroupBox1.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -53,7 +52,6 @@ partial class PC_Mods
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.00001F));
 			this.TLP_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.TLP_Main.Controls.Add(this.slickGroupBox1, 0, 0);
-			this.TLP_Main.Controls.Add(this.LC_Mods, 0, 2);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(5, 30);
 			this.TLP_Main.Name = "TLP_Main";
@@ -165,18 +163,6 @@ partial class PC_Mods
 			// 
 			// LC_Mods
 			// 
-			this.LC_Mods.AutoInvalidate = false;
-			this.LC_Mods.AutoScroll = true;
-			this.TLP_Main.SetColumnSpan(this.LC_Mods, 2);
-			this.LC_Mods.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.LC_Mods.HighlightOnHover = true;
-			this.LC_Mods.ItemHeight = 28;
-			this.LC_Mods.Location = new System.Drawing.Point(0, 196);
-			this.LC_Mods.Margin = new System.Windows.Forms.Padding(0);
-			this.LC_Mods.Name = "LC_Mods";
-			this.LC_Mods.SeparateWithLines = true;
-			this.LC_Mods.Size = new System.Drawing.Size(890, 290);
-			this.LC_Mods.TabIndex = 3;
 			// 
 			// PC_Mods
 			// 
@@ -208,5 +194,4 @@ partial class PC_Mods
 	private ThreeOptionToggle OT_Included;
 	private SlickControls.SlickGroupBox slickGroupBox1;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-	private UserInterface.ListControl.ModsListControl LC_Mods;
 }

@@ -227,4 +227,9 @@ internal class ModsUtil
 			.GroupBy(x => Path.GetFileName(x.FileName))
 			.Where(x => x.Count() > 1);
 	}
+
+	internal static Mod GetMod(string? v)
+	{
+		return CentralManager.Mods.FirstOrDefault(x => x.Folder.Equals(v, StringComparison.InvariantCultureIgnoreCase));
+	}
 }

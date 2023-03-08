@@ -39,6 +39,7 @@
 			this.PI_Options = new SlickControls.PanelItem();
 			this.PI_Compatibility = new SlickControls.PanelItem();
 			this.PI_ModReview = new SlickControls.PanelItem();
+			this.PI_Troubleshoot = new SlickControls.PanelItem();
 			this.base_P_SideControls.SuspendLayout();
 			this.base_P_Container.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
@@ -53,8 +54,8 @@
 			this.base_P_SideControls.Controls.Add(this.tableLayoutPanel1);
 			this.base_P_SideControls.Font = new System.Drawing.Font("Nirmala UI", 10.5F);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
-			this.base_P_SideControls.Location = new System.Drawing.Point(0, 426);
-			this.base_P_SideControls.Size = new System.Drawing.Size(202, 50);
+			this.base_P_SideControls.Location = new System.Drawing.Point(0, 411);
+			this.base_P_SideControls.Size = new System.Drawing.Size(239, 50);
 			// 
 			// base_P_Container
 			// 
@@ -94,7 +95,7 @@
 			// 
 			this.L_Version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Version.AutoSize = true;
-			this.L_Version.Location = new System.Drawing.Point(144, 0);
+			this.L_Version.Location = new System.Drawing.Point(181, 0);
 			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Version.Name = "L_Version";
 			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
@@ -128,7 +129,7 @@
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(202, 23);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(239, 23);
 			this.tableLayoutPanel1.TabIndex = 32;
 			// 
 			// PI_Profiles
@@ -139,6 +140,7 @@
 			this.PI_Profiles.Icon = ((System.Drawing.Bitmap)(resources.GetObject("PI_Profiles.Icon")));
 			this.PI_Profiles.Selected = false;
 			this.PI_Profiles.Text = "Profiles";
+			this.PI_Profiles.OnClick += new System.Windows.Forms.MouseEventHandler(this.PI_Profiles_OnClick);
 			// 
 			// PI_Options
 			// 
@@ -167,13 +169,23 @@
 			this.PI_ModReview.Selected = false;
 			this.PI_ModReview.Text = "Mods Review";
 			// 
+			// PI_Troubleshoot
+			// 
+			this.PI_Troubleshoot.ForceReopen = false;
+			this.PI_Troubleshoot.Group = "Maintenance";
+			this.PI_Troubleshoot.Highlighted = false;
+			this.PI_Troubleshoot.Icon = ((System.Drawing.Bitmap)(resources.GetObject("PI_Troubleshoot.Icon")));
+			this.PI_Troubleshoot.Selected = false;
+			this.PI_Troubleshoot.Text = "Help & Logs";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(1000, 575);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.FormIcon = ((System.Drawing.Image)(resources.GetObject("$this.FormIcon")));
-			this.IconBounds = new System.Drawing.Rectangle(94, 22, 14, 42);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+			this.IconBounds = new System.Drawing.Rectangle(112, 29, 14, 42);
 			this.MaximizeBox = true;
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 1920, 1032);
 			this.MinimizeBox = true;
@@ -185,6 +197,7 @@
         this.PI_Profiles,
         this.PI_ModReview,
         this.PI_Compatibility,
+        this.PI_Troubleshoot,
         this.PI_Options};
 			this.Text = "Load Order Tool";
 			this.base_P_SideControls.ResumeLayout(false);
@@ -208,5 +221,6 @@
 		internal SlickControls.PanelItem PI_Options;
 		internal SlickControls.PanelItem PI_Compatibility;
 		private SlickControls.PanelItem PI_ModReview;
+		private SlickControls.PanelItem PI_Troubleshoot;
 	}
 }

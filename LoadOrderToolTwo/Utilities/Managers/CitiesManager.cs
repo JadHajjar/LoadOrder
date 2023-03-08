@@ -11,6 +11,7 @@ using System.Management;
 using System.Timers;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
+
 public static class CitiesManager
 {
 	public static event MonitorTickDelegate? MonitorTick;
@@ -32,43 +33,20 @@ public static class CitiesManager
 
 	public static bool CitiesAvailable()
 	{
-		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamExe : LocationManager.CitiesExe;
-		var dir = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamPath : LocationManager.GamePath;
+		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseCitiesExe ? LocationManager.CitiesExe : LocationManager.SteamExe;
+		var dir = CentralManager.CurrentProfile.LaunchSettings.UseCitiesExe ? LocationManager.GamePath : LocationManager.SteamPath;
 
 		return File.Exists(Path.Combine(dir, fileExe));
 	}
 
 	public static void Launch()
 	{
-		UpdateFiles(); // auto disabling FPS booster causes unsaved changes so this comes first.
+		UpdateFiles();
 
-		//if (!ConfigWrapper.AutoSave && ConfigWrapper.Dirty)
-		//{
-		//	var result = MessageBox.Show(
-		//		caption: "Unsaved changes",
-		//		text:
-		//		"There are changes that are not saved to game and will not take efFfect. " +
-		//		"Save changes to game before launching it?",
-		//		buttons: MessageBoxButtons.YesNoCancel);
-		//	switch (result)
-		//	{
-		//		case DialogResult.Cancel:
-		//			return;
-		//		case DialogResult.Yes:
-		//			ConfigWrapper.SaveConfig();
-		//			CO.GameSettings.SaveAll();
-		//			break;
-		//		case DialogResult.No:
-		//			break;
-		//		default:
-		//			Log.Exception(new Exception("FormClosing: Unknown choice" + result));
-		//			break;
-		//	}
-		//}
 		var args = GetCommandArgs();
 
-		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamExe : LocationManager.CitiesExe;
-		var dir = CentralManager.CurrentProfile.LaunchSettings.UseSteamExe ? LocationManager.SteamPath : LocationManager.GamePath;
+		var fileExe = CentralManager.CurrentProfile.LaunchSettings.UseCitiesExe ? LocationManager.CitiesExe : LocationManager.SteamExe;
+		var dir = CentralManager.CurrentProfile.LaunchSettings.UseCitiesExe ? LocationManager.GamePath : LocationManager.SteamPath;
 		IOUtil.Execute(dir, fileExe, string.Join(" ", args));
 	}
 
@@ -89,7 +67,7 @@ public static class CitiesManager
 						"Disable FPS Booster to show logs?",
 						"Disable FPS Booster",
 						buttons: PromptButtons.YesNo);
-					
+
 					if (result == System.Windows.Forms.DialogResult.Yes)
 					{
 						fpsBooster.IsIncluded = false;
@@ -101,6 +79,7 @@ public static class CitiesManager
 			{
 				success = MonoFile.Instance.UseRelease();
 			}
+
 			if (!success)
 			{
 				if (MonoFile.Instance.ReleaseIsUsed() is bool bReleaseMono)
@@ -118,6 +97,7 @@ public static class CitiesManager
 			{
 				success = CitiesFile.Instance.UseRelease();
 			}
+
 			if (!success)
 			{
 				if (CitiesFile.Instance.ReleaseIsUsed() is bool bReleaseCities)
@@ -141,7 +121,7 @@ public static class CitiesManager
 	private static string[] GetCommandArgs()
 	{
 		var args = new List<string>();
-		if (CentralManager.CurrentProfile.LaunchSettings.UseSteamExe)
+		if (!CentralManager.CurrentProfile.LaunchSettings.UseCitiesExe)
 		{
 			args.Add("-applaunch 255710");
 		}
@@ -180,7 +160,7 @@ public static class CitiesManager
 			}
 			else
 			{
-				args.Add("--loadSave=" + quote(path));
+				args.Add("--loadSave=" + quote(path!));
 			}
 		}
 
