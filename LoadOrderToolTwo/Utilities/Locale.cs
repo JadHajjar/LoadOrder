@@ -66,4 +66,6 @@ internal class Locale : LocaleHelper
 	public static string IncludesItemsYouDoNotHave => _instance.GetText(nameof(IncludesItemsYouDoNotHave));
 	public static string ContentAndInfo => _instance.GetText(nameof(ContentAndInfo));
 	public static string OtherProfiles => _instance.GetText(nameof(OtherProfiles));
+
+	public static string CR_NoAvailableReport { get; internal set; }
 }

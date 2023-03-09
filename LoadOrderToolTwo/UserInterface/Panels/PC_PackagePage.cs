@@ -7,14 +7,8 @@ using LoadOrderToolTwo.Utilities;
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
@@ -34,17 +28,27 @@ public partial class PC_PackagePage : PanelContent
 		PB_Icon.Package = package;
 
 		if (!string.IsNullOrWhiteSpace(package.IconUrl))
+		{
 			PB_Icon.LoadImage(package.IconUrl);
+		}
 
 		P_Info.SetPackage(package);
 
-		var c = new ItemListControl<IPackage>();
-		c.Dock = DockStyle.Fill;
-		T_Info.LinkedControl = c;
-		
-		if (Package.Mod != null)
-		c.Add(Package.Mod);
+		var c = new ItemListControl<IPackage>
+		{
+			Dock = DockStyle.Fill
+		};
+
 		c.AddRange(Package.Assets!);
+
+		if (Package.Mod != null)
+		{
+			c.Add(Package.Mod);
+		}
+
+		T_Info.LinkedControl = c;
+
+		T_CR.LinkedControl = new PackageCompatibilityReportControl(package);
 	}
 
 	public Package Package { get; }
