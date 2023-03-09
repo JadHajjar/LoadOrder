@@ -59,7 +59,7 @@ internal class AssetsBubble : StatusBubbleBase
 		var assets = CentralManager.Assets.Count(x => x.IsIncluded);
 		var assetsSize = CentralManager.Assets.Where(x => x.IsIncluded).Sum(x => x.FileSize).SizeString();
 
-		DrawValue(e, ref targetHeight, assets.ToString(), "assets included");
-		DrawValue(e, ref targetHeight, assetsSize, "total size");
+		DrawValue(e, ref targetHeight, assets.ToString(), assets == 1 ? Locale.AssetIncluded : Locale.AssetIncludedPlural);
+		DrawValue(e, ref targetHeight, assetsSize, Locale.TotalSize);
 	}
 }

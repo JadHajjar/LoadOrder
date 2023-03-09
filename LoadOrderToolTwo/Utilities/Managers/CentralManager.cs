@@ -123,6 +123,13 @@ internal static class CentralManager
 
 					InformationUpdate(package);
 				}
+
+				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
+				{
+					package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!, true);
+
+					InformationUpdate(package);
+				}
 			});
 		}
 
@@ -142,9 +149,18 @@ internal static class CentralManager
 
 			Parallel.ForEach(Packages, (package, state) =>
 			{
-				if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage == null)
+				if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage is null)
 				{
 					package.IconImage = ImageManager.GetImage(package.IconUrl!);
+
+					InformationUpdate(package);
+				}
+
+				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl) && package.AuthorIconImage is null)
+				{
+					package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!);
+
+					InformationUpdate(package);
 				}
 			});
 

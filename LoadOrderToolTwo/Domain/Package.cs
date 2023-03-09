@@ -8,6 +8,7 @@ using LoadOrderToolTwo.Utilities.Managers;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 
 namespace LoadOrderToolTwo.Domain;
 
@@ -57,6 +58,7 @@ public class Package : IPackage
 	public SteamUser? Author { get; set; }
 	public string? Class { get; set; }
 	public Bitmap? IconImage { get; set; }
+	public Bitmap? AuthorIconImage { get; set; }
 	public string? IconUrl { get; set; }
 	public string Name { get; set; }
 	public bool RemovedFromSteam { get; set; }
@@ -67,8 +69,10 @@ public class Package : IPackage
 	public bool SteamInfoLoaded { get; set; }
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
+
 	internal CompatibilityManager.ModInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
 	Package IPackage.Package => this;
+	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
 
 	internal string GetName()
 	{

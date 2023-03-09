@@ -5,12 +5,7 @@ using LoadOrderToolTwo.Utilities;
 
 using SlickControls;
 
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static CompatibilityReport.CatalogData.Enums;
@@ -60,7 +55,7 @@ internal class PackageDescriptionControl : SlickImageControl
 		var report = Package.CompatibilityReport;
 		if (report is not null)
 		{
-			DrawLabel(e, report.reportSeverity.ToString().FormatWords(), Properties.Resources.I_CompatibilityReport_16, (report.reportSeverity switch
+			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{report.reportSeverity}"), Properties.Resources.I_CompatibilityReport_16, (report.reportSeverity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
@@ -79,8 +74,8 @@ internal class PackageDescriptionControl : SlickImageControl
 
 			e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.BackColor), authorRect, (int)(6 * UI.FontScale));
 
-			e.Graphics.DrawString("by " + Package.Author.Name, UI.Font(9.75F), new SolidBrush(FormDesign.Design.ForeColor), authorRect.Pad(avatarRect.Right - Padding.Left,0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center });
-			
+			e.Graphics.DrawString("by " + Package.Author.Name, UI.Font(9.75F), new SolidBrush(FormDesign.Design.ForeColor), authorRect.Pad(avatarRect.Right - Padding.Left, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center });
+
 			if (Loading)
 			{
 				DrawLoader(e.Graphics, avatarRect);

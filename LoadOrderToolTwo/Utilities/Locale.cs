@@ -55,7 +55,6 @@ internal class Locale : LocaleHelper
 	public static string StatusUnknown => _instance.GetText(nameof(StatusUnknown));
 	public static string OutOfDate => _instance.GetText(nameof(OutOfDate));
 	public static string PartiallyDownloaded => _instance.GetText(nameof(PartiallyDownloaded));
-
 	public static string CompatibilityReport => _instance.GetText(nameof(CompatibilityReport));
 	public static string Back => _instance.GetText(nameof(Back));
 	public static string Profiles => _instance.GetText(nameof(Profiles));
@@ -66,6 +65,10 @@ internal class Locale : LocaleHelper
 	public static string IncludesItemsYouDoNotHave => _instance.GetText(nameof(IncludesItemsYouDoNotHave));
 	public static string ContentAndInfo => _instance.GetText(nameof(ContentAndInfo));
 	public static string OtherProfiles => _instance.GetText(nameof(OtherProfiles));
+	public static string Filters => _instance.GetText(nameof(Filters));
+	public static string AssetIncluded => _instance.GetText(nameof(AssetIncluded));
+	public static string AssetIncludedPlural => _instance.GetText(nameof(AssetIncludedPlural));
+	public static string TotalSize => _instance.GetText(nameof(TotalSize));
 
-	public static string CR_NoAvailableReport { get; internal set; }
+	public static string CR_NoAvailableReport => _instance.GetText(nameof(CR_NoAvailableReport));
 }

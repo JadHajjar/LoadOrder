@@ -47,7 +47,7 @@ public static class ImageManager
 			return null;
 		}
 
-		var filePath = Path.Combine(ISave.DocsFolder, "Thumbs", Path.GetFileName(url.TrimEnd('/', '\\')) + ".png");
+		var filePath = Path.Combine(ISave.DocsFolder, "Thumbs", Path.GetFileNameWithoutExtension(url.TrimEnd('/', '\\')) + Path.GetExtension(url).IfEmpty(".png"));
 
 		lock (LockObj(url))
 		{
@@ -106,7 +106,7 @@ public static class ImageManager
 					Thread.Sleep(1000);
 					goto start;
 				}
-				else if (tries < 3)
+				else if (tries < 2)
 				{
 					tries++;
 					goto start;

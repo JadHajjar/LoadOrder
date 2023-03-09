@@ -49,6 +49,12 @@ public class ThreeOptionToggle : SlickControl
 		Font = UI.Font(9.75F);
 		Margin = UI.Scale(new Padding(5), UI.FontScale);
 		Padding = UI.Scale(new Padding(5), UI.FontScale);
+	}
+
+	protected override void OnSizeChanged(EventArgs e)
+	{
+		base.OnSizeChanged(e);
+
 		Height = (int)(28 * UI.UIScale);
 	}
 

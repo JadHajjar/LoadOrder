@@ -93,6 +93,16 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_Broken {
+            get {
+                object obj = ResourceManager.GetObject("I_Broken", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_Broken_16 {
             get {
                 object obj = ResourceManager.GetObject("I_Broken_16", resourceCulture);
@@ -166,6 +176,16 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_Content_16 {
             get {
                 object obj = ResourceManager.GetObject("I_Content_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_ContentRemoved {
+            get {
+                object obj = ResourceManager.GetObject("I_ContentRemoved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -386,6 +406,16 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_ProfileSettings_16 {
             get {
                 object obj = ResourceManager.GetObject("I_ProfileSettings_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Question {
+            get {
+                object obj = ResourceManager.GetObject("I_Question", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

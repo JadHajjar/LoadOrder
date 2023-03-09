@@ -207,7 +207,7 @@ public static class SteamUtil
 		}
 
 		package.SteamInfoLoaded = true;
-		package.Name = steamWorkshopItem.Title;
+		package.Name = package.SteamId == 2040656402ul ? "Harmony" : steamWorkshopItem.Title;
 		package.Author = steamWorkshopItem.Author;
 		package.ServerTime = steamWorkshopItem.UpdatedUTC;
 		package.Tags = steamWorkshopItem.Tags;

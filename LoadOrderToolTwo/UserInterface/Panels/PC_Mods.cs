@@ -18,7 +18,7 @@ public partial class PC_Mods : PanelContent
 	{
 		InitializeComponent();
 
-		LC_Mods = new() { Dock = DockStyle.Fill };
+		LC_Mods = new() { Dock = DockStyle.Fill, Margin = new() };
 
 		TLP_Main.Controls.Add(LC_Mods, 0, 2);
 		TLP_Main.SetColumnSpan(LC_Mods, 2);
@@ -28,6 +28,7 @@ public partial class PC_Mods : PanelContent
 		LC_Mods.CanDrawItem += LC_Mods_CanDrawItem;
 
 		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
+		roundedGroupBox1.Text = Locale.Filters;
 
 		if (!CentralManager.IsContentLoaded)
 		{
@@ -41,6 +42,14 @@ public partial class PC_Mods : PanelContent
 		}
 
 		CentralManager.WorkshopInfoUpdated += LC_Mods.Invalidate;
+	}
+
+	protected override void DesignChanged(FormDesign design)
+	{
+		base.DesignChanged(design);
+
+		BackColor = design.AccentBackColor;
+		LC_Mods.BackColor = roundedGroupBox1.BackColor = design.BackColor;
 	}
 
 	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Mod> e)

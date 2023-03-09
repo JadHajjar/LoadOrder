@@ -39,8 +39,8 @@ internal class ProfilePreviewControl : StatusBubbleBase
 	protected override void CustomDraw(PaintEventArgs e, ref int targetHeight)
 	{
 		var y = targetHeight;
-		DrawValue(e, ref targetHeight, Profile.Mods.Count.ToString(), "mods included");
-		DrawValue(e, ref y, Profile.Assets.Count.ToString(), "assets included", x: Width / 2);
+		DrawValue(e, ref targetHeight, Profile.Mods.Count.ToString(), Profile.Mods.Count == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural);
+		DrawValue(e, ref y, Profile.Assets.Count.ToString(), Profile.Assets.Count == 1 ? Locale.AssetIncluded : Locale.AssetIncludedPlural, x: Width / 2);
 
 		if (Profile.IsMissingItems)
 		{

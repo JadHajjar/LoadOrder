@@ -14,6 +14,7 @@ public interface IPackage
 	string Folder { get; }
 	string? VirtualFolder { get; }
 	Bitmap? IconImage { get; set; }
+	Bitmap? AuthorIconImage { get; set; }
 	string? IconUrl { get; set; }
 	long LocalSize { get; }
 	DateTime LocalTime { get; }
@@ -29,4 +30,5 @@ public interface IPackage
 	string? SteamPage { get; }
 	string[]? Tags { get; set; }
 	bool Workshop { get; }
+	bool IsIncluded { get; }
 }
