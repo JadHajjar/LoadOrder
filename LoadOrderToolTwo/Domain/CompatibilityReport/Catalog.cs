@@ -101,7 +101,7 @@ public class Catalog
 
 	public Mod? GetMod(ulong steamId)
 	{
-		return modIndex.TryGet(steamId);
+		return modIndex.TryGet(steamId)?.Clone();
 	}
 
 	public Author? GetAuthor(ulong authorID, string authorUrl)
@@ -129,7 +129,7 @@ public class Catalog
 
 	public Mod? GetSubscription(ulong steamID)
 	{
-		return CentralManager.Packages.Any(x => x.SteamId == steamID) && modIndex.ContainsKey(steamID) ? modIndex[steamID] : null;
+		return CentralManager.Packages.Any(x => x.SteamId == steamID && (x.Mod?.IsIncluded ?? true) && (x.Mod?.IsEnabled ?? true)) && modIndex.ContainsKey(steamID) ? modIndex[steamID] : null;
 	}
 
     public List<Compatibility> GetSubscriptionCompatibilities(ulong steamID)

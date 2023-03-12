@@ -26,6 +26,13 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		HighlightOnHover = true;
 		SeparateWithLines = true;
 
+		if (!CentralManager.IsContentLoaded)
+		{
+			Loading = true;
+
+			CentralManager.ContentLoaded += () => Loading = false;
+		}
+
 		CentralManager.ModInformationUpdated += (_) => Invalidate();
 	}
 
@@ -139,6 +146,26 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		catch { }
 	}
 
+	protected override void OnPaint(PaintEventArgs e)
+	{
+		if (Loading)
+		{
+			base.OnPaint(e);
+		}
+		else if (!Items.Any())
+		{
+			e.Graphics.DrawString(Locale.NoLocalPackagesFound, UI.Font(9.75F, FontStyle.Italic), new SolidBrush(ForeColor), ClientRectangle, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+		}
+		else if (!SafeGetItems().Any())
+		{
+			e.Graphics.DrawString(Locale.NoPackagesMatchFilters, UI.Font(9.75F, FontStyle.Italic), new SolidBrush(ForeColor), ClientRectangle, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+		}
+		else
+		{
+			base.OnPaint(e);
+		}
+	}
+
 	protected override void OnPaintItem(ItemPaintEventArgs<T> e)
 	{
 		var large = e.HoverState.HasFlag(HoverState.Hovered) || e.HoverState.HasFlag(HoverState.Pressed);
@@ -237,7 +264,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		var report = e.Item.Package.CompatibilityReport;
 		if (report is not null)
 		{
-			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{report.reportSeverity}"), Properties.Resources.I_CompatibilityReport_16, (report.reportSeverity switch
+			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{report.Severity}"), Properties.Resources.I_CompatibilityReport_16, (report.Severity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
@@ -298,7 +325,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 
 	private void GetStatusDescriptors(T mod, out string text, out Bitmap? icon, out Color color)
 	{
-		if (!mod.Workshop && !mod.BuiltIn)
+		if (!mod.Workshop)
 		{
 			text = Locale.Local;
 			icon = Properties.Resources.I_Local_16;

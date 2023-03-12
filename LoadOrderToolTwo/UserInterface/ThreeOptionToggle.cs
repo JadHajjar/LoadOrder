@@ -11,7 +11,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
-public class ThreeOptionToggle : SlickControl
+public class ThreeOptionToggle : SlickControl, ISupportsReset
 {
 	private Value _selectedValue;
 
@@ -91,9 +91,9 @@ public class ThreeOptionToggle : SlickControl
 		var iconSize = UI.FontScale >= 1.25 ? 24 : 16;
 		var centerWidth = (int)(40 * UI.FontScale);
 		var cursorLocation = PointToClient(Cursor.Position);
-		var rectangle1 = new Rectangle(0, 0, (Width - centerWidth) / 2, Height);
-		var rectangle2 = new Rectangle((Width + centerWidth) / 2, 0, (Width - centerWidth) / 2, Height);
-		var rectangleNone = new Rectangle((Width - centerWidth) / 2, 0, centerWidth, Height);
+		var rectangle1 = new Rectangle(0, 0, (Width - centerWidth) / 2, Height - 1);
+		var rectangle2 = new Rectangle((Width + centerWidth) / 2, 0, (Width - centerWidth) / 2, Height - 1);
+		var rectangleNone = new Rectangle((Width - centerWidth) / 2, 0, centerWidth, Height - 1);
 		var option1Hovered = rectangle1.Contains(cursorLocation) && HoverState.HasFlag(HoverState.Hovered);
 		var option2Hovered = rectangle2.Contains(cursorLocation) && HoverState.HasFlag(HoverState.Hovered);
 		var noneHovered = rectangleNone.Contains(cursorLocation) && HoverState.HasFlag(HoverState.Hovered);
@@ -101,12 +101,12 @@ public class ThreeOptionToggle : SlickControl
 		var textColor2 = SelectedValue == Value.Option2 || (option2Hovered && HoverState.HasFlag(HoverState.Pressed)) ? FormDesign.Design.ActiveForeColor : FormDesign.Design.ForeColor;
 		var textColorNone = SelectedValue == Value.None || (noneHovered && HoverState.HasFlag(HoverState.Pressed)) ? FormDesign.Design.ActiveForeColor : FormDesign.Design.ForeColor;
 
-		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(FormDesign.Design.ButtonColor), ClientRectangle, Padding.Left);
+		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(FormDesign.Design.ButtonColor, 0.5F), ClientRectangle, Padding.Left);
 
 		// Option 1
 		if (option1Hovered || SelectedValue == Value.Option1)
 		{
-			e.Graphics.FillRoundedRectangle(rectangle1.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.Option1 ? 255 : 100, OptionStyle1.GetColor())), rectangle1, Padding.Left, topRight: false, botRight: false);
+			e.Graphics.FillRoundedRectangle(rectangle1.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.Option1 ? 255 : 100, OptionStyle1.GetColor()), 0.5F), rectangle1, Padding.Left, topRight: false, botRight: false);
 		}
 
 		if (Image1 != null)
@@ -127,7 +127,7 @@ public class ThreeOptionToggle : SlickControl
 		// Option 2
 		if (option2Hovered || SelectedValue == Value.Option2)
 		{
-			e.Graphics.FillRoundedRectangle(rectangle2.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.Option2 ? 255 : 100, OptionStyle2.GetColor())), rectangle2, Padding.Left, topLeft: false, botLeft: false);
+			e.Graphics.FillRoundedRectangle(rectangle2.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.Option2 ? 255 : 100, OptionStyle2.GetColor()), 0.5F), rectangle2, Padding.Left, topLeft: false, botLeft: false);
 		}
 
 		if (Image2 != null)
@@ -148,10 +148,15 @@ public class ThreeOptionToggle : SlickControl
 		// Center
 		if (noneHovered || SelectedValue == Value.None)
 		{
-			e.Graphics.FillRectangle(rectangleNone.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.None ? 255 : 100, FormDesign.Design.ActiveColor)), rectangleNone);
+			e.Graphics.FillRectangle(rectangleNone.Gradient(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) || SelectedValue == Value.None ? 255 : 100, FormDesign.Design.ActiveColor), 0.5F), rectangleNone);
 		}
 
 		using var slash = Properties.Resources.I_Slash.Color(textColorNone);
 		e.Graphics.DrawImage(slash, ClientRectangle.CenterR(iconSize, iconSize));
+	}
+
+	public void ResetValue()
+	{
+		SelectedValue = Value.None;
 	}
 }

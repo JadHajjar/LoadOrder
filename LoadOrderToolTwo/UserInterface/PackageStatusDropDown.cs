@@ -18,10 +18,15 @@ using System.Windows.Forms;
 namespace LoadOrderToolTwo.UserInterface;
 internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 {
-    public PackageStatusDropDown()
-    {
-		Items = Enum.GetValues(typeof(DownloadStatus)).Cast<DownloadStatus>().ToArray();
-    }
+	protected override void OnHandleCreated(EventArgs e)
+	{
+		base.OnHandleCreated(e);
+
+		if (Live)
+		{
+			Items = new[] { (DownloadStatus)(-1) }.Concat(Enum.GetValues(typeof(DownloadStatus)).Cast<DownloadStatus>()).ToArray();
+		}
+	}
 
 	protected override void UIChanged()
 	{
@@ -34,7 +39,7 @@ internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 	{
 		base.OnSizeChanged(e);
 
-		Height = (int)(28 * UI.UIScale);
+		Height = (int)(42 * UI.UIScale);
 	}
 
 	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, DownloadStatus item)
@@ -44,13 +49,25 @@ internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 		using (icon.Color(hoverState.HasFlag(HoverState.Pressed) ? foreColor : color))
 		{
 			e.Graphics.DrawImage(icon, rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
+			
+			var textRect = new Rectangle(rectangle.X + icon.Width + Padding.Left, rectangle.Y + (rectangle.Height - Font.Height) / 2, 0, Font.Height);
 
-			e.Graphics.DrawString(text, Font, new SolidBrush(foreColor), rectangle.Pad(icon.Width + Padding.Left, 0, 0, 1), new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter });
+			textRect.Width = rectangle.Width - textRect.X;
+
+			e.Graphics.DrawString(text, Font, new SolidBrush(foreColor), textRect, new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter });
 		}
 	}
 
 	private void GetStatusDescriptors(DownloadStatus status, out string text, out Bitmap icon, out Color color)
 	{
+		if ((int)status == -1)
+		{
+			text = Locale.AnyStatus;
+			icon = ImageManager.GetIcon("I_Slash");
+			color = FormDesign.Design.ForeColor;
+			return;
+		}
+
 		switch (status)
 		{
 			case DownloadStatus.OK:

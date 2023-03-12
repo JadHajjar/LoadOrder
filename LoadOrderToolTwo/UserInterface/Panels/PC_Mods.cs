@@ -7,12 +7,14 @@ using LoadOrderToolTwo.Utilities.Managers;
 using SlickControls;
 
 using System;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_Mods : PanelContent
 {
-	private ItemListControl<Mod> LC_Mods;
+	private readonly ItemListControl<Mod> LC_Mods;
 
 	public PC_Mods()
 	{
@@ -20,15 +22,11 @@ public partial class PC_Mods : PanelContent
 
 		LC_Mods = new() { Dock = DockStyle.Fill, Margin = new() };
 
-		TLP_Main.Controls.Add(LC_Mods, 0, 2);
-		TLP_Main.SetColumnSpan(LC_Mods, 2);
+		TLP_Main.Controls.Add(LC_Mods, 0, 3);
 
 		OT_Workshop.Visible = !CentralManager.CurrentProfile.LaunchSettings.NoWorkshop;
 
 		LC_Mods.CanDrawItem += LC_Mods_CanDrawItem;
-
-		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
-		roundedGroupBox1.Text = Locale.Filters;
 
 		if (!CentralManager.IsContentLoaded)
 		{
@@ -44,42 +42,97 @@ public partial class PC_Mods : PanelContent
 		CentralManager.WorkshopInfoUpdated += LC_Mods.Invalidate;
 	}
 
+	protected override void LocaleChanged()
+	{
+		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
+		DD_PackageStatus.Text = Locale.ModStatus;
+		DD_ReportSeverity.Text = Locale.ReportSeverity;
+	}
+
+	protected override void UIChanged()
+	{
+		base.UIChanged();
+
+		TB_Search.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		TB_Search.Height = 1;
+		P_Filters.Margin = P_Actions.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
+		P_Filters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Filter));
+		//P_Actions.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Wrench));
+		B_ReDownload.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ReDownload));
+		B_ReDownload.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		I_ClearFilters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ClearFilter));
+		I_ClearFilters.Size = UI.FontScale >= 1.25 ? new(32, 32) : new(24, 24);
+		I_ClearFilters.Location = new(P_Filters.Width - P_Filters.Padding.Right - I_ClearFilters.Width, P_Filters.Padding.Bottom);
+	}
+
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
+		P_Filters.BackColor = P_Actions.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
 		BackColor = design.AccentBackColor;
-		LC_Mods.BackColor = roundedGroupBox1.BackColor = design.BackColor;
+		LC_Mods.BackColor = design.BackColor;
+	}
+
+	public override Color GetTopBarColor()
+	{
+		return FormDesign.Design.AccentBackColor;
 	}
 
 	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Mod> e)
 	{
+		e.DoNotDraw = IsFilteredOut(e.Item);
+	}
+
+	private bool IsFilteredOut(Mod mod)
+	{
+		var doNotDraw = false;
+
 		if (CentralManager.CurrentProfile.LaunchSettings.NoWorkshop)
 		{
-			e.DoNotDraw = e.Item.Workshop;
+			doNotDraw = mod.Workshop;
 		}
 
-		if (!e.DoNotDraw && OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!doNotDraw && OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
 		{
-			e.DoNotDraw |= OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
+			doNotDraw = OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.Workshop;
 		}
 
-		if (!e.DoNotDraw && OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!doNotDraw && OT_Included.SelectedValue != ThreeOptionToggle.Value.None)
 		{
-			e.DoNotDraw |= OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsIncluded;
+			doNotDraw = OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsIncluded;
 		}
 
-		if (!e.DoNotDraw && OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
+		if (!doNotDraw && OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
 		{
-			e.DoNotDraw |= OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsEnabled;
+			doNotDraw = OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsEnabled;
 		}
 
-		if (!e.DoNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
+		if (!doNotDraw && (int)DD_PackageStatus.SelectedItem != -1)
 		{
-			e.DoNotDraw |= !(e.Item.Name.SearchCheck(TB_Search.Text)
-				|| (e.Item.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
-				|| e.Item.SteamId.ToString().SearchCheck(TB_Search.Text));
+			if (DD_PackageStatus.SelectedItem == DownloadStatus.None)
+			{
+				doNotDraw = mod.Workshop;
+			}
+			else
+			{
+				doNotDraw = DD_PackageStatus.SelectedItem != mod.Status;
+			}
 		}
+
+		if (!doNotDraw && (int)DD_ReportSeverity.SelectedItem != -1)
+		{
+			doNotDraw = DD_ReportSeverity.SelectedItem != mod.Package.CompatibilityReport?.Severity;
+		}
+
+		if (!doNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
+		{
+			doNotDraw = !(mod.Name.SearchCheck(TB_Search.Text)
+				|| (mod.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
+				|| mod.SteamId.ToString().SearchCheck(TB_Search.Text));
+		}
+
+		return doNotDraw;
 	}
 
 	private void CentralManager_ContentLoaded()
@@ -95,5 +148,35 @@ public partial class PC_Mods : PanelContent
 	private void FilterChanged(object sender, EventArgs e)
 	{
 		LC_Mods.FilterChanged();
+	}
+
+	private void I_ClearFilters_Click(object sender, EventArgs e)
+	{
+		this.ClearForm();
+	}
+
+	private void B_ExInclude_LeftClicked(object sender, EventArgs e)
+	{
+		ModsUtil.SetIncluded(CentralManager.Mods.Where(x => !IsFilteredOut(x)), false);
+	}
+
+	private void B_ExInclude_RightClicked(object sender, EventArgs e)
+	{
+		ModsUtil.SetIncluded(CentralManager.Mods.Where(x => !IsFilteredOut(x)), true);
+	}
+
+	private void B_DisEnable_LeftClicked(object sender, EventArgs e)
+	{
+		ModsUtil.SetEnabled(CentralManager.Mods.Where(x => !IsFilteredOut(x)), false);
+	}
+
+	private void B_DisEnable_RightClicked(object sender, EventArgs e)
+	{
+		ModsUtil.SetEnabled(CentralManager.Mods.Where(x => !IsFilteredOut(x)), true);
+	}
+
+	private void B_ReDownload_Click(object sender, EventArgs e)
+	{
+		SteamUtil.ReDownload(CentralManager.Mods.Where(x => x.Status is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded).Select(x => x.SteamId).ToArray());
 	}
 }

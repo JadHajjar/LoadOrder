@@ -32,6 +32,6 @@ internal abstract class CachedSaveItem<TKey, TValue>
 
 	public bool IsStateValid()
 	{
-		return _currentValue?.Equals(CurrentValue) ?? true;
+		return !(_currentValue?.Equals(ValueToSave) ?? false);
 	}
 }

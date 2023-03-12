@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
@@ -18,10 +19,15 @@ using static CompatibilityReport.CatalogData.Enums;
 namespace LoadOrderToolTwo.UserInterface;
 internal class ReportSeverityDropDown : SlickSelectionDropDown<ReportSeverity>
 {
-    public ReportSeverityDropDown()
-    {
-		Items = Enum.GetValues(typeof(ReportSeverity)).Cast<ReportSeverity>().ToArray();
-    }
+	protected override void OnHandleCreated(EventArgs e)
+	{
+		base.OnHandleCreated(e);
+
+		if (Live)
+		{
+			Items = new[] { (ReportSeverity)(-1) }.Concat(Enum.GetValues(typeof(ReportSeverity)).Cast<ReportSeverity>()).ToArray();
+		}
+	}
 
 	protected override void UIChanged()
 	{
@@ -34,25 +40,29 @@ internal class ReportSeverityDropDown : SlickSelectionDropDown<ReportSeverity>
 	{
 		base.OnSizeChanged(e);
 
-		Height = (int)(28 * UI.UIScale);
+		Height = (int)(42 * UI.UIScale);
 	}
 
 	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, ReportSeverity item)
 	{
-		var text = LocaleHelper.GetGlobalText($"CR_{item}");
+		var text = (int)item == -1 ? Locale.AnyReportStatus : LocaleHelper.GetGlobalText($"CR_{item}");
 		var color = (item switch
 		{
 			ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 			ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
 			ReportSeverity.Unsubscribe => FormDesign.Design.RedColor,
-			ReportSeverity.Remarks => FormDesign.Design.ForeColor,
+			ReportSeverity.Remarks or (ReportSeverity)(-1) => FormDesign.Design.ForeColor,
 			_ => FormDesign.Design.GreenColor
 		});
 
-		using var icon = ImageManager.GetIcon("I_CompatibilityReport").Color(hoverState.HasFlag(HoverState.Pressed) ? foreColor : color);
+		using var icon = (int)item == -1 ? ImageManager.GetIcon("I_Slash") : item.GetSeverityIcon(true);
 
-		e.Graphics.DrawImage(icon, rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
+		e.Graphics.DrawImage(icon.Color(color), rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
 
-		e.Graphics.DrawString(text, Font, new SolidBrush(foreColor), rectangle.Pad(icon.Width + Padding.Left, 0, 0, 1), new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter });
+		var textRect = new Rectangle(rectangle.X + icon.Width + Padding.Left, rectangle.Y + (rectangle.Height - Font.Height)/2,0,Font.Height);
+
+		textRect.Width = rectangle.Width - textRect.X;
+
+		e.Graphics.DrawString(text, Font, new SolidBrush(foreColor), textRect, new StringFormat { LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter });
 	}
 }

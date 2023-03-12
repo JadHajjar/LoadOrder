@@ -265,4 +265,82 @@
   <data name="I_Question" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_Question.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="I_ClearFilter" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_ClearFilter.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_ClearFilter_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_ClearFilter_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Filter_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Filter_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_MajorIssues" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_MajorIssues.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_MajorIssues_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_MajorIssues_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_MinorIssues" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_MinorIssues.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_MinorIssues_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_MinorIssues_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Remarks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Remarks.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Remarks_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Remarks_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Info" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Info.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Info_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Info_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Add_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Add_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Alternatives" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Alternatives.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Compatibilities" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Compatibilities.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Disposable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Disposable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Malicious" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Malicious.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_MissingMod" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_MissingMod.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Note" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Note.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Recommendations" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Recommendations.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Stability" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Stability.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Statuses" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Statuses.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Switch" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Switch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Switch_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Switch_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Upgrade" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Upgrade.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="I_Wrench_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Wrench_16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

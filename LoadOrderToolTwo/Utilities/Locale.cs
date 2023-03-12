@@ -7,6 +7,63 @@ internal class Locale : LocaleHelper
 
 	protected Locale() : base($"{nameof(LoadOrderToolTwo)}.Properties.Locale.csv") { }
 
+	public static string CR_NoAvailableReport => _instance.GetText(nameof(CR_NoAvailableReport));
+	public static string CR_IncompatibleWithGameVersion => _instance.GetText(nameof(CR_IncompatibleWithGameVersion));
+	public static string CR_RequiresIncompatibleMod => _instance.GetText(nameof(CR_RequiresIncompatibleMod));
+	public static string CR_BreaksGame => _instance.GetText(nameof(CR_BreaksGame));
+	public static string CR_BrokenMod => _instance.GetText(nameof(CR_BrokenMod));
+	public static string CR_MajorIssuesNoNote => _instance.GetText(nameof(CR_MajorIssuesNoNote));
+	public static string CR_MajorIssuesWithNote => _instance.GetText(nameof(CR_MajorIssuesWithNote));
+	public static string CR_MinorIssuesNoNote => _instance.GetText(nameof(CR_MinorIssuesNoNote));
+	public static string CR_MinorIssuesWithNote => _instance.GetText(nameof(CR_MinorIssuesWithNote));
+	public static string CR_UserReportsNoNote => _instance.GetText(nameof(CR_UserReportsNoNote));
+	public static string CR_UserReportsWithNote => _instance.GetText(nameof(CR_UserReportsWithNote));
+	public static string CR_NotEnoughInformationUpdated => _instance.GetText(nameof(CR_NotEnoughInformationUpdated));
+	public static string CR_NotEnoughInformationOutdated => _instance.GetText(nameof(CR_NotEnoughInformationOutdated));
+	public static string CR_Stable => _instance.GetText(nameof(CR_Stable));
+	public static string CR_NotReviewedUpdated => _instance.GetText(nameof(CR_NotReviewedUpdated));
+	public static string CR_NotReviewedOutdated => _instance.GetText(nameof(CR_NotReviewedOutdated));
+	public static string CR_NotInCatalogMod => _instance.GetText(nameof(CR_NotInCatalogMod));
+	public static string CR_NotInCatalog => _instance.GetText(nameof(CR_NotInCatalog));
+	public static string CR_MissingDLC => _instance.GetText(nameof(CR_MissingDLC));
+	public static string CR_UnneededDependency => _instance.GetText(nameof(CR_UnneededDependency));
+	public static string CR_WorksWhenDisabled => _instance.GetText(nameof(CR_WorksWhenDisabled));
+	public static string CR_SuccessorsAvailable => _instance.GetText(nameof(CR_SuccessorsAvailable));
+	public static string CR_SuccessorsAvailableMultiple => _instance.GetText(nameof(CR_SuccessorsAvailableMultiple));
+	public static string CR_AlternativesAvailable => _instance.GetText(nameof(CR_AlternativesAvailable));
+	public static string CR_AlternativesAvailableMultiple => _instance.GetText(nameof(CR_AlternativesAvailableMultiple));
+	public static string CR_RequiredModsMissing => _instance.GetText(nameof(CR_RequiredModsMissing));
+	public static string CR_Obsolete => _instance.GetText(nameof(CR_Obsolete));
+	public static string CR_RemovedFromWorkshop => _instance.GetText(nameof(CR_RemovedFromWorkshop));
+	public static string CR_Deprecated => _instance.GetText(nameof(CR_Deprecated));
+	public static string CR_Abandoned => _instance.GetText(nameof(CR_Abandoned));
+	public static string CR_AbandonedRetired => _instance.GetText(nameof(CR_AbandonedRetired));
+	public static string CR_Retired => _instance.GetText(nameof(CR_Retired));
+	public static string CR_Note => _instance.GetText(nameof(CR_Note));
+	public static string CR_Recommendations => _instance.GetText(nameof(CR_Recommendations));
+	public static string CR_SavesCantLoadWithout => _instance.GetText(nameof(CR_SavesCantLoadWithout));
+	public static string CR_SourceNotPublic => _instance.GetText(nameof(CR_SourceNotPublic));
+	public static string CR_NoDescription => _instance.GetText(nameof(CR_NoDescription));
+	public static string CR_NoCommentSection => _instance.GetText(nameof(CR_NoCommentSection));
+	public static string CR_SourceBundled => _instance.GetText(nameof(CR_SourceBundled));
+	public static string CR_SourceNotPublicAbandoned => _instance.GetText(nameof(CR_SourceNotPublicAbandoned));
+	public static string CR_SourceObfuscated => _instance.GetText(nameof(CR_SourceObfuscated));
+	public static string CR_Reupload => _instance.GetText(nameof(CR_Reupload));
+	public static string CR_BreaksEditors => _instance.GetText(nameof(CR_BreaksEditors));
+	public static string CR_ModForModders => _instance.GetText(nameof(CR_ModForModders));
+	public static string CR_TestVersion => _instance.GetText(nameof(CR_TestVersion));
+	public static string CR_TestVersionStable => _instance.GetText(nameof(CR_TestVersionStable));
+	public static string CR_MusicCopyright => _instance.GetText(nameof(CR_MusicCopyright));
+	public static string CR_SameModDifferentReleaseType => _instance.GetText(nameof(CR_SameModDifferentReleaseType));
+	public static string CR_SameFunctionality => _instance.GetText(nameof(CR_SameFunctionality));
+	public static string CR_IncompatibleAccordingToAuthor => _instance.GetText(nameof(CR_IncompatibleAccordingToAuthor));
+	public static string CR_IncompatibleAccordingToUsers => _instance.GetText(nameof(CR_IncompatibleAccordingToUsers));
+	public static string CR_MajorIssuesWith => _instance.GetText(nameof(CR_MajorIssuesWith));
+	public static string CR_MinorIssuesWith => _instance.GetText(nameof(CR_MinorIssuesWith));
+	public static string CR_RequiresSpecificSettings => _instance.GetText(nameof(CR_RequiresSpecificSettings));
+	public static string CR_SameFunctionalityCompatible => _instance.GetText(nameof(CR_SameFunctionalityCompatible));
+	public static string CR_CompatibleAccordingToAuthor => _instance.GetText(nameof(CR_CompatibleAccordingToAuthor));
+
 	public static string Dashboard => _instance.GetText(nameof(Dashboard));
 	public static string StartCities => _instance.GetText(nameof(StartCities));
 	public static string StopCities => _instance.GetText(nameof(StopCities));
@@ -69,6 +126,19 @@ internal class Locale : LocaleHelper
 	public static string AssetIncluded => _instance.GetText(nameof(AssetIncluded));
 	public static string AssetIncludedPlural => _instance.GetText(nameof(AssetIncludedPlural));
 	public static string TotalSize => _instance.GetText(nameof(TotalSize));
-
-	public static string CR_NoAvailableReport => _instance.GetText(nameof(CR_NoAvailableReport));
+	public static string AssetStatus => _instance.GetText(nameof(AssetStatus));
+	public static string ModStatus => _instance.GetText(nameof(ModStatus));
+	public static string ReportSeverity => _instance.GetText(nameof(ReportSeverity));
+	public static string AnyStatus => _instance.GetText(nameof(AnyStatus));
+	public static string AnyReportStatus => _instance.GetText(nameof(AnyReportStatus));
+	public static string Subscribe => _instance.GetText(nameof(Subscribe));
+	public static string Switch => _instance.GetText(nameof(Switch));
+	public static string Enable => _instance.GetText(nameof(Enable));
+	public static string ModOwned => _instance.GetText(nameof(ModOwned));
+	public static string Settings => _instance.GetText(nameof(Settings));
+	public static string NoLocalPackagesFound => _instance.GetText(nameof(NoLocalPackagesFound));
+	public static string NoPackagesMatchFilters => _instance.GetText(nameof(NoPackagesMatchFilters));
+	public static string Actions => _instance.GetText(nameof(Actions));
+	public static string ModUtilities => _instance.GetText(nameof(ModUtilities));
+	public static string CollectionTitle => _instance.GetText(nameof(CollectionTitle));
 }

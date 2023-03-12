@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
@@ -52,12 +53,12 @@ namespace CompatibilityReport.CatalogData
         [XmlArrayItem("ChangeNote")] public List<string> ChangeNotes { get; set; } = new List<string>();
 
         // Properties used by the Reporter for subscribed mods.
-        [CloneIgnore, XmlIgnore] public bool IsDisabled { get; set; }
-        [CloneIgnore, XmlIgnore] public bool IsIncluded { get; set; }
+        [CloneIgnore, XmlIgnore] public bool IsDisabled => !(ModsUtil.FindMod(SteamID)?.IsEnabled ?? false);
+        [CloneIgnore, XmlIgnore] public bool IsIncluded => ModsUtil.FindMod(SteamID)?.IsIncluded ?? false;
 		[CloneIgnore, XmlIgnore] public bool IsCameraScript { get; set; }
         [CloneIgnore, XmlIgnore] public string ModPath { get; set; }
-        [CloneIgnore, XmlIgnore] public DateTime DownloadedTime { get; set; }
-        [CloneIgnore, XmlIgnore] public Enums.ReportSeverity ReportSeverity { get; set; }
+        [CloneIgnore, XmlIgnore] public DateTime DownloadedTime => ModsUtil.FindMod(SteamID)?.LocalTime ?? DateTime.MinValue;
+		[CloneIgnore, XmlIgnore] public Enums.ReportSeverity ReportSeverity { get; set; }
 
         // Used by the Updater, to see if this mod was added or updated this session.
         [CloneIgnore, XmlIgnore] public bool AddedThisSession { get; set; }
@@ -268,16 +269,6 @@ namespace CompatibilityReport.CatalogData
             return ExclusionForRequiredMods.Remove(requiredMod);
         }
 
-
-        /// <summary>Updates the subscription properties.</summary>
-        public void UpdateSubscription(bool isDisabled, bool isIncluded, bool isCameraScript, string modPath, DateTime downloadedTime)
-        {
-            IsDisabled = isDisabled;
-            IsIncluded = isIncluded;
-            IsCameraScript = isCameraScript;
-            ModPath = modPath;
-            DownloadedTime = downloadedTime;
-        }
 
 
         /// <summary>Sets the report severity for a mod.</summary>

@@ -27,6 +27,7 @@ public class Profile
 
 	public void Save()
 	{
+		ProfileManager.GatherInformation(this);
 		ProfileManager.Save(this);
 	}
 

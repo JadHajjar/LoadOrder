@@ -77,7 +77,7 @@ internal class CompatibilityReportBubble : StatusBubbleBase
 			return;
 		}
 
-		var groups = CentralManager.Mods.Where(x => x.IsIncluded).GroupBy(x => x.Package.CompatibilityReport?.reportSeverity);
+		var groups = CentralManager.Mods.Where(x => x.IsIncluded).GroupBy(x => x.Package.CompatibilityReport?.Severity);
 
 		DrawValue(e, ref targetHeight, groups.Sum(x => !(x.Key > ReportSeverity.Remarks) ? x.Count() : 0).ToString(), "mods with no issues");
 

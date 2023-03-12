@@ -55,7 +55,7 @@ internal class PackageDescriptionControl : SlickImageControl
 		var report = Package.CompatibilityReport;
 		if (report is not null)
 		{
-			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{report.reportSeverity}"), Properties.Resources.I_CompatibilityReport_16, (report.reportSeverity switch
+			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{report.Severity}"), Properties.Resources.I_CompatibilityReport_16, (report.Severity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
@@ -80,7 +80,7 @@ internal class PackageDescriptionControl : SlickImageControl
 			{
 				DrawLoader(e.Graphics, avatarRect);
 			}
-			else
+			else if (Image != null)
 			{
 				using var image = new Bitmap(Image, avatarRect.Size);
 				using var texture = new TextureBrush(image);

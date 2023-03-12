@@ -103,7 +103,8 @@ public class SettingsFile
 	{
 		m_SettingsInputKeyValues.Remove(key);
 		m_SettingsIntValues.Remove(key);
-		m_SettingsBoolValues.Remove(key);
+		lock(m_SettingsBoolValues)
+			m_SettingsBoolValues.Remove(key);
 		m_SettingsFloatValues.Remove(key);
 		m_SettingsStringValues.Remove(key);
 		MarkDirty();
@@ -421,6 +422,7 @@ public class SettingsFile
 
 	internal bool GetValue(string name, ref bool val)
 	{
+		lock(m_SettingsBoolValues)
 		if (m_SettingsBoolValues.TryGetValue(name, out var flag))
 		{
 			val = flag;
@@ -431,6 +433,7 @@ public class SettingsFile
 
 	internal void SetValue(string name, bool val)
 	{
+		lock(m_SettingsBoolValues)
 		if (!m_SettingsBoolValues.TryGetValue(name, out var flag) || flag != val)
 		{
 			Log.Debug("Setting " + name + " updated to " + val);

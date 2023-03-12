@@ -54,12 +54,18 @@ internal class AssetsUtil
 		}
 
 		CentralManager.InformationUpdate(asset);
+		ProfileManager.TriggerAutoSave();
 
 		SaveChanges();
 	}
 
-	private static void SaveChanges()
+	public static void SaveChanges()
 	{
+		if (ProfileManager.ApplyingProfile)
+		{
+			return;
+		}
+
 		_config.Assets = CentralManager.Assets
 				.Where(x => !x.IsIncluded)
 				.Select(x => new AssetInfo { Excluded = true, Path = x.FileName })

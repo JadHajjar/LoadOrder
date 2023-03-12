@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ public static class SteamUtil
 		{
 			var path = ISave.GetPath(STEAM_CACHE_FILE);
 
-			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5))
+			if (DateTime.Now - File.GetLastWriteTime(path) > TimeSpan.FromDays(1.5) && ConnectionHandler.IsConnected)
 			{
 				return null;
 			}
@@ -176,6 +177,41 @@ public static class SteamUtil
 		return new();
 	}
 
+	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadCollectionContentsAsync(string collectionId)
+	{
+		var url = @"https://api.steampowered.com/ISteamRemoteStorage/GetCollectionDetails/v1/";
+
+		var bodyDictionary = new Dictionary<string, string>
+		{
+			["collectioncount"] = "1",
+			[$"publishedfileids[0]"] = collectionId
+		};
+
+		using var httpClient = new HttpClient();
+		var body = new FormUrlEncodedContent(bodyDictionary);
+		var httpResponse = await httpClient.PostAsync(url, body);
+
+		if (httpResponse.IsSuccessStatusCode)
+		{
+			var response = await httpResponse.Content.ReadAsStringAsync();
+
+			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopCollectionRootResponse>(response)?.response.collectiondetails?.FirstOrDefault()?.children?
+				.Select(x => ulong.Parse(x.publishedfileid))
+				.ToList() ?? new();
+
+			if (data.Count == 0)
+				return new();
+
+			data.Insert(0, ulong.Parse(collectionId));
+
+			return await LoadDataAsync(data.ToArray());
+		}
+
+		Log.Error("failed to get steam data: " + httpResponse.RequestMessage);
+
+		return new();
+	}
+
 	public static void ReDownload(params ulong[] ids)
 	{
 		try
@@ -197,6 +233,37 @@ public static class SteamUtil
 		}
 		catch (Exception) { }
 	}
+
+	public static bool IsDlcInstalledLocally(uint dlcId)
+	{
+		const uint appId = 255710;
+		// Construct the path to the app manifest file
+		string appManifestPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Steam", "AppData", $"{appId}", "steam_appid.txt");
+
+		// Check if the app manifest file exists
+		if (!File.Exists(appManifestPath))
+		{
+			// The app manifest file does not exist, so the app is not installed
+			return false;
+		}
+
+		// Read the app ID from the app manifest file
+		uint installedAppId = uint.Parse(File.ReadAllText(appManifestPath).Trim());
+
+		// Check if the installed app ID matches the specified app ID
+		if (installedAppId != appId)
+		{
+			// The installed app ID does not match the specified app ID, so the app is not installed
+			return false;
+		}
+
+		// Construct the path to the DLC manifest file
+		string dlcManifestPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Steam", "depotcache", $"{dlcId}.manifest");
+
+		// Check if the DLC manifest file exists
+		return File.Exists(dlcManifestPath);
+	}
+
 
 	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem, bool cache)
 	{

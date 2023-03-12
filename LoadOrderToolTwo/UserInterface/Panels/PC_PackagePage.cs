@@ -26,11 +26,7 @@ public partial class PC_PackagePage : PanelContent
 		T_Profiles.Text = Locale.OtherProfiles;
 		L_Title.Text = package.GetName().RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?");
 		PB_Icon.Package = package;
-
-		if (!string.IsNullOrWhiteSpace(package.IconUrl))
-		{
-			PB_Icon.LoadImage(package.IconUrl);
-		}
+		PB_Icon.LoadImage(package.IconUrl);
 
 		P_Info.SetPackage(package);
 
@@ -68,6 +64,11 @@ public partial class PC_PackagePage : PanelContent
 
 		BackColor = design.AccentBackColor;
 		P_Content.BackColor = P_Back.BackColor = design.BackColor;
+	}
+
+	public override Color GetTopBarColor()
+	{
+		return FormDesign.Design.AccentBackColor;
 	}
 
 	private void B_Redownload_Click(object sender, EventArgs e)

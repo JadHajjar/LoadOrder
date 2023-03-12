@@ -4,13 +4,17 @@ using LoadOrderToolTwo.Domain;
 
 using SlickControls;
 
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
 internal class PackageIcon : SlickImageControl
 {
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
 	public Package? Package { get; set; }
+	[DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+	public bool Collection { get; set; }
 
 	protected override void OnPaint(PaintEventArgs e)
 	{

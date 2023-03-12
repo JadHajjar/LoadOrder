@@ -16,7 +16,13 @@ internal class CachedSaveLibrary<TItem, TKey, TValue> where TItem : CachedSaveIt
 
 	public void SetValue(TKey key, TValue value)
 	{
-		_dictionary[key] = (Activator.CreateInstance(typeof(TItem), key, value) as TItem)!;
+		var entry = (Activator.CreateInstance(typeof(TItem), key, value) as TItem)!;
+
+		if (entry.IsStateValid())
+		{ 
+			lock (_dictionary)
+				_dictionary[key] = entry; 
+		}
 	}
 
 	public bool GetValue(TKey key, out TValue? value)
@@ -33,12 +39,15 @@ internal class CachedSaveLibrary<TItem, TKey, TValue> where TItem : CachedSaveIt
 
 	public void Save()
 	{
-		foreach (var item in _dictionary.Values)
+		lock (_dictionary)
 		{
-			item.Save();
-		}
+			foreach (var item in _dictionary.Values)
+			{
+				item.Save();
+			}
 
-		_dictionary.Clear();
+			_dictionary.Clear();
+		}
 	}
 
 	public bool Any()

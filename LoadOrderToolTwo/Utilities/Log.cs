@@ -304,7 +304,7 @@ internal static class LogExtensions
 		return a;
 	}
 
-	public static void Log(this Exception ex, bool showInPanel = true)
+	public static void Log(this Exception ex, bool showInPanel = false)
 	{
 		Utilities.Log.Exception(ex, showInPanel: showInPanel);
 	}

@@ -61,7 +61,13 @@
     <Compile Update="UserInterface\PackageStatusDropDown.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserInterface\Panels\PC_ModUtilities.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserInterface\StatusBubbles\CompatibilityReportBubble.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserInterface\DoubleButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>

@@ -28,7 +28,7 @@ internal class ModsUtil
 
 	private static void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)
 	{
-		if (!isRunning && (_includedLibrary.Any() || _enabledLibrary.Any()))
+		if (!isRunning && !ProfileManager.ApplyingProfile && (_includedLibrary.Any() || _enabledLibrary.Any()))
 		{
 			SavePendingValues();
 		}
@@ -91,7 +91,7 @@ internal class ModsUtil
 
 	internal static void SetIncluded(Mod mod, bool value)
 	{
-		if (CitiesManager.IsRunning())
+		if (ProfileManager.ApplyingProfile || CitiesManager.IsRunning())
 		{
 			_includedLibrary.SetValue(mod, value);
 		}
@@ -101,6 +101,24 @@ internal class ModsUtil
 		}
 
 		CentralManager.InformationUpdate(mod.Package);
+		ProfileManager.TriggerAutoSave();
+	}
+
+	internal static void SetIncluded(IEnumerable<Mod> mods, bool value)
+	{
+		var list = mods.ToList();
+
+		for (var i = 0; i < list.Count; i++)
+		{
+			if (i == list.Count - 1)
+			{
+				SetIncluded(list[i], value);
+			}
+			else
+			{
+				_includedLibrary.SetValue(list[i], value);
+			}
+		}
 	}
 
 	internal static void SetLocallyIncluded(Mod mod, bool value)
@@ -117,7 +135,7 @@ internal class ModsUtil
 
 	internal static void SetEnabled(Mod mod, bool value)
 	{
-		if (CitiesManager.IsRunning())
+		if (ProfileManager.ApplyingProfile || CitiesManager.IsRunning())
 		{
 			_enabledLibrary.SetValue(mod, value);
 		}
@@ -127,6 +145,24 @@ internal class ModsUtil
 		}
 
 		CentralManager.InformationUpdate(mod.Package);
+		ProfileManager.TriggerAutoSave();
+	}
+
+	internal static void SetEnabled(IEnumerable<Mod> mods, bool value)
+	{
+		var list = mods.ToList();
+
+		for (var i = 0; i < list.Count; i++)
+		{
+			if (i == list.Count - 1)
+			{
+				SetEnabled(list[i], value);
+			}
+			else
+			{
+				_enabledLibrary.SetValue(list[i], value);
+			}
+		}
 	}
 
 	internal static void SetLocallyEnabled(Mod mod, bool value)
@@ -228,8 +264,13 @@ internal class ModsUtil
 			.Where(x => x.Count() > 1);
 	}
 
-	internal static Mod GetMod(string? v)
+	internal static Mod FindMod(string? folder)
 	{
-		return CentralManager.Mods.FirstOrDefault(x => x.Folder.Equals(v, StringComparison.InvariantCultureIgnoreCase));
+		return CentralManager.Mods.FirstOrDefault(x => x.Folder.Equals(folder, StringComparison.InvariantCultureIgnoreCase));
+	}
+
+	internal static Mod FindMod(ulong steamID)
+	{
+		return CentralManager.Mods.FirstOrDefault(x => x.SteamId == steamID);
 	}
 }

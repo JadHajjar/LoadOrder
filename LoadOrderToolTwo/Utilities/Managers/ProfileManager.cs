@@ -14,6 +14,9 @@ public static class ProfileManager
 	private const string CITIES_PATH = "%CITIES%";
 	private const string WS_CONTENT_PATH = "%WORKSHOP%";
 	private static readonly List<Profile> _profiles;
+	private static bool disableAutoSave;
+
+	public static bool ApplyingProfile { get; private set; }
 	public static Profile CurrentProfile { get; private set; }
 	public static IEnumerable<Profile> Profiles
 	{
@@ -49,18 +52,97 @@ public static class ProfileManager
 		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 	}
 
-	private static void CentralManager_ContentLoaded() => new BackgroundAction(() =>
+	private static void CentralManager_ContentLoaded()
 	{
-		foreach (var profile in _profiles)
+		new BackgroundAction(() =>
 		{
-			profile.IsMissingItems = profile.Mods.Any(x => GetMod(x) is null) || profile.Assets.Any(x => GetAsset(x) is null);
-		}
-	}).Run();
+			foreach (var profile in _profiles)
+			{
+				profile.IsMissingItems = profile.Mods.Any(x => GetMod(x) is null) || profile.Assets.Any(x => GetAsset(x) is null);
+			}
+		}).Run();
+	}
 
 	internal static void SetProfile(Profile profile)
 	{
 		CurrentProfile = profile;
-		ProfileChanged?.Invoke(CurrentProfile);
+
+		new BackgroundAction("Applying profile", apply).Run();
+
+		void apply()
+		{
+			var unprocessedMods = CentralManager.Mods.ToList();
+			var unprocessedAssets = CentralManager.Assets.ToList();
+			var missingMods = new List<Profile.Mod>();
+			var missingAssets = new List<Profile.Asset>();
+
+			ApplyingProfile = true;
+
+			foreach (var mod in profile.Mods)
+			{
+				var localMod = GetMod(mod);
+
+				if (localMod != null)
+				{
+					localMod.IsIncluded = true;
+					localMod.IsEnabled = mod.Enabled;
+
+					unprocessedMods.Remove(localMod);
+				}
+				else
+				{
+					missingMods.Add(mod);
+				}
+			}
+
+			foreach (var asset in profile.Assets)
+			{
+				var localAsset = GetAsset(asset);
+
+				if (localAsset != null)
+				{
+					localAsset.IsIncluded = true;
+
+					unprocessedAssets.Remove(localAsset);
+				}
+				else
+				{
+					missingAssets.Add(asset);
+				}
+			}
+
+			foreach (var mod in unprocessedMods)
+			{
+				mod.IsIncluded = false;
+				mod.IsEnabled = false;
+			}
+
+			foreach (var asset in unprocessedAssets)
+			{
+				asset.IsIncluded = false;
+			}
+
+			ApplyingProfile = false;
+			disableAutoSave = true;
+
+			ModsUtil.SavePendingValues();
+			AssetsUtil.SaveChanges();
+
+			ProfileChanged?.Invoke(profile);
+
+			CentralManager.SessionSettings.CurrentProfile = profile.Name;
+			CentralManager.SessionSettings.Save();
+
+			disableAutoSave = false;
+		}
+	}
+
+	internal static void TriggerAutoSave()
+	{
+		if (CurrentProfile.AutoSave && !disableAutoSave && !ApplyingProfile)
+		{
+			CurrentProfile.Save();
+		}
 	}
 
 	private static List<Profile> LoadProfiles()
@@ -77,9 +159,11 @@ public static class ProfileManager
 
 				profiles.Add(newProfile);
 
-				newProfile.Save();
+				Save(newProfile);
 
+#if !DEBUG
 				File.Delete(profile);
+#endif
 			}
 		}
 		catch { }
@@ -105,6 +189,17 @@ public static class ProfileManager
 		return profiles;
 	}
 
+	public static void GatherInformation(Profile? profile)
+	{
+		if (profile == null || profile.Temporary)
+		{
+			return;
+		}
+
+		profile.Assets = CentralManager.Assets.Where(x => x.IsIncluded).Select(x => new Profile.Asset(x)).ToList();
+		profile.Mods = CentralManager.Mods.Where(x => x.IsIncluded).Select(x => new Profile.Mod(x)).ToList();
+	}
+
 	public static bool Save(Profile? profile)
 	{
 		if (profile == null || profile.Temporary)
@@ -128,7 +223,7 @@ public static class ProfileManager
 
 	internal static Mod GetMod(Profile.Mod mod)
 	{
-		return ModsUtil.GetMod(ToLocalPath(mod.RelativePath));
+		return ModsUtil.FindMod(ToLocalPath(mod.RelativePath));
 	}
 
 	internal static Asset GetAsset(Profile.Asset asset)

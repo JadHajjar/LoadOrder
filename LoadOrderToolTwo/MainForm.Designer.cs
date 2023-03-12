@@ -167,7 +167,8 @@
 			this.PI_ModReview.Highlighted = false;
 			this.PI_ModReview.Icon = ((System.Drawing.Bitmap)(resources.GetObject("PI_ModReview.Icon")));
 			this.PI_ModReview.Selected = false;
-			this.PI_ModReview.Text = "Mods Review";
+			this.PI_ModReview.Text = "Mod Utilities";
+			this.PI_ModReview.OnClick += new System.Windows.Forms.MouseEventHandler(this.PI_ModReview_OnClick);
 			// 
 			// PI_Troubleshoot
 			// 
