@@ -211,12 +211,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		var iconRectangle = rects.IconRect;
 		var textRect = rects.TextRect;
 
-		using var image = new Bitmap(e.Item.IconImage ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle.Size);
-		using var texture = new TextureBrush(image);
-
-		e.Graphics.TranslateTransform(iconRectangle.X, iconRectangle.Y);
-		e.Graphics.FillRoundedRectangle(texture, new Rectangle(Point.Empty, iconRectangle.Size), (int)(4 * UI.FontScale));
-		e.Graphics.TranslateTransform(-iconRectangle.X, -iconRectangle.Y);
+		e.Graphics.DrawRoundedImage(e.Item.IconImage ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale));
 
 		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?").RemoveDoubleSpaces(), UI.Font(large ? 11.25F : 9F, FontStyle.Bold), new SolidBrush(e.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : rects.CenterRect.Contains(CursorLocation) && e.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
@@ -245,12 +240,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 
 				if (e.Item.AuthorIconImage is not null)
 				{
-					using var authorImage = new Bitmap(e.Item.AuthorIconImage, avatarRect.Size);
-					using var authorTexture = new TextureBrush(authorImage);
-
-					e.Graphics.TranslateTransform(avatarRect.X, avatarRect.Y);
-					e.Graphics.FillEllipse(authorTexture, new Rectangle(Point.Empty, avatarRect.Size));
-					e.Graphics.ResetTransform();
+					e.Graphics.DrawRoundImage(e.Item.AuthorIconImage ?? Properties.Resources.I_AuthorIcon.Color(FormDesign.Design.IconColor), avatarRect, (int)(4 * UI.FontScale));
 				}
 			}
 			else

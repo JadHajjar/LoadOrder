@@ -27,7 +27,7 @@ public partial class PC_ModUtilities : PanelContent
 
 	private async void B_LoadCollection_Click(object sender, EventArgs e)
 	{
-		if (this.CheckValidation())
+		if (!B_LoadCollection.Loading && this.CheckValidation())
 		{
 			B_LoadCollection.Loading = true;
 

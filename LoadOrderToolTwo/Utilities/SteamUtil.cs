@@ -23,7 +23,14 @@ public static class SteamUtil
 
 	private static void SaveCache(Dictionary<ulong, SteamWorkshopItem> list)
 	{
-		ISave.Save(list, STEAM_CACHE_FILE);
+		var cache = GetCachedInfo() ?? new();
+
+		foreach (var item in list)
+		{
+			cache[item.Key] = item.Value;
+		}
+
+		ISave.Save(cache, STEAM_CACHE_FILE);
 	}
 
 	internal static Dictionary<ulong, SteamWorkshopItem>? GetCachedInfo()
@@ -42,25 +49,6 @@ public static class SteamUtil
 			return dic;
 		}
 		catch { return null; }
-	}
-
-	public static bool CheckForInternetConnection()
-	{
-		try
-		{
-			using var client = new HttpClient();
-			using var stream = client.GetStreamAsync("https://steamcommunity.com/").Result;
-			return true;
-		}
-		catch
-		{
-			return false;
-		}
-	}
-
-	public static async Task<bool> CheckForInternetConnectionAsync()
-	{
-		return await Task.Run(CheckForInternetConnection);
 	}
 
 	public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunkSize)
@@ -196,6 +184,7 @@ public static class SteamUtil
 			var response = await httpResponse.Content.ReadAsStringAsync();
 
 			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopCollectionRootResponse>(response)?.response.collectiondetails?.FirstOrDefault()?.children?
+				.Where(x => x.filetype == 0)
 				.Select(x => ulong.Parse(x.publishedfileid))
 				.ToList() ?? new();
 
@@ -216,14 +205,12 @@ public static class SteamUtil
 	{
 		try
 		{
-			var steamArguments = new StringBuilder("'steam://open/console");
+			var steamArguments = new StringBuilder("steam://open/console");
 
 			for (var i = 0; i < ids.Length; i++)
 			{
 				steamArguments.AppendFormat(" +workshop_download_item 255710 {0}", ids[i]);
 			}
-
-			steamArguments.Append('\'');
 
 			ExecuteSteam(steamArguments.ToString());
 

@@ -3,6 +3,7 @@
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
@@ -26,7 +27,7 @@ public partial class PC_PackagePage : PanelContent
 		T_Profiles.Text = Locale.OtherProfiles;
 		L_Title.Text = package.GetName().RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?");
 		PB_Icon.Package = package;
-		PB_Icon.LoadImage(package.IconUrl);
+		PB_Icon.LoadImage(package.IconUrl, ImageManager.GetImage);
 
 		P_Info.SetPackage(package);
 

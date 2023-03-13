@@ -40,7 +40,9 @@ public static class ImageManager
 		return new FileInfo(filePath);
 	}
 
-	public static Bitmap? GetImage(string url, bool localOnly = false)
+	public static Bitmap? GetImage(string url) => GetImage(url, false);
+
+	public static Bitmap? GetImage(string url, bool localOnly)
 	{
 		if (string.IsNullOrWhiteSpace(url))
 		{
@@ -79,16 +81,26 @@ public static class ImageManager
 
 			try
 			{
+				const int squareSize = 256;
+
 				using var webClient = new WebClient();
 				var imageData = webClient.DownloadData(url);
 
 				using var ms = new MemoryStream(imageData);
-				using var streamImage = Image.FromStream(ms);
-				var image = new Bitmap(streamImage, 128, 128);
+				using var img = Image.FromStream(ms);
+
+				var size = img.Size.GetProportionalDownscaledSize(squareSize);
+				var image = new Bitmap(squareSize, squareSize);
+
+				using (var imageGraphics = Graphics.FromImage(image))
+				{
+					imageGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+					imageGraphics.DrawImage(img, new Rectangle((squareSize - size.Width) / 2, (squareSize - size.Height) / 2, size.Width, size.Height));
+				}
 
 				Directory.GetParent(filePath).Create();
 
-				if (filePath.EndsWith(".jpg", StringComparison.InvariantCultureIgnoreCase))
+				if (filePath.EndsWith(".jpg", StringComparison.InvariantCultureIgnoreCase) || filePath.EndsWith(".jpeg", StringComparison.InvariantCultureIgnoreCase))
 				{
 					image.Save(filePath, System.Drawing.Imaging.ImageFormat.Jpeg);
 				}

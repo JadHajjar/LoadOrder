@@ -32,22 +32,17 @@ internal class PackageIcon : SlickImageControl
 
 		if (Image == null)
 		{
-			using var image = new Bitmap((Package?.Mod is not null ? Properties.Resources.I_ModIcon : Properties.Resources.I_AssetIcon).Color(FormDesign.Design.IconColor));
-			using var texture = new TextureBrush(image);
+			using var image = (Collection ? Properties.Resources.I_CollectionIcon : Package?.Mod is not null ? Properties.Resources.I_ModIcon : Properties.Resources.I_AssetIcon).Color(FormDesign.Design.IconColor);
 			var iconRect = ClientRectangle.CenterR(image.Size);
 
 			e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.IconColor), ClientRectangle, (int)(10 * UI.FontScale));
 			e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.BackColor), iconRect.Pad(1), (int)(10 * UI.FontScale));
 
-			e.Graphics.TranslateTransform(iconRect.X, iconRect.Y);
-			e.Graphics.FillRoundedRectangle(texture, new Rectangle(Point.Empty, iconRect.Size), (int)(10 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(image, iconRect, (int)(10 * UI.FontScale));
 		}
 		else
 		{
-			using var image = new Bitmap(Image, Size);
-			using var texture = new TextureBrush(image);
-
-			e.Graphics.FillRoundedRectangle(texture, ClientRectangle, (int)(10 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(Image, ClientRectangle, (int)(10 * UI.FontScale));
 		}
 	}
 }

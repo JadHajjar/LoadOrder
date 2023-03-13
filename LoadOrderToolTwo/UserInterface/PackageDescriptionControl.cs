@@ -2,6 +2,7 @@
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
@@ -21,7 +22,7 @@ internal class PackageDescriptionControl : SlickImageControl
 
 		if (!string.IsNullOrWhiteSpace(Package.Author?.AvatarUrl))
 		{
-			LoadImage(Package.Author?.AvatarUrl);
+			LoadImage(Package.Author?.AvatarUrl, ImageManager.GetImage);
 		}
 	}
 
@@ -82,11 +83,7 @@ internal class PackageDescriptionControl : SlickImageControl
 			}
 			else if (Image != null)
 			{
-				using var image = new Bitmap(Image, avatarRect.Size);
-				using var texture = new TextureBrush(image);
-
-				e.Graphics.TranslateTransform(avatarRect.X, avatarRect.Y);
-				e.Graphics.FillEllipse(texture, new Rectangle(Point.Empty, avatarRect.Size));
+				e.Graphics.DrawRoundImage(Image, avatarRect, (int)(4 * UI.FontScale));
 			}
 		}
 	}

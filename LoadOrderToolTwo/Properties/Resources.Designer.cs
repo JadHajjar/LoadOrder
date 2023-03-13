@@ -113,6 +113,16 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_AuthorIcon {
+            get {
+                object obj = ResourceManager.GetObject("I_AuthorIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_Broken {
             get {
                 object obj = ResourceManager.GetObject("I_Broken", resourceCulture);
@@ -186,6 +196,16 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_Cloud {
             get {
                 object obj = ResourceManager.GetObject("I_Cloud", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_CollectionIcon {
+            get {
+                object obj = ResourceManager.GetObject("I_CollectionIcon", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -8,6 +8,8 @@ using SlickControls;
 using System;
 using System.Windows.Forms;
 
+using static System.Environment;
+
 namespace LoadOrderToolTwo;
 internal static class Program
 {
@@ -25,6 +27,7 @@ internal static class Program
 
 			SlickCursors.Initialize();
 			ConnectionHandler.Start();
+			ISave.CustomSaveDirectory = GetFolderPath(SpecialFolder.LocalApplicationData);
 			BackgroundAction.BackgroundTaskError += (b, e) => Log.Exception(e, $"The background action ({b}) failed", false);
 
 			if (Environment.OSVersion.Version.Major == 6)

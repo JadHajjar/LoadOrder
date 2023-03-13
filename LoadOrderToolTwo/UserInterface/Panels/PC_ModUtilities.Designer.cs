@@ -37,13 +37,10 @@ partial class PC_ModUtilities
 			this.roundedGroupPanel1 = new SlickControls.RoundedGroupPanel();
 			this.slickIcon1 = new SlickControls.SlickIcon();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.slickButton1 = new SlickControls.SlickButton();
-			this.slickTextBox1 = new SlickControls.SlickTextBox();
 			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
 			this.P_Filters.SuspendLayout();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.roundedGroupPanel1.SuspendLayout();
-			this.tableLayoutPanel2.SuspendLayout();
 			this.tableLayoutPanel3.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -63,7 +60,7 @@ partial class PC_ModUtilities
 			this.TB_CollectionLink.SelectedText = "";
 			this.TB_CollectionLink.SelectionLength = 0;
 			this.TB_CollectionLink.SelectionStart = 0;
-			this.TB_CollectionLink.Size = new System.Drawing.Size(651, 49);
+			this.TB_CollectionLink.Size = new System.Drawing.Size(653, 49);
 			this.TB_CollectionLink.TabIndex = 13;
 			this.TB_CollectionLink.Validation = SlickControls.ValidationType.Regex;
 			this.TB_CollectionLink.ValidationRegex = "^(?:https:\\/\\/steamcommunity\\.com\\/(?:(?:sharedfiles)|(?:workshop))\\/filedetails\\" +
@@ -78,10 +75,10 @@ partial class PC_ModUtilities
 			this.P_Filters.Controls.Add(this.tableLayoutPanel1);
 			this.P_Filters.Dock = System.Windows.Forms.DockStyle.Top;
 			this.P_Filters.Image = ((System.Drawing.Image)(resources.GetObject("P_Filters.Image")));
-			this.P_Filters.Location = new System.Drawing.Point(3, 114);
+			this.P_Filters.Location = new System.Drawing.Point(3, 58);
 			this.P_Filters.Name = "P_Filters";
-			this.P_Filters.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
-			this.P_Filters.Size = new System.Drawing.Size(777, 105);
+			this.P_Filters.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
+			this.P_Filters.Size = new System.Drawing.Size(777, 97);
 			this.P_Filters.TabIndex = 15;
 			this.P_Filters.Text = "CollectionTitle";
 			// 
@@ -107,12 +104,12 @@ partial class PC_ModUtilities
 			this.tableLayoutPanel1.Controls.Add(this.B_LoadCollection, 1, 0);
 			this.tableLayoutPanel1.Controls.Add(this.TB_CollectionLink, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(7, 43);
+			this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 36);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(763, 55);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(765, 55);
 			this.tableLayoutPanel1.TabIndex = 0;
 			// 
 			// B_LoadCollection
@@ -121,7 +118,7 @@ partial class PC_ModUtilities
 			this.B_LoadCollection.ColorShade = null;
 			this.B_LoadCollection.Cursor = System.Windows.Forms.Cursors.Hand;
 			this.B_LoadCollection.Image = global::LoadOrderToolTwo.Properties.Resources.I_Import;
-			this.B_LoadCollection.Location = new System.Drawing.Point(660, 3);
+			this.B_LoadCollection.Location = new System.Drawing.Point(662, 3);
 			this.B_LoadCollection.Name = "B_LoadCollection";
 			this.B_LoadCollection.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
 			this.B_LoadCollection.Size = new System.Drawing.Size(100, 49);
@@ -141,8 +138,8 @@ partial class PC_ModUtilities
 			this.roundedGroupPanel1.Image = ((System.Drawing.Image)(resources.GetObject("roundedGroupPanel1.Image")));
 			this.roundedGroupPanel1.Location = new System.Drawing.Point(3, 3);
 			this.roundedGroupPanel1.Name = "roundedGroupPanel1";
-			this.roundedGroupPanel1.Padding = new System.Windows.Forms.Padding(7, 43, 7, 7);
-			this.roundedGroupPanel1.Size = new System.Drawing.Size(777, 105);
+			this.roundedGroupPanel1.Padding = new System.Windows.Forms.Padding(6, 36, 6, 6);
+			this.roundedGroupPanel1.Size = new System.Drawing.Size(777, 49);
 			this.roundedGroupPanel1.TabIndex = 16;
 			this.roundedGroupPanel1.Text = "CollectionTitle";
 			// 
@@ -165,48 +162,14 @@ partial class PC_ModUtilities
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel2.Controls.Add(this.slickButton1, 1, 0);
-			this.tableLayoutPanel2.Controls.Add(this.slickTextBox1, 0, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
-			this.tableLayoutPanel2.Location = new System.Drawing.Point(7, 43);
+			this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 36);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(763, 55);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(765, 0);
 			this.tableLayoutPanel2.TabIndex = 0;
-			// 
-			// slickButton1
-			// 
-			this.slickButton1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-			this.slickButton1.ColorShade = null;
-			this.slickButton1.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.slickButton1.Image = global::LoadOrderToolTwo.Properties.Resources.I_Import;
-			this.slickButton1.Location = new System.Drawing.Point(660, 3);
-			this.slickButton1.Name = "slickButton1";
-			this.slickButton1.Padding = new System.Windows.Forms.Padding(10, 15, 10, 15);
-			this.slickButton1.Size = new System.Drawing.Size(100, 49);
-			this.slickButton1.SpaceTriggersClick = true;
-			this.slickButton1.TabIndex = 15;
-			this.slickButton1.Text = "LoadCollection";
-			// 
-			// slickTextBox1
-			// 
-			this.slickTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.slickTextBox1.LabelText = "CollectionLink";
-			this.slickTextBox1.Location = new System.Drawing.Point(3, 3);
-			this.slickTextBox1.Name = "slickTextBox1";
-			this.slickTextBox1.Placeholder = "PasteCollection";
-			this.slickTextBox1.Required = true;
-			this.slickTextBox1.SelectedText = "";
-			this.slickTextBox1.SelectionLength = 0;
-			this.slickTextBox1.SelectionStart = 0;
-			this.slickTextBox1.Size = new System.Drawing.Size(651, 49);
-			this.slickTextBox1.TabIndex = 13;
-			this.slickTextBox1.Validation = SlickControls.ValidationType.Regex;
-			this.slickTextBox1.ValidationRegex = "^(?:https:\\/\\/steamcommunity\\.com\\/(?:(?:sharedfiles)|(?:workshop))\\/filedetails\\" +
-    "/\\?id=)?(\\d{10,20})$";
 			// 
 			// tableLayoutPanel3
 			// 
@@ -237,7 +200,6 @@ partial class PC_ModUtilities
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.roundedGroupPanel1.ResumeLayout(false);
 			this.roundedGroupPanel1.PerformLayout();
-			this.tableLayoutPanel2.ResumeLayout(false);
 			this.tableLayoutPanel3.ResumeLayout(false);
 			this.tableLayoutPanel3.PerformLayout();
 			this.ResumeLayout(false);
@@ -255,7 +217,5 @@ partial class PC_ModUtilities
 	private SlickControls.RoundedGroupPanel roundedGroupPanel1;
 	private SlickControls.SlickIcon slickIcon1;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
-	private SlickControls.SlickButton slickButton1;
-	private SlickControls.SlickTextBox slickTextBox1;
 	private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
 }

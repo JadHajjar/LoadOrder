@@ -1,6 +1,9 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.Domain.Steam;
+using LoadOrderToolTwo.Utilities.Managers;
+
+using Newtonsoft.Json.Serialization;
 
 using SlickControls;
 
@@ -20,7 +23,7 @@ internal class SteamPackageViewControl : SlickImageControl
 		Item = item;
 		Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-		LoadImage(item.PreviewURL);
+		LoadImage(item.PreviewURL, ImageManager.GetImage);
 	}
 
 	public SteamWorkshopItem Item { get; }
@@ -34,6 +37,10 @@ internal class SteamPackageViewControl : SlickImageControl
 	protected override void OnPaint(PaintEventArgs e)
 	{
 		e.Graphics.Clear(BackColor);
+
+		e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+		e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+		e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
 		var iconRect = new Rectangle(Padding.Left, Padding.Top, Height - Padding.Vertical, Height - Padding.Vertical);
 

@@ -2,6 +2,7 @@
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
@@ -24,7 +25,7 @@ public partial class PC_ImportCollection : PanelContent
 		_id = contents.First().Key;
 		L_Title.Text = contents.First().Value.Title;
 		PB_Icon.Collection = true;
-		PB_Icon.LoadImage(contents.First().Value.PreviewURL);
+		PB_Icon.LoadImage(contents.First().Value.PreviewURL, ImageManager.GetImage);
 
 		TLP_Contents.RowCount = 0;
 		TLP_Contents.RowStyles.Clear();
