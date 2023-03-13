@@ -50,7 +50,7 @@ internal class SteamPackageViewControl : SlickImageControl
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left);
+			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left, FormDesign.Design.IconColor);
 		}
 
 		e.Graphics.DrawString(Item.Title, Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, 0, 0, 0));

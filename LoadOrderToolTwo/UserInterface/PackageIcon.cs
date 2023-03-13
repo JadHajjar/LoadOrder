@@ -38,11 +38,11 @@ internal class PackageIcon : SlickImageControl
 			e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.IconColor), ClientRectangle, (int)(10 * UI.FontScale));
 			e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.BackColor), iconRect.Pad(1), (int)(10 * UI.FontScale));
 
-			e.Graphics.DrawRoundedImage(image, iconRect, (int)(10 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(image, iconRect, (int)(10 * UI.FontScale), FormDesign.Design.AccentBackColor);
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(Image, ClientRectangle, (int)(10 * UI.FontScale));
+			e.Graphics.DrawRoundedImage(Image, ClientRectangle, (int)(10 * UI.FontScale), FormDesign.Design.AccentBackColor);
 		}
 	}
 }

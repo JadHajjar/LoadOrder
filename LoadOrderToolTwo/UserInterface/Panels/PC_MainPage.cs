@@ -17,7 +17,6 @@ public partial class PC_MainPage : PanelContent
 	{
 		InitializeComponent();
 
-		Text = Locale.Dashboard;
 		B_StartStop.Enabled = CentralManager.IsContentLoaded && CitiesManager.CitiesAvailable();
 
 		if (!CentralManager.IsContentLoaded)
@@ -28,6 +27,11 @@ public partial class PC_MainPage : PanelContent
 		CitiesManager.MonitorTick += CitiesManager_MonitorTick;
 
 		RefreshButtonState(CitiesManager.IsRunning(), true);
+	}
+
+	protected override void LocaleChanged()
+	{
+		Text = Locale.Dashboard;
 	}
 
 	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)

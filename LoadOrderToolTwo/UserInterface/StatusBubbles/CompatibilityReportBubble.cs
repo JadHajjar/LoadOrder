@@ -73,13 +73,13 @@ internal class CompatibilityReportBubble : StatusBubbleBase
 
 		if (!CompatibilityManager.CatalogAvailable)
 		{
-			DrawText(e, ref targetHeight, "Compatibility report is not available, click here to subscribe to the mod", FormDesign.Design.RedColor);
+			DrawText(e, ref targetHeight, Locale.CrNotAvailable, FormDesign.Design.RedColor);
 			return;
 		}
 
 		var groups = CentralManager.Mods.Where(x => x.IsIncluded).GroupBy(x => x.Package.CompatibilityReport?.Severity);
 
-		DrawValue(e, ref targetHeight, groups.Sum(x => !(x.Key > ReportSeverity.Remarks) ? x.Count() : 0).ToString(), "mods with no issues");
+		DrawValue(e, ref targetHeight, groups.Sum(x => !(x.Key > ReportSeverity.Remarks) ? x.Count() : 0).ToString(), Locale.ModsNoIssues);
 
 		foreach ( var group in groups.OrderBy(x => x.Key))
 		{
@@ -90,9 +90,9 @@ internal class CompatibilityReportBubble : StatusBubbleBase
 
 			DrawValue(e, ref targetHeight, group.Count().ToString(), group.Key switch
 			{
-				ReportSeverity.MinorIssues => "mods with minor issues",
-				ReportSeverity.MajorIssues => "mods with major issues",
-				ReportSeverity.Unsubscribe => "mods that should be unsubscribed from",
+				ReportSeverity.MinorIssues => Locale.ModsWithMinorIssues,
+				ReportSeverity.MajorIssues => Locale.ModsWithMajorIssues,
+				ReportSeverity.Unsubscribe => Locale.ModsShouldUnsub,
 				_ => ""
 			}, group.Key switch
 			{

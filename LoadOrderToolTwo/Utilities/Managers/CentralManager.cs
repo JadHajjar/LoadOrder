@@ -7,6 +7,7 @@ using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Utilities;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,6 @@ using System.Threading.Tasks;
 namespace LoadOrderToolTwo.Utilities.Managers;
 internal static class CentralManager
 {
-	private static readonly object _packageLock = new();
 	private static List<Package>? packages;
 	private const ulong CR_STEAM_ID = 2881031511;
 
@@ -27,50 +27,40 @@ internal static class CentralManager
 	public static Profile CurrentProfile => ProfileManager.CurrentProfile;
 	public static bool IsContentLoaded { get; private set; }
 	public static SessionSettings SessionSettings { get; set; } = ISave.Load<SessionSettings>(nameof(SessionSettings) + ".tf");
-	public static IEnumerable<Package> Packages => packages ?? new(); 
+	public static IEnumerable<Package> Packages => packages ?? new();
+
 	public static IEnumerable<Mod> Mods
 	{
 		get
 		{
-			lock (_packageLock)
-			{
-				if (Packages == null)
-				{
-					yield break;
-				}
+			var currentPackages = packages ?? new();
 
-				foreach (var package in Packages)
+			foreach (var package in currentPackages)
+			{
+				if (package.Mod != null)
 				{
-					if (package.Mod != null)
-					{
-						yield return package.Mod;
-					}
+					yield return package.Mod;
 				}
 			}
 		}
 	}
+
 	public static IEnumerable<Asset> Assets
 	{
 		get
 		{
-			lock (_packageLock)
+			var currentPackages = packages ?? new();
+
+			foreach (var package in currentPackages)
 			{
-				if (Packages == null)
+				if (package.Assets == null)
 				{
-					yield break;
+					continue;
 				}
 
-				foreach (var package in Packages)
+				foreach (var asset in package.Assets)
 				{
-					if (package.Assets == null)
-					{
-						continue;
-					}
-
-					foreach (var asset in package.Assets)
-					{
-						yield return asset;
-					}
+					yield return asset;
 				}
 			}
 		}
@@ -87,10 +77,7 @@ internal static class CentralManager
 			CompatibilityManager.LoadCompatibilityReport(compatibilityReport);
 		}
 
-		lock (_packageLock)
-		{
-			packages = content;
-		}
+		packages = content;
 
 		IsContentLoaded = true;
 
@@ -110,7 +97,7 @@ internal static class CentralManager
 
 			WorkshopInfoUpdated?.Invoke();
 
-			Parallel.ForEach(Packages, (package, state) =>
+			Parallel.ForEach(Packages.OrderBy(x => x.Mod == null), (package, state) =>
 			{
 				package.Status = ModsUtil.GetStatus(package, out var reason);
 				package.StatusReason = reason;
@@ -147,7 +134,7 @@ internal static class CentralManager
 
 			WorkshopInfoUpdated?.Invoke();
 
-			Parallel.ForEach(Packages, (package, state) =>
+			Parallel.ForEach(Packages.OrderBy(x => x.Mod == null).ThenBy(x => x.Name), (package, state) =>
 			{
 				if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage is null)
 				{
@@ -195,5 +182,72 @@ internal static class CentralManager
 		{
 			AssetInformationUpdated?.Invoke(asset);
 		}
+	}
+
+	internal static void AddPackage(Package package)
+	{
+		if (package.SteamId == CR_STEAM_ID)
+		{
+			CompatibilityManager.LoadCompatibilityReport(package);
+		}
+
+		var newPackages = new List<Package>(packages)
+		{
+			package
+		};
+
+		packages = newPackages;
+
+		RefreshSteamInfo(package);
+		ContentLoaded?.Invoke();
+	}
+
+	internal static void RefreshSteamInfo(Package package)
+	{
+		if (!package.Workshop)
+		{
+			return;
+		}
+
+		ConnectionHandler.WhenConnected(async () =>
+		{
+			var result = await SteamUtil.LoadDataAsync(new ulong[] { package.SteamId });
+
+			if (result.ContainsKey(package.SteamId))
+			{
+				package.SetSteamInformation(result[package.SteamId], false);
+			}
+
+			WorkshopInfoUpdated?.Invoke();
+
+			if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage is null)
+			{
+				package.IconImage = ImageManager.GetImage(package.IconUrl!);
+
+				InformationUpdate(package);
+			}
+
+			if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl) && package.AuthorIconImage is null)
+			{
+				package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!);
+
+				InformationUpdate(package);
+			}
+
+			WorkshopInfoUpdated?.Invoke();
+		});
+	}
+
+	internal static void RemovePackage(Package package)
+	{
+		var newPackages = new List<Package>(packages);
+
+		newPackages.Remove(package);
+
+		packages = newPackages;
+
+		RefreshSteamInfo(package);
+		ContentLoaded?.Invoke();
+		WorkshopInfoUpdated?.Invoke();
 	}
 }

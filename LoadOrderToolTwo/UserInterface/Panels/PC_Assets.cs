@@ -34,14 +34,13 @@ public partial class PC_Assets : PanelContent
 		if (!CentralManager.IsContentLoaded)
 		{
 			LC_Assets.Loading = true;
-
-			CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 		}
 		else
 		{
 			LC_Assets.SetItems(CentralManager.Assets);
 		}
 
+		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 		CentralManager.WorkshopInfoUpdated += LC_Assets.Invalidate;
 	}
 

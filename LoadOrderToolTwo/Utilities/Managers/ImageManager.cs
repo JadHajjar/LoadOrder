@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -14,6 +15,14 @@ namespace LoadOrderToolTwo.Utilities.Managers;
 public static class ImageManager
 {
 	private static readonly Dictionary<string, object> _lockObjects = new();
+	private static readonly HashSet<string> _badURLs;
+
+	static ImageManager()
+	{
+		ISave.Load(out string[] badURLs, "BadSteamURLs.tf");
+
+		_badURLs = new(badURLs ?? new string[0]);
+	}
 
 	private static object LockObj(string path)
 	{
@@ -44,7 +53,7 @@ public static class ImageManager
 
 	public static Bitmap? GetImage(string url, bool localOnly)
 	{
-		if (string.IsNullOrWhiteSpace(url))
+		if (string.IsNullOrWhiteSpace(url) || _badURLs.Contains(url))
 		{
 			return null;
 		}
@@ -81,14 +90,13 @@ public static class ImageManager
 
 			try
 			{
-				const int squareSize = 256;
-
 				using var webClient = new WebClient();
 				var imageData = webClient.DownloadData(url);
 
 				using var ms = new MemoryStream(imageData);
 				using var img = Image.FromStream(ms);
 
+				var squareSize = img.Width <= 64 ? img.Width : 256;
 				var size = img.Size.GetProportionalDownscaledSize(squareSize);
 				var image = new Bitmap(squareSize, squareSize);
 
@@ -125,6 +133,13 @@ public static class ImageManager
 				}
 				else
 				{
+					if (ConnectionHandler.IsConnected)
+					{
+						_badURLs.Add(url);
+
+						ISave.Save(_badURLs.ToArray(), "BadSteamURLs.tf");
+					}
+
 					return null;
 				}
 			}

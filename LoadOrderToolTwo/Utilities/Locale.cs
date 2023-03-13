@@ -141,4 +141,11 @@ internal class Locale : LocaleHelper
 	public static string Actions => _instance.GetText(nameof(Actions));
 	public static string ModUtilities => _instance.GetText(nameof(ModUtilities));
 	public static string CollectionTitle => _instance.GetText(nameof(CollectionTitle));
+	public static object Packages => _instance.GetText(nameof(Packages));
+	public static string Options => _instance.GetText(nameof(Options));
+	public static string CrNotAvailable => _instance.GetText(nameof(CrNotAvailable));
+	public static string ModsWithMinorIssues => _instance.GetText(nameof(ModsWithMinorIssues));
+	public static string ModsWithMajorIssues => _instance.GetText(nameof(ModsWithMajorIssues));
+	public static string ModsShouldUnsub => _instance.GetText(nameof(ModsShouldUnsub));
+	public static string ModsNoIssues => _instance.GetText(nameof(ModsNoIssues));
 }

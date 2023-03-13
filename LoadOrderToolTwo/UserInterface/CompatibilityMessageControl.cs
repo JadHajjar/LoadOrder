@@ -162,7 +162,7 @@ internal class CompatibilityMessageControl : SlickControl
 					e.Graphics.FillRoundedRectangle(new SolidBrush(Color.FromArgb(HoverState.HasFlag(HoverState.Pressed) ? 255 : 50, FormDesign.Design.ActiveColor)), rect.Pad(1), pad);
 				}
 
-				e.Graphics.DrawRoundedImage(item.Icon ?? Properties.Resources.I_ModIcon.Color(fore), rect.Align(UI.Scale(new Size(50, 50), UI.FontScale), ContentAlignment.TopLeft), pad);
+				e.Graphics.DrawRoundedImage(item.Icon ?? Properties.Resources.I_ModIcon.Color(fore), rect.Align(UI.Scale(new Size(50, 50), UI.FontScale), ContentAlignment.TopLeft), pad, fore);
 
 				e.Graphics.DrawString(item.Name, UI.Font(9F, FontStyle.Bold), new SolidBrush(fore), rect.Pad((int)(55 * UI.FontScale), 0, 0, 0));
 				

@@ -81,6 +81,7 @@ public partial class PC_Profiles : PanelContent
 	{
 		base.UIChanged();
 
+		P_Options.Padding = P_Options.Margin = UI.Scale(new Padding(5), UI.UIScale);
 		L_TempProfile.Font = UI.Font(10.5F);
 		L_CurrentProfile.Font = UI.Font(12.75F, FontStyle.Bold);
 		B_LoadProfiles.Font = B_NewProfile.Font = UI.Font(9.75F);
@@ -95,7 +96,7 @@ public partial class PC_Profiles : PanelContent
 		P_Profiles2.BackColor = design.BackColor;
 		TLP_ProfileName.BackColor = design.ButtonColor;
 		L_TempProfile.ForeColor = design.YellowColor;
-		P_ScrollPanel.BackColor = design.AccentBackColor;
+		P_Options.BackColor = design.AccentBackColor;
 		TLP_LaunchSettings.BackColor = TLP_GeneralSettings.BackColor = design.Type == FormDesignType.Light ? design.BackColor : design.ButtonColor;
 	}
 

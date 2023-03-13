@@ -1,7 +1,6 @@
 using Extensions;
 
 using LoadOrderToolTwo.Utilities;
-using LoadOrderToolTwo.Utilities.IO;
 
 using SlickControls;
 
@@ -30,7 +29,7 @@ internal static class Program
 			ISave.CustomSaveDirectory = GetFolderPath(SpecialFolder.LocalApplicationData);
 			BackgroundAction.BackgroundTaskError += (b, e) => Log.Exception(e, $"The background action ({b}) failed", false);
 
-			if (Environment.OSVersion.Version.Major == 6)
+			if (OSVersion.Version.Major == 6)
 			{
 				SetProcessDPIAware();
 			}
@@ -40,7 +39,7 @@ internal static class Program
 			//AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyUtil.ReflectionResolveInterface;
 			//AppDomain.CurrentDomain.AssemblyResolve += AssemblyUtil.ResolveInterface;
 
-			Application.EnableVisualStyles();
+			//Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
 		}

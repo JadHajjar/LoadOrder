@@ -13,7 +13,10 @@ public partial class PC_ModUtilities : PanelContent
 	public PC_ModUtilities()
 	{
 		InitializeComponent();
+	}
 
+	protected override void LocaleChanged()
+	{
 		Text = Locale.ModUtilities;
 	}
 
@@ -36,7 +39,9 @@ public partial class PC_ModUtilities : PanelContent
 
 			if (contents?.Any() ?? false)
 			{
-				Form.PushPanel(null, new PC_ImportCollection(contents));
+				var collection= contents[ulong.Parse(collectionId)];
+				contents.Remove(ulong.Parse(collectionId));
+				Form.PushPanel(null, new PC_ImportCollection(collection, contents));
 				TB_CollectionLink.Text = string.Empty;
 			}
 

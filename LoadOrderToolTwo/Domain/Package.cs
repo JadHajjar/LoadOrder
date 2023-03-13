@@ -74,7 +74,7 @@ public class Package : IPackage
 	Package IPackage.Package => this;
 	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
 
-	internal string GetName()
+	public override string ToString()
 	{
 		if (!string.IsNullOrEmpty(Name))
 		{ return Name; }

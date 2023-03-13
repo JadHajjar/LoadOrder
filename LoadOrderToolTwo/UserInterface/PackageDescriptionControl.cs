@@ -83,7 +83,7 @@ internal class PackageDescriptionControl : SlickImageControl
 			}
 			else if (Image != null)
 			{
-				e.Graphics.DrawRoundImage(Image, avatarRect, (int)(4 * UI.FontScale));
+				e.Graphics.DrawRoundImage(Image, avatarRect);
 			}
 		}
 	}

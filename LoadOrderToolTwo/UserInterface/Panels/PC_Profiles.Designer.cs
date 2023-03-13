@@ -38,6 +38,7 @@ partial class PC_Profiles
 			this.L_TempProfile = new System.Windows.Forms.Label();
 			this.B_LoadProfiles = new SlickControls.SlickButton();
 			this.B_NewProfile = new SlickControls.SlickButton();
+			this.P_Options = new SlickControls.RoundedPanel();
 			this.P_ScrollPanel = new System.Windows.Forms.Panel();
 			this.FLP_Options = new System.Windows.Forms.FlowLayoutPanel();
 			this.TLP_GeneralSettings = new SlickControls.RoundedGroupTableLayoutPanel();
@@ -56,6 +57,7 @@ partial class PC_Profiles
 			this.slickScroll1 = new SlickControls.SlickScroll();
 			this.TLP_ProfileName.SuspendLayout();
 			this.TLP_Main.SuspendLayout();
+			this.P_Options.SuspendLayout();
 			this.P_ScrollPanel.SuspendLayout();
 			this.FLP_Options.SuspendLayout();
 			this.TLP_GeneralSettings.SuspendLayout();
@@ -137,7 +139,7 @@ partial class PC_Profiles
 			this.TLP_Main.Controls.Add(this.TLP_ProfileName, 0, 0);
 			this.TLP_Main.Controls.Add(this.B_LoadProfiles, 2, 0);
 			this.TLP_Main.Controls.Add(this.B_NewProfile, 3, 0);
-			this.TLP_Main.Controls.Add(this.P_ScrollPanel, 0, 2);
+			this.TLP_Main.Controls.Add(this.P_Options, 0, 2);
 			this.TLP_Main.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TLP_Main.Location = new System.Drawing.Point(0, 30);
 			this.TLP_Main.Name = "TLP_Main";
@@ -207,16 +209,25 @@ partial class PC_Profiles
 			this.B_NewProfile.TabIndex = 14;
 			this.B_NewProfile.Text = "AddProfile";
 			// 
+			// P_Options
+			// 
+			this.TLP_Main.SetColumnSpan(this.P_Options, 4);
+			this.P_Options.Controls.Add(this.P_ScrollPanel);
+			this.P_Options.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.P_Options.Location = new System.Drawing.Point(3, 114);
+			this.P_Options.Name = "P_Options";
+			this.P_Options.Size = new System.Drawing.Size(801, 339);
+			this.P_Options.TabIndex = 16;
+			// 
 			// P_ScrollPanel
 			// 
-			this.TLP_Main.SetColumnSpan(this.P_ScrollPanel, 4);
-			this.P_ScrollPanel.Controls.Add(this.FLP_Options);
 			this.P_ScrollPanel.Controls.Add(this.slickScroll);
+			this.P_ScrollPanel.Controls.Add(this.FLP_Options);
 			this.P_ScrollPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.P_ScrollPanel.Location = new System.Drawing.Point(0, 111);
-			this.P_ScrollPanel.Margin = new System.Windows.Forms.Padding(0);
+			this.P_ScrollPanel.Location = new System.Drawing.Point(0, 0);
+			this.P_ScrollPanel.Margin = new System.Windows.Forms.Padding(5);
 			this.P_ScrollPanel.Name = "P_ScrollPanel";
-			this.P_ScrollPanel.Size = new System.Drawing.Size(807, 345);
+			this.P_ScrollPanel.Size = new System.Drawing.Size(801, 339);
 			this.P_ScrollPanel.TabIndex = 16;
 			// 
 			// FLP_Options
@@ -227,7 +238,7 @@ partial class PC_Profiles
 			this.FLP_Options.Controls.Add(this.TLP_LaunchSettings);
 			this.FLP_Options.Location = new System.Drawing.Point(0, 0);
 			this.FLP_Options.Name = "FLP_Options";
-			this.FLP_Options.Size = new System.Drawing.Size(756, 233);
+			this.FLP_Options.Size = new System.Drawing.Size(709, 233);
 			this.FLP_Options.TabIndex = 18;
 			// 
 			// TLP_GeneralSettings
@@ -245,7 +256,7 @@ partial class PC_Profiles
 			this.TLP_GeneralSettings.RowCount = 1;
 			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TLP_GeneralSettings.Size = new System.Drawing.Size(185, 92);
+			this.TLP_GeneralSettings.Size = new System.Drawing.Size(138, 92);
 			this.TLP_GeneralSettings.TabIndex = 17;
 			// 
 			// CB_AutoSave
@@ -267,7 +278,7 @@ partial class PC_Profiles
 			this.CB_AutoSave.Name = "CB_AutoSave";
 			this.CB_AutoSave.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.CB_AutoSave.Selected = false;
-			this.CB_AutoSave.Size = new System.Drawing.Size(165, 34);
+			this.CB_AutoSave.Size = new System.Drawing.Size(118, 34);
 			this.CB_AutoSave.SpaceTriggersClick = true;
 			this.CB_AutoSave.TabIndex = 0;
 			this.CB_AutoSave.Text = "AutoSave";
@@ -290,7 +301,7 @@ partial class PC_Profiles
 			this.TLP_LaunchSettings.Controls.Add(this.CB_NoWorkshop, 0, 1);
 			this.TLP_LaunchSettings.Controls.Add(this.CB_NoAssets, 2, 1);
 			this.TLP_LaunchSettings.Image = global::LoadOrderToolTwo.Properties.Resources.I_Launch;
-			this.TLP_LaunchSettings.Location = new System.Drawing.Point(194, 3);
+			this.TLP_LaunchSettings.Location = new System.Drawing.Point(147, 3);
 			this.TLP_LaunchSettings.Name = "TLP_LaunchSettings";
 			this.TLP_LaunchSettings.Padding = new System.Windows.Forms.Padding(7, 38, 7, 7);
 			this.TLP_LaunchSettings.RowCount = 3;
@@ -315,7 +326,7 @@ partial class PC_Profiles
 			this.CB_NoMods.HideText = false;
 			this.CB_NoMods.IconSize = 16;
 			this.CB_NoMods.Image = ((System.Drawing.Image)(resources.GetObject("CB_NoMods.Image")));
-			this.CB_NoMods.Location = new System.Drawing.Point(437, 95);
+			this.CB_NoMods.Location = new System.Drawing.Point(287, 95);
 			this.CB_NoMods.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
 			this.CB_NoMods.Name = "CB_NoMods";
 			this.CB_NoMods.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
@@ -372,7 +383,7 @@ partial class PC_Profiles
 			this.CB_LHT.Name = "CB_LHT";
 			this.CB_LHT.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.CB_LHT.Selected = false;
-			this.CB_LHT.Size = new System.Drawing.Size(175, 34);
+			this.CB_LHT.Size = new System.Drawing.Size(75, 34);
 			this.CB_LHT.SpaceTriggersClick = true;
 			this.CB_LHT.TabIndex = 0;
 			this.CB_LHT.Text = "LHT";
@@ -418,7 +429,7 @@ partial class PC_Profiles
 			this.CB_NoWorkshop.Name = "CB_NoWorkshop";
 			this.CB_NoWorkshop.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.CB_NoWorkshop.Selected = false;
-			this.CB_NoWorkshop.Size = new System.Drawing.Size(229, 34);
+			this.CB_NoWorkshop.Size = new System.Drawing.Size(148, 34);
 			this.CB_NoWorkshop.SpaceTriggersClick = true;
 			this.CB_NoWorkshop.TabIndex = 4;
 			this.CB_NoWorkshop.Text = "NoWorkshop";
@@ -438,12 +449,12 @@ partial class PC_Profiles
 			this.CB_NoAssets.HideText = false;
 			this.CB_NoAssets.IconSize = 16;
 			this.CB_NoAssets.Image = ((System.Drawing.Image)(resources.GetObject("CB_NoAssets.Image")));
-			this.CB_NoAssets.Location = new System.Drawing.Point(245, 95);
+			this.CB_NoAssets.Location = new System.Drawing.Point(164, 95);
 			this.CB_NoAssets.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
 			this.CB_NoAssets.Name = "CB_NoAssets";
 			this.CB_NoAssets.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.CB_NoAssets.Selected = false;
-			this.CB_NoAssets.Size = new System.Drawing.Size(186, 34);
+			this.CB_NoAssets.Size = new System.Drawing.Size(117, 34);
 			this.CB_NoAssets.SpaceTriggersClick = true;
 			this.CB_NoAssets.TabIndex = 5;
 			this.CB_NoAssets.Text = "NoAssets";
@@ -454,9 +465,9 @@ partial class PC_Profiles
 			// 
 			this.slickScroll.Dock = System.Windows.Forms.DockStyle.Right;
 			this.slickScroll.LinkedControl = this.FLP_Options;
-			this.slickScroll.Location = new System.Drawing.Point(800, 0);
+			this.slickScroll.Location = new System.Drawing.Point(794, 0);
 			this.slickScroll.Name = "slickScroll";
-			this.slickScroll.Size = new System.Drawing.Size(7, 345);
+			this.slickScroll.Size = new System.Drawing.Size(7, 339);
 			this.slickScroll.Style = SlickControls.StyleType.Vertical;
 			this.slickScroll.TabIndex = 16;
 			this.slickScroll.TabStop = false;
@@ -521,6 +532,7 @@ partial class PC_Profiles
 			this.TLP_ProfileName.PerformLayout();
 			this.TLP_Main.ResumeLayout(false);
 			this.TLP_Main.PerformLayout();
+			this.P_Options.ResumeLayout(false);
 			this.P_ScrollPanel.ResumeLayout(false);
 			this.P_ScrollPanel.PerformLayout();
 			this.FLP_Options.ResumeLayout(false);
@@ -547,7 +559,7 @@ partial class PC_Profiles
 	private SlickControls.SlickButton B_LoadProfiles;
 	private SlickControls.SlickButton B_NewProfile;
 	private System.Windows.Forms.Label L_TempProfile;
-	private System.Windows.Forms.Panel P_ScrollPanel;
+	private SlickControls.RoundedPanel P_Options;
 	private SlickControls.SlickScroll slickScroll;
 	private SlickControls.RoundedGroupTableLayoutPanel TLP_LaunchSettings;
 	private SlickControls.SlickCheckbox CB_LoadSave;
@@ -564,4 +576,5 @@ partial class PC_Profiles
 	private SlickControls.RoundedGroupTableLayoutPanel TLP_GeneralSettings;
 	private SlickControls.SlickCheckbox CB_AutoSave;
 	private System.Windows.Forms.FlowLayoutPanel FLP_Options;
+	private System.Windows.Forms.Panel P_ScrollPanel;
 }

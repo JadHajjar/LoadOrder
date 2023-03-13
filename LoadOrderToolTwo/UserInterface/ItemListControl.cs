@@ -211,12 +211,13 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		var iconRectangle = rects.IconRect;
 		var textRect = rects.TextRect;
 
-		e.Graphics.DrawRoundedImage(e.Item.IconImage ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale));
+		e.Graphics.DrawRoundedImage(e.Item.IconImage ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale), FormDesign.Design.AccentBackColor);
 
 		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?").RemoveDoubleSpaces(), UI.Font(large ? 11.25F : 9F, FontStyle.Bold), new SolidBrush(e.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : rects.CenterRect.Contains(CursorLocation) && e.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
-		var versionRect = DrawLabel(e, e.Item is Mod
-			? (e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Package.Mod!.Version.GetString())
+		var versionRect = DrawLabel(e, e.Item is Package pkg
+			? (pkg.Mod is null ? "" : (e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Package.Mod?.Version.GetString())) : e.Item is Mod
+			? (e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Package.Mod?.Version.GetString())
 			: (e.Item as Asset)!.FileSize.SizeString(), null, FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.BackColor, 40), new Rectangle(textRect.X, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
 
 		var timeRect = DrawLabel(e, e.Item.LocalTime.ToLocalTime().ToString("g"), Properties.Resources.I_UpdateTime, FormDesign.Design.AccentColor.MergeColor(FormDesign.Design.BackColor, 75), new Rectangle(versionRect.Right + Padding.Left, e.ClipRectangle.Y, (int)(100 * UI.FontScale), e.ClipRectangle.Height), ContentAlignment.BottomLeft);
@@ -240,7 +241,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 
 				if (e.Item.AuthorIconImage is not null)
 				{
-					e.Graphics.DrawRoundImage(e.Item.AuthorIconImage ?? Properties.Resources.I_AuthorIcon.Color(FormDesign.Design.IconColor), avatarRect, (int)(4 * UI.FontScale));
+					e.Graphics.DrawRoundImage(e.Item.AuthorIconImage ?? Properties.Resources.I_AuthorIcon.Color(FormDesign.Design.IconColor), avatarRect);
 				}
 			}
 			else

@@ -12,11 +12,11 @@ using System.Linq;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
-public partial class PC_Mods : PanelContent
+public partial class PC_Packages : PanelContent
 {
-	private readonly ItemListControl<Mod> LC_Mods;
+	private readonly ItemListControl<Package> LC_Mods;
 
-	public PC_Mods()
+	public PC_Packages()
 	{
 		InitializeComponent();
 
@@ -34,7 +34,7 @@ public partial class PC_Mods : PanelContent
 		}
 		else
 		{
-			LC_Mods.SetItems(CentralManager.Mods);
+			LC_Mods.SetItems(CentralManager.Packages);
 		}
 
 		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
@@ -43,7 +43,7 @@ public partial class PC_Mods : PanelContent
 
 	protected override void LocaleChanged()
 	{
-		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
+		Text = $"{Locale.Packages} - {ProfileManager.CurrentProfile.Name}";
 		DD_PackageStatus.Text = Locale.ModStatus;
 		DD_ReportSeverity.Text = Locale.ReportSeverity;
 	}
@@ -78,12 +78,12 @@ public partial class PC_Mods : PanelContent
 		return FormDesign.Design.AccentBackColor;
 	}
 
-	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Mod> e)
+	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Package> e)
 	{
 		e.DoNotDraw = IsFilteredOut(e.Item);
 	}
 
-	private bool IsFilteredOut(Mod mod)
+	private bool IsFilteredOut(Package mod)
 	{
 		var doNotDraw = false;
 
@@ -104,7 +104,7 @@ public partial class PC_Mods : PanelContent
 
 		if (!doNotDraw && OT_Enabled.SelectedValue != ThreeOptionToggle.Value.None)
 		{
-			doNotDraw = OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsEnabled;
+			//doNotDraw = OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsEnabled;
 		}
 
 		if (!doNotDraw && (int)DD_PackageStatus.SelectedItem != -1)
@@ -121,7 +121,7 @@ public partial class PC_Mods : PanelContent
 
 		if (!doNotDraw && (int)DD_ReportSeverity.SelectedItem != -1)
 		{
-			doNotDraw = DD_ReportSeverity.SelectedItem != mod.Package.CompatibilityReport?.Severity;
+			doNotDraw = DD_ReportSeverity.SelectedItem != mod.CompatibilityReport?.Severity;
 		}
 
 		if (!doNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
@@ -141,7 +141,7 @@ public partial class PC_Mods : PanelContent
 			LC_Mods.Loading = false;
 		}
 
-		LC_Mods.SetItems(CentralManager.Mods);
+		LC_Mods.SetItems(CentralManager.Packages);
 	}
 
 	private void FilterChanged(object sender, EventArgs e)
@@ -156,22 +156,22 @@ public partial class PC_Mods : PanelContent
 
 	private void B_ExInclude_LeftClicked(object sender, EventArgs e)
 	{
-		ModsUtil.SetIncluded(CentralManager.Mods.Where(x => !IsFilteredOut(x)), false);
+		//ModsUtil.SetIncluded(CentralManager.Packages.Where(x => !IsFilteredOut(x)), false);
 	}
 
 	private void B_ExInclude_RightClicked(object sender, EventArgs e)
 	{
-		ModsUtil.SetIncluded(CentralManager.Mods.Where(x => !IsFilteredOut(x)), true);
+		//ModsUtil.SetIncluded(CentralManager.Packages.Where(x => !IsFilteredOut(x)), true);
 	}
 
 	private void B_DisEnable_LeftClicked(object sender, EventArgs e)
 	{
-		ModsUtil.SetEnabled(CentralManager.Mods.Where(x => !IsFilteredOut(x)), false);
+		//ModsUtil.SetEnabled(CentralManager.Packages.Where(x => !IsFilteredOut(x)), false);
 	}
 
 	private void B_DisEnable_RightClicked(object sender, EventArgs e)
 	{
-		ModsUtil.SetEnabled(CentralManager.Mods.Where(x => !IsFilteredOut(x)), true);
+		//ModsUtil.SetEnabled(CentralManager.Packages.Where(x => !IsFilteredOut(x)), true);
 	}
 
 	private void B_ReDownload_Click(object sender, EventArgs e)

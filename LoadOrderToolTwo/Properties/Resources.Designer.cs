@@ -93,6 +93,26 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_AskHelp {
+            get {
+                object obj = ResourceManager.GetObject("I_AskHelp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_AskHelp_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_AskHelp_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_AssetIcon {
             get {
                 object obj = ResourceManager.GetObject("I_AssetIcon", resourceCulture);
@@ -106,6 +126,16 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_Assets {
             get {
                 object obj = ResourceManager.GetObject("I_Assets", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Assets_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Assets_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +296,26 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_ContentRemoved_16 {
             get {
                 object obj = ResourceManager.GetObject("I_ContentRemoved_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Dashboard {
+            get {
+                object obj = ResourceManager.GetObject("I_Dashboard", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Dashboard_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Dashboard_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -523,6 +573,16 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_Mods_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Mods_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_Note {
             get {
                 object obj = ResourceManager.GetObject("I_Note", resourceCulture);
@@ -566,6 +626,26 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_OutOfDate_16 {
             get {
                 object obj = ResourceManager.GetObject("I_OutOfDate_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Package {
+            get {
+                object obj = ResourceManager.GetObject("I_Package", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Package_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Package_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -776,6 +856,26 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_Upgrade {
             get {
                 object obj = ResourceManager.GetObject("I_Upgrade", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_UserOptions {
+            get {
+                object obj = ResourceManager.GetObject("I_UserOptions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_UserOptions_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_UserOptions_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

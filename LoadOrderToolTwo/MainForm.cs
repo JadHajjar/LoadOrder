@@ -22,7 +22,7 @@ public partial class MainForm : BasePanelForm
 #if DEBUG
 		L_Version.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(4);
 #else
-		L_Version.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+		L_Version.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + " Beta";
 #endif
 		try
 		{ FormDesign.Initialize(this, DesignChanged); }
@@ -36,6 +36,21 @@ public partial class MainForm : BasePanelForm
 		new BackgroundAction("Loading content", CentralManager.Start).Run();
 	}
 
+	protected override void UIChanged()
+	{
+		base.UIChanged();
+
+		PI_Dashboard.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Dashboard));
+		PI_Mods.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Mods));
+		PI_Assets.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Assets));
+		PI_Profiles.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_ProfileSettings));
+		PI_Options.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_UserOptions));
+		PI_Compatibility.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_CompatibilityReport));
+		PI_ModUtilities.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Wrench));
+		PI_Troubleshoot.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_AskHelp));
+		PI_Packages.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Package));
+	}
+
 	protected override void OnCreateControl()
 	{
 		base.OnCreateControl();
@@ -44,7 +59,9 @@ public partial class MainForm : BasePanelForm
 		{
 			if (CentralManager.SessionSettings.WindowBounds != null)
 			{
-				DefaultBounds = Bounds = CentralManager.SessionSettings.WindowBounds.Value;
+				Bounds = CentralManager.SessionSettings.WindowBounds.Value;
+
+				LastUiScale = UI.UIScale;
 			}
 
 			if (CentralManager.SessionSettings.WindowIsMaximized)
@@ -104,6 +121,16 @@ public partial class MainForm : BasePanelForm
 
 	private void PI_ModReview_OnClick(object sender, MouseEventArgs e)
 	{
-		SetPanel<PC_ModUtilities>(PI_ModReview);
+		SetPanel<PC_ModUtilities>(PI_ModUtilities);
+	}
+
+	private void PI_Packages_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_Packages>(PI_Packages);
+	}
+
+	private void PI_Options_OnClick(object sender, MouseEventArgs e)
+	{
+		SetPanel<PC_Options>(PI_Options);
 	}
 }

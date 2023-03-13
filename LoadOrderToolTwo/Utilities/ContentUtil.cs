@@ -1,4 +1,5 @@
 ﻿using LoadOrderToolTwo.Domain;
+using LoadOrderToolTwo.Domain.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
@@ -84,18 +85,27 @@ internal class ContentUtil
 		foreach (var folder in addonsAssetsPath)
 		{
 			getPackage(folder, false, false);
+			PackageWatcher.Create(folder, false, false);
 		}
 
-		if(Directory.Exists(gameModsPath))
-		foreach (var folder in Directory.GetDirectories(gameModsPath))
+		if (Directory.Exists(gameModsPath))
 		{
-			getPackage(folder, true, false);
+			PackageWatcher.Create(gameModsPath, true, false);
+
+			foreach (var folder in Directory.GetDirectories(gameModsPath))
+			{
+				getPackage(folder, true, false);
+			}
 		}
 
-		if(Directory.Exists(addonsModsPath))
-		foreach (var folder in Directory.GetDirectories(addonsModsPath))
+		if (Directory.Exists(addonsModsPath))
 		{
-			getPackage(folder, false, false);
+			PackageWatcher.Create(addonsModsPath, false, false);
+
+			foreach (var folder in Directory.GetDirectories(addonsModsPath))
+			{
+				getPackage(folder, false, false);
+			}
 		}
 
 		var subscribedItems = GetSubscribedItemPaths().ToList();
@@ -104,6 +114,8 @@ internal class ContentUtil
 		{
 			getPackage(folder, false, true);
 		});
+
+		PackageWatcher.Create(LocationManager.WorkshopContentPath, false, true);
 
 		return packages;
 
@@ -127,5 +139,29 @@ internal class ContentUtil
 				}
 			}
 		}
+	}
+
+	internal static void LoadNewPackage(string path, bool builtIn, bool workshop)
+	{
+		var package = new Package(path, builtIn, workshop);
+
+		package.Assets = AssetsUtil.GetAssets(package).ToArray();
+		package.Mod = ModsUtil.GetMod(package);
+
+		CentralManager.AddPackage(package);
+	}
+
+	internal static void RefreshPackage(Package package)
+	{
+		if (!Directory.Exists(package.Folder))
+		{
+			CentralManager.RemovePackage(package);
+			return;
+		}
+
+		package.Assets = AssetsUtil.GetAssets(package).ToArray();
+		package.Mod = ModsUtil.GetMod(package);
+
+		CentralManager.RefreshSteamInfo(package);
 	}
 }
