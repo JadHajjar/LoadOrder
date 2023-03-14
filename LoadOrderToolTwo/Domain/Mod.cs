@@ -51,6 +51,7 @@ public class Mod : IPackage
 	public string[]? Tags { get => ((IPackage)Package).Tags; set => ((IPackage)Package).Tags = value; }
 	public string? SteamDescription { get => ((IPackage)Package).SteamDescription; set => ((IPackage)Package).SteamDescription = value; }
 	public Bitmap? AuthorIconImage { get => ((IPackage)Package).AuthorIconImage; set => ((IPackage)Package).AuthorIconImage = value; }
+	public bool IsRequired { get => ((IPackage)Package).IsRequired; set => ((IPackage)Package).IsRequired = value; }
 
 	public override string ToString() => Name;
 }

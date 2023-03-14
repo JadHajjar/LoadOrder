@@ -56,6 +56,7 @@ public class Asset : IPackage
 	public string? SteamDescription { get => ((IPackage)Package).SteamDescription; set => ((IPackage)Package).SteamDescription = value; }
 	public string? VirtualFolder => ((IPackage)Package).VirtualFolder;
 	public Bitmap? AuthorIconImage { get => ((IPackage)Package).AuthorIconImage; set => ((IPackage)Package).AuthorIconImage = value; }
+	public bool IsRequired { get => ((IPackage)Package).IsRequired; set => ((IPackage)Package).IsRequired = value; }
 
 	public override string ToString()
 	{

@@ -11,7 +11,8 @@ using IoPath = System.IO.Path;
 namespace LoadOrderToolTwo.Domain.Utilities;
 internal class PackageWatcher : FileSystemWatcher
 {
-	public static void Create(string folder, bool builtIn, bool workshop) => new PackageWatcher(folder, builtIn, workshop);
+	private readonly DelayedAction<string> _delayedPathAction = new(350);
+	private readonly DelayedAction<Package> _delayedPackageAction = new(350);
 
 	private PackageWatcher(string folder, bool builtIn, bool workshop)
 	{
@@ -40,12 +41,22 @@ internal class PackageWatcher : FileSystemWatcher
 
 		if (package != null)
 		{
-			ContentUtil.RefreshPackage(package);
+			_delayedPackageAction.Run(package, TriggerUpdate);
 		}
 		else
 		{
-			ContentUtil.LoadNewPackage(path, BuiltIn, Workshop);
+			_delayedPathAction.Run(path, TriggerUpdate);
 		}
+	}
+
+	private void TriggerUpdate(Package package)
+	{
+		ContentUtil.RefreshPackage(package);
+	}
+
+	private void TriggerUpdate(string path)
+	{
+		ContentUtil.LoadNewPackage(path, BuiltIn, Workshop);
 	}
 
 	public string GetFirstFolderOrFileName(string filePath, string sourceFolder)
@@ -72,5 +83,13 @@ internal class PackageWatcher : FileSystemWatcher
 		}
 
 		return Path;
+	}
+
+	public static void Create(string folder, bool builtIn, bool workshop)
+	{
+		if (Directory.Exists(folder))
+		{
+			new PackageWatcher(folder, builtIn, workshop);
+		}
 	}
 }

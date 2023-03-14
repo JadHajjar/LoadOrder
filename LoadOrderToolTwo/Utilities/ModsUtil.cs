@@ -123,7 +123,7 @@ internal class ModsUtil
 
 	internal static void SetLocallyIncluded(Mod mod, bool value)
 	{
-		if (value)
+		if (value || mod.IsRequired)
 		{
 			File.Delete(Path.Combine(mod.Folder, ContentUtil.EXCLUDED_FILE_NAME));
 		}

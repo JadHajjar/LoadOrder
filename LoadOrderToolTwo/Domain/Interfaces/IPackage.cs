@@ -31,4 +31,5 @@ public interface IPackage
 	string[]? Tags { get; set; }
 	bool Workshop { get; }
 	bool IsIncluded { get; }
+	bool IsRequired { get; set; }
 }

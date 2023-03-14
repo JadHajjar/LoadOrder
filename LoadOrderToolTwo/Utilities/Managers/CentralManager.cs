@@ -6,6 +6,8 @@ using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Utilities;
 
+using Steamworks;
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,8 +17,14 @@ using System.Threading.Tasks;
 namespace LoadOrderToolTwo.Utilities.Managers;
 internal static class CentralManager
 {
+	private const ulong CompatibilityReport_STEAM_ID = 2881031511;
+	private const ulong HARMONY_ALPHA_STEAM_ID = 2399204842;
+	private const ulong HARMONY_STEAM_ID = 2040656402;
+	private const ulong PATCH_LOADER_MOD_STEAM_ID = 2041457644;
+	private const ulong LOM_ALPHA_STEAM_ID = 2620852727;
+	private const ulong LOM_STEAM_ID = 2448824112;
+
 	private static List<Package>? packages;
-	private const ulong CR_STEAM_ID = 2881031511;
 
 	public static event Action? ContentLoaded;
 	public static event Action? WorkshopInfoUpdated;
@@ -70,12 +78,7 @@ internal static class CentralManager
 	{
 		var content = ContentUtil.LoadContents();
 
-		var compatibilityReport = content.FirstOrDefault(x => x.SteamId == CR_STEAM_ID);
-
-		if (compatibilityReport != null)
-		{
-			CompatibilityManager.LoadCompatibilityReport(compatibilityReport);
-		}
+		AnalyzePackages(content);
 
 		packages = content;
 
@@ -155,6 +158,79 @@ internal static class CentralManager
 		});
 	}
 
+	private static void AnalyzePackages(List<Package> content)
+	{
+		Package? compatibilityReport = null, harmony = null, harmonyAlpha = null, lom = null, lomAlpha = null, plm = null;
+		
+		foreach (var package in content)
+		{
+			switch (package.SteamId)
+			{
+				case LOM_STEAM_ID:
+					lom = package;
+					break;
+
+				case LOM_ALPHA_STEAM_ID:
+					lomAlpha = package;
+					break;
+
+				case PATCH_LOADER_MOD_STEAM_ID:
+					plm = package;
+					break;
+
+				case HARMONY_STEAM_ID:
+					harmony = package;
+					break;
+
+				case HARMONY_ALPHA_STEAM_ID:
+					harmonyAlpha = package;
+					break;
+
+				case CompatibilityReport_STEAM_ID:
+					compatibilityReport = package;
+					break;
+			}
+		}
+
+		if (compatibilityReport != null)
+		{
+			CompatibilityManager.LoadCompatibilityReport(compatibilityReport);
+		}
+
+		if (plm != null)
+		{
+			plm.IsRequired = true;
+			plm.Mod!.IsIncluded = true;
+			plm.Mod!.IsEnabled = true;
+		}
+
+		if (lomAlpha != null)
+		{
+			lomAlpha.IsRequired = true;
+			lomAlpha.Mod!.IsIncluded = true;
+			lomAlpha.Mod!.IsEnabled = true;
+		}
+		else if (lom != null)
+		{
+			lom.IsRequired = true;
+			lom.Mod!.IsIncluded = true;
+			lom.Mod!.IsEnabled = true;
+		}
+
+		if (harmonyAlpha != null)
+		{
+			harmonyAlpha.IsRequired = true;
+			harmonyAlpha.Mod!.IsIncluded = true;
+			harmonyAlpha.Mod!.IsEnabled = true;
+		}
+		else if (harmony != null)
+		{
+			harmony.IsRequired = true;
+			harmony.Mod!.IsIncluded = true;
+			harmony.Mod!.IsEnabled = true;
+		}
+	}
+
 	public static void InformationUpdate(IPackage iPackage)
 	{
 		if (iPackage is Package package)
@@ -186,9 +262,16 @@ internal static class CentralManager
 
 	internal static void AddPackage(Package package)
 	{
-		if (package.SteamId == CR_STEAM_ID)
+		if (package.SteamId == CompatibilityReport_STEAM_ID)
 		{
 			CompatibilityManager.LoadCompatibilityReport(package);
+		}
+		
+		var cachedSteamInfo = SteamUtil.GetCachedInfo();
+
+		if (cachedSteamInfo != null && cachedSteamInfo.ContainsKey(package.SteamId))
+		{
+			package.SetSteamInformation(cachedSteamInfo[package.SteamId], true);
 		}
 
 		var newPackages = new List<Package>(packages)
@@ -246,7 +329,7 @@ internal static class CentralManager
 
 		packages = newPackages;
 
-		RefreshSteamInfo(package);
+		package.Status = DownloadStatus.NotDownloaded;
 		ContentLoaded?.Invoke();
 		WorkshopInfoUpdated?.Invoke();
 	}

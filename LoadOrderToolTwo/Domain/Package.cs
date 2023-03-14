@@ -74,6 +74,8 @@ public class Package : IPackage
 	Package IPackage.Package => this;
 	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
 
+	public bool IsRequired { get; set; }
+
 	public override string ToString()
 	{
 		if (!string.IsNullOrEmpty(Name))
