@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Utilities.Managers;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Utilities.Managers;
 
 using Newtonsoft.Json;
 
@@ -7,10 +9,10 @@ using System.Collections.Generic;
 namespace LoadOrderToolTwo.Domain;
 public class Profile
 {
-	public static readonly Profile TransitoryProfile = new("Temporary Profile") { Temporary = true, AutoSave = false };
+	public static readonly Profile TemporaryProfile = new("Temporary Profile") { Temporary = true, AutoSave = false };
 
-	[JsonIgnore] public bool Temporary { get; private set; }
-	[JsonIgnore] public bool IsMissingItems { get; set; }
+	[JsonIgnore, CloneIgnore] public bool Temporary { get; private set; }
+	[JsonIgnore, CloneIgnore] public bool IsMissingItems { get; set; }
 
 	public Profile(string name) : this()
 	{
@@ -31,9 +33,9 @@ public class Profile
 		ProfileManager.Save(this);
 	}
 
-	public string? Name { get; set; }
-	public List<Asset> Assets { get; set; }
-	public List<Mod> Mods { get; set; }
+	[CloneIgnore] public string? Name { get; set; }
+	[CloneIgnore] public List<Asset> Assets { get; set; }
+	[CloneIgnore] public List<Mod> Mods { get; set; }
 	public LaunchSettings LaunchSettings { get; set; }
 	public string? LsmSkipFile { get; set; }
 	public bool AutoSave { get; set; }

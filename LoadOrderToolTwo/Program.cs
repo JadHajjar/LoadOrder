@@ -39,7 +39,7 @@ internal static class Program
 			//AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += AssemblyUtil.ReflectionResolveInterface;
 			//AppDomain.CurrentDomain.AssemblyResolve += AssemblyUtil.ResolveInterface;
 
-			//Application.EnableVisualStyles();
+			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
 		}

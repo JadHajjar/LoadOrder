@@ -1,4 +1,6 @@
-﻿namespace LoadOrderToolTwo.UserInterface.Panels;
+﻿using LoadOrderToolTwo.Utilities.Managers;
+
+namespace LoadOrderToolTwo.UserInterface.Panels;
 
 partial class PC_Mods
 {
@@ -15,6 +17,8 @@ partial class PC_Mods
 	{
 		if (disposing && (components != null))
 		{
+			CentralManager.ContentLoaded -= CentralManager_ContentLoaded;
+			CentralManager.WorkshopInfoUpdated -= LC_Mods.Invalidate;
 			components.Dispose();
 		}
 		base.Dispose(disposing);

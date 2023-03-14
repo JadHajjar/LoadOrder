@@ -36,6 +36,11 @@ internal class PackageWatcher : FileSystemWatcher
 
 	private void FileChanged(object sender, FileSystemEventArgs e)
 	{
+		if (IoPath.GetFileName(e.FullPath) == ContentUtil.EXCLUDED_FILE_NAME)
+		{
+			return;
+		}
+
 		var path = GetFirstFolderOrFileName(e.FullPath, Path);
 		var package = CentralManager.Packages.FirstOrDefault(x => x.Folder.PathEquals(path));
 

@@ -85,13 +85,10 @@ internal class ContentUtil
 		foreach (var folder in addonsAssetsPath)
 		{
 			getPackage(folder, false, false);
-			PackageWatcher.Create(folder, false, false);
 		}
 
 		if (Directory.Exists(gameModsPath))
 		{
-			PackageWatcher.Create(gameModsPath, true, false);
-
 			foreach (var folder in Directory.GetDirectories(gameModsPath))
 			{
 				getPackage(folder, true, false);
@@ -100,8 +97,6 @@ internal class ContentUtil
 
 		if (Directory.Exists(addonsModsPath))
 		{
-			PackageWatcher.Create(addonsModsPath, false, false);
-
 			foreach (var folder in Directory.GetDirectories(addonsModsPath))
 			{
 				getPackage(folder, false, false);
@@ -114,8 +109,6 @@ internal class ContentUtil
 		{
 			getPackage(folder, false, true);
 		});
-
-		PackageWatcher.Create(LocationManager.WorkshopContentPath, false, true);
 
 		return packages;
 
@@ -163,5 +156,24 @@ internal class ContentUtil
 		package.Mod = ModsUtil.GetMod(package);
 
 		CentralManager.RefreshSteamInfo(package);
+	}
+
+	internal static void StartListeners()
+	{
+		var addonsAssetsPath = new[]
+		{
+			LocationManager.AssetsPath,
+			LocationManager.StylesPath,
+			LocationManager.MapThemesPath
+		};
+
+		foreach (var folder in addonsAssetsPath)
+		{
+			PackageWatcher.Create(folder, false, false);
+		}
+
+		PackageWatcher.Create(LocationManager.ModsPath, false, false);
+
+		PackageWatcher.Create(LocationManager.WorkshopContentPath, false, true);
 	}
 }

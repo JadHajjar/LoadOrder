@@ -18,11 +18,6 @@ public partial class PC_Profiles : PanelContent
 	{
 		InitializeComponent();
 
-		Text = Locale.ProfileBubble;
-		L_TempProfile.Text = Locale.TemporaryProfileCanNotBeEdited;
-		TLP_LaunchSettings.Text = Locale.LaunchSettings;
-		TLP_GeneralSettings.Text = Locale.Settings;
-
 		LoadProfile(CentralManager.CurrentProfile);
 
 		foreach (var profile in ProfileManager.Profiles)
@@ -36,6 +31,14 @@ public partial class PC_Profiles : PanelContent
 		}
 
 		ProfileManager.ProfileChanged += (p) => this.TryInvoke(() => LoadProfile(p));
+	}
+
+	protected override void LocaleChanged()
+	{
+		Text = Locale.ProfileBubble;
+		L_TempProfile.Text = Locale.TemporaryProfileCanNotBeEdited;
+		TLP_LaunchSettings.Text = Locale.LaunchSettings;
+		TLP_GeneralSettings.Text = Locale.Settings;
 	}
 
 	private void Profile_MouseClick(object sender, MouseEventArgs e)
@@ -62,7 +65,9 @@ public partial class PC_Profiles : PanelContent
 		loadingProfile = true;
 
 		L_TempProfile.Visible = I_TempProfile.Visible = profile.Temporary;
-		FLP_Options.Enabled = B_EditName.Visible = !profile.Temporary;
+		FLP_Options.Enabled = !profile.Temporary;
+
+		B_EditName.Visible = !profile.Temporary && !TB_Name.Visible;
 
 		I_ProfileIcon.Loading = false;
 		L_CurrentProfile.Text = profile.Name;
@@ -84,7 +89,7 @@ public partial class PC_Profiles : PanelContent
 		P_Options.Padding = P_Options.Margin = UI.Scale(new Padding(5), UI.UIScale);
 		L_TempProfile.Font = UI.Font(10.5F);
 		L_CurrentProfile.Font = UI.Font(12.75F, FontStyle.Bold);
-		B_LoadProfiles.Font = B_NewProfile.Font = UI.Font(9.75F);
+		B_ViewProfiles.Font = B_NewProfile.Font = B_Cancel.Font = UI.Font(9.75F);
 		TLP_GeneralSettings.Margin = TLP_LaunchSettings.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
 
@@ -143,5 +148,125 @@ public partial class PC_Profiles : PanelContent
 		var shouldClose = !new Rectangle(P_Profiles.PointToScreen(Point.Empty), P_Profiles.Size).Pad(-100).Contains(p);
 
 		AnimationHandler.Animate(P_Profiles, UI.Scale(new Size(shouldClose ? 0 : 320, 1), UI.FontScale), 2, AnimationOption.IgnoreHeight);
+	}
+
+	private void B_NewProfile_Click(object sender, EventArgs e)
+	{
+		TLP_New.Visible = true;
+		TLP_Main.Visible = false;
+	}
+
+	private void B_EditName_Click(object sender, EventArgs e)
+	{
+		TB_Name.Visible = true;
+		B_EditName.Visible = false;
+		L_CurrentProfile.Visible = false;
+		TB_Name.Text = L_CurrentProfile.Text;
+
+		BeginInvoke(new Action(() =>
+		{
+			TB_Name.Focus();
+			TB_Name.SelectAll();
+		}));
+	}
+
+	private void NewProfile_Click(object sender, EventArgs e)
+	{
+		var newProfile = new Profile() { Name = ProfileManager.GetNewProfileName() };
+
+		ProfileManager.Save(newProfile);
+
+		ProfileManager.SetProfile(newProfile);
+
+		L_CurrentProfile.Text = newProfile.Name;
+		I_ProfileIcon.Loading = true;
+		FLP_Options.Enabled = false;
+		TLP_Main.Visible = true;
+		TLP_New.Visible = false;
+		B_EditName_Click(sender, e);
+		AnimationHandler.Animate(P_Profiles, UI.Scale(new Size(0, 1), UI.FontScale), 2, AnimationOption.IgnoreHeight);
+	}
+
+	private void CopyProfile_Click(object sender, EventArgs e)
+	{
+		var newProfile = CentralManager.CurrentProfile.Clone();
+		newProfile.Name = ProfileManager.GetNewProfileName();
+
+		newProfile.Save();
+
+		ProfileManager.SetProfile(newProfile);
+
+		L_CurrentProfile.Text = newProfile.Name;
+		I_ProfileIcon.Loading = true;
+		FLP_Options.Enabled = false;
+		TLP_Main.Visible = true;
+		TLP_New.Visible = false;
+		B_EditName_Click(sender, e);
+		AnimationHandler.Animate(P_Profiles, UI.Scale(new Size(0, 1), UI.FontScale), 2, AnimationOption.IgnoreHeight);
+	}
+
+	private void B_Cancel_Click(object sender, EventArgs e)
+	{
+		TLP_Main.Visible = true;
+		TLP_New.Visible = false;
+	}
+
+	private void TB_Name_KeyDown(object sender, KeyEventArgs e)
+	{
+		if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
+		{
+			e.SuppressKeyPress = true;
+			e.Handled = true;
+		}
+	}
+
+	private void TB_Name_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+	{
+		if (e.KeyCode == Keys.Enter)
+		{
+			e.IsInputKey = true;
+
+			TB_Name.Visible = false;
+		}
+
+		if ( e.KeyCode == Keys.Escape)
+		{
+			e.IsInputKey = true;
+
+			TB_Name.Text = string.Empty;
+			TB_Name.Visible = false;
+		}
+	}
+
+	private void TB_Name_IconClicked(object sender, EventArgs e)
+	{
+		TB_Name.Visible = false;
+	}
+
+	private void TB_Name_Leave(object sender, EventArgs e)
+	{
+		if (!TB_Name.Visible)
+		{
+			return;
+		}
+
+		if (string.IsNullOrWhiteSpace(TB_Name.Text))
+		{
+			TB_Name.Visible = false;
+			B_EditName.Visible = true;
+			L_CurrentProfile.Visible = true;
+			return;
+		}
+
+		if (!ProfileManager.RenameProfile(ProfileManager.CurrentProfile, TB_Name.Text))
+		{
+			TB_Name.SetError();
+			return;
+		}
+
+		L_CurrentProfile.Text = ProfileManager.CurrentProfile.Name;
+		TB_Name.Visible = false;
+		B_EditName.Visible = true;
+		L_CurrentProfile.Visible = true;
 	}
 }

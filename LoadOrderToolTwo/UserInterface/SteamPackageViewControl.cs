@@ -9,8 +9,6 @@ using Newtonsoft.Json.Serialization;
 
 using SlickControls;
 
-using Steamworks;
-
 using System;
 using System.Collections.Generic;
 using System.Drawing;

@@ -6,8 +6,6 @@ using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Utilities;
 
-using Steamworks;
-
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -85,6 +83,8 @@ internal static class CentralManager
 		IsContentLoaded = true;
 
 		ContentLoaded?.Invoke();
+
+		ContentUtil.StartListeners();
 
 		var cachedSteamInfo = SteamUtil.GetCachedInfo();
 

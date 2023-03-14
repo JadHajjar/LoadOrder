@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 public static class ProfileManager
@@ -22,6 +23,8 @@ public static class ProfileManager
 	{
 		get
 		{
+			yield return Profile.TemporaryProfile;
+
 			foreach (var profile in _profiles)
 			{
 				yield return profile;
@@ -46,7 +49,7 @@ public static class ProfileManager
 		}
 		else
 		{
-			CurrentProfile = Profile.TransitoryProfile;
+			CurrentProfile = Profile.TemporaryProfile;
 		}
 
 		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
@@ -66,6 +69,16 @@ public static class ProfileManager
 	internal static void SetProfile(Profile profile)
 	{
 		CurrentProfile = profile;
+
+		if (profile.Temporary)
+		{
+			ProfileChanged?.Invoke(profile);
+
+			CentralManager.SessionSettings.CurrentProfile = null;
+			CentralManager.SessionSettings.Save();
+
+			return;
+		}
 
 		new BackgroundAction("Applying profile", apply).Run();
 
@@ -245,5 +258,72 @@ public static class ProfileManager
 			.Replace(LOCAL_APP_DATA_PATH, LocationManager.AppDataPath)
 			.Replace(CITIES_PATH, LocationManager.GamePath)
 			.Replace(WS_CONTENT_PATH, LocationManager.WorkshopContentPath);
+	}
+
+	internal static bool RenameProfile(Profile profile, string text)
+	{
+		if (profile == null || profile.Temporary)
+		{
+			return false;
+		}
+
+		text = text.EscapeFileName();
+
+		var newName = Path.Combine(LocationManager.LotProfilesAppDataPath, $"{text}.json");
+		var oldName = Path.Combine(LocationManager.LotProfilesAppDataPath, $"{profile.Name}.json");
+
+		if (newName == oldName)
+		{
+			return true;
+		}
+
+		if (File.Exists(newName))
+		{
+			return false;
+		}
+
+		if (File.Exists(oldName))
+		{
+			File.Move(oldName, newName);
+
+			profile.Name = text;
+		}
+		else
+		{
+			profile.Name = text;
+
+			Save(profile);
+		}
+
+		CentralManager.SessionSettings.CurrentProfile = text;
+		CentralManager.SessionSettings.Save();
+
+		return true;
+	}
+
+	internal static string? GetNewProfileName()
+	{
+		var startName = Path.Combine(LocationManager.LotProfilesAppDataPath, "New Profile.json");
+
+		// Check if the file with the proposed name already exists
+		if (File.Exists(startName))
+		{
+			var extension = ".json";
+			var nameWithoutExtension = Path.Combine(LocationManager.LotProfilesAppDataPath, "New Profile");
+			var counter = 1;
+
+			// Loop until a valid file name is found
+			while (File.Exists(startName))
+			{
+				// Generate the new file name with the counter appended
+				startName = $"{nameWithoutExtension} ({counter}){extension}";
+
+				// Increment the counter
+				counter++;
+			}
+		}
+
+		// Return the valid file name
+		return Path.GetFileNameWithoutExtension(startName);
 	}
 }

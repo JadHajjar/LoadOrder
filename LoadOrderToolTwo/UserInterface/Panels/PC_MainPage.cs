@@ -21,12 +21,17 @@ public partial class PC_MainPage : PanelContent
 
 		if (!CentralManager.IsContentLoaded)
 		{
-			CentralManager.ContentLoaded += () => this.TryInvoke(() => B_StartStop.Enabled = CitiesManager.CitiesAvailable());
+			CentralManager.ContentLoaded += SetButtonEnabledOnLoad;
 		}
 
 		CitiesManager.MonitorTick += CitiesManager_MonitorTick;
 
 		RefreshButtonState(CitiesManager.IsRunning(), true);
+	}
+
+	private void SetButtonEnabledOnLoad()
+	{
+		this.TryInvoke(() => B_StartStop.Enabled = CitiesManager.CitiesAvailable());
 	}
 
 	protected override void LocaleChanged()

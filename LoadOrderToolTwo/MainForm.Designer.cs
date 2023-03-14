@@ -56,8 +56,8 @@
 			this.base_P_SideControls.Controls.Add(this.tableLayoutPanel1);
 			this.base_P_SideControls.Font = new System.Drawing.Font("Nirmala UI", 6.75F);
 			this.base_P_SideControls.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(114)))), ((int)(((byte)(129)))), ((int)(((byte)(150)))));
-			this.base_P_SideControls.Location = new System.Drawing.Point(7, 525);
-			this.base_P_SideControls.Size = new System.Drawing.Size(218, 16);
+			this.base_P_SideControls.Location = new System.Drawing.Point(5, 531);
+			this.base_P_SideControls.Size = new System.Drawing.Size(150, 16);
 			// 
 			// base_P_Container
 			// 
@@ -156,7 +156,7 @@
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(218, 16);
+			this.tableLayoutPanel1.Size = new System.Drawing.Size(150, 16);
 			this.tableLayoutPanel1.TabIndex = 34;
 			// 
 			// L_Text
@@ -175,7 +175,7 @@
 			// 
 			this.L_Version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.L_Version.AutoSize = true;
-			this.L_Version.Location = new System.Drawing.Point(180, 0);
+			this.L_Version.Location = new System.Drawing.Point(112, 0);
 			this.L_Version.Margin = new System.Windows.Forms.Padding(0);
 			this.L_Version.Name = "L_Version";
 			this.L_Version.Padding = new System.Windows.Forms.Padding(2);
@@ -190,7 +190,7 @@
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.FormIcon = ((System.Drawing.Image)(resources.GetObject("$this.FormIcon")));
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.IconBounds = new System.Drawing.Rectangle(102, 29, 14, 42);
+			this.IconBounds = new System.Drawing.Rectangle(68, 14, 14, 42);
 			this.MaximizeBox = true;
 			this.MaximizedBounds = new System.Drawing.Rectangle(0, 0, 1920, 1032);
 			this.MinimizeBox = true;

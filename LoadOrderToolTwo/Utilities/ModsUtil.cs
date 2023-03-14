@@ -131,6 +131,14 @@ internal class ModsUtil
 		{
 			File.WriteAllBytes(Path.Combine(mod.Folder, ContentUtil.EXCLUDED_FILE_NAME), new byte[0]);
 		}
+
+		if (CentralManager.SessionSettings.LinkModAssets && mod.Package.Assets != null)
+		{
+			foreach (var asset in mod.Package.Assets)
+			{
+				asset.IsIncluded = value;
+			}
+		}
 	}
 
 	internal static void SetEnabled(Mod mod, bool value)
@@ -167,10 +175,19 @@ internal class ModsUtil
 
 	internal static void SetLocallyEnabled(Mod mod, bool value)
 	{
+		if (mod.IsRequired)
+		{
+			value = true;
+		}
+
 		if (_enabledValues.ContainsKey(mod))
 		{
 			_enabledValues[mod].value = value;
-		} (_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
+		}
+		else
+		{
+			(_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
+		}
 	}
 
 	private static SavedBool GetEnabledSetting(Mod mod)

@@ -43,9 +43,6 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Steamworks.NET">
-      <HintPath>..\..\..\temp\Steamworks.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
@@ -68,6 +65,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UserInterface\Panels\PC_ModUtilities.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UserInterface\NewProfileOptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="UserInterface\StatusBubbles\CompatibilityReportBubble.cs">

@@ -148,4 +148,7 @@ internal class Locale : LocaleHelper
 	public static string ModsWithMajorIssues => _instance.GetText(nameof(ModsWithMajorIssues));
 	public static string ModsShouldUnsub => _instance.GetText(nameof(ModsShouldUnsub));
 	public static string ModsNoIssues => _instance.GetText(nameof(ModsNoIssues));
+	public static string Preferences => _instance.GetText(nameof(Preferences));
+	public static string StartScratch => _instance.GetText(nameof(StartScratch));
+	public static string ContinueFromCurrent => _instance.GetText(nameof(ContinueFromCurrent));
 }

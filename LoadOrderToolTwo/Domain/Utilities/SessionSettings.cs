@@ -15,4 +15,6 @@ internal class SessionSettings : ISave
 	public string? CurrentProfile { get; set; }
     public Rectangle? WindowBounds { get; set; }
 	public bool WindowIsMaximized { get; set; }
+
+	public bool LinkModAssets { get; set; } = true;
 }
