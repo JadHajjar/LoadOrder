@@ -12,7 +12,8 @@ internal class SessionSettings : ISave
 {
 	public override string Name => nameof(SessionSettings) + ".tf";
 
-	public string? CurrentProfile { get; set; }
+    public bool FirstTimeSetupCompleted { get; set; }
+    public string? CurrentProfile { get; set; }
     public Rectangle? WindowBounds { get; set; }
 	public bool WindowIsMaximized { get; set; }
 

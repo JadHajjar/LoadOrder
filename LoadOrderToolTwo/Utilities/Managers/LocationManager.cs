@@ -85,4 +85,9 @@ internal class LocationManager
 	};
 
 	public static string CurrentDirectory { get; } = Directory.GetParent(Application.ExecutablePath).FullName;
+
+	internal static void RunFirstTimeSetup()
+	{
+
+	}
 }

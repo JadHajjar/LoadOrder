@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Domain;
+﻿using Extensions;
+
+using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
@@ -175,5 +177,10 @@ internal class ContentUtil
 		PackageWatcher.Create(LocationManager.ModsPath, false, false);
 
 		PackageWatcher.Create(LocationManager.WorkshopContentPath, false, true);
+	}
+
+	internal static void CreateShortcut()
+	{
+		ExtensionClass.CreateShortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOT 2.lnk"), System.Windows.Forms.Application.ExecutablePath);
 	}
 }

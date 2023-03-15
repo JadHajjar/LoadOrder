@@ -74,6 +74,13 @@ internal static class CentralManager
 
 	public static void Start()
 	{
+		if (!SessionSettings.FirstTimeSetupCompleted)
+		{
+			ContentUtil.CreateShortcut();
+
+			LocationManager.RunFirstTimeSetup();
+		}
+
 		var content = ContentUtil.LoadContents();
 
 		AnalyzePackages(content);
