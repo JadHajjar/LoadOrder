@@ -2,6 +2,8 @@
 
 using LoadOrderToolTwo.Domain;
 
+using SlickControls;
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +27,7 @@ public static class ProfileManager
 		{
 			yield return Profile.TemporaryProfile;
 
-			foreach (var profile in _profiles)
+			foreach (var profile in _profiles.OrderByDescending(x => x.LastEditDate))
 			{
 				yield return profile;
 			}
@@ -66,7 +68,7 @@ public static class ProfileManager
 		}).Run();
 	}
 
-	internal static void SetProfile(Profile profile)
+	internal static void SetProfile(Profile profile, SlickControls.BasePanelForm form)
 	{
 		CurrentProfile = profile;
 
@@ -135,6 +137,11 @@ public static class ProfileManager
 				asset.IsIncluded = false;
 			}
 
+			if (missingMods.Count > 0 || missingAssets.Count > 0)
+			{
+				UserInterface.Panels.PC_MissingPackages.PromptMissingPackages(form, missingMods, missingAssets);
+			}
+
 			ApplyingProfile = false;
 			disableAutoSave = true;
 
@@ -170,9 +177,16 @@ public static class ProfileManager
 				var legacyProfile = LoadOrderTool.Legacy.LoadOrderProfile.Deserialize(profile);
 				var newProfile = legacyProfile.ToLot2Profile(Path.GetFileNameWithoutExtension(profile));
 
-				profiles.Add(newProfile);
+				if (newProfile != null)
+				{
+					newProfile.LastEditDate = File.GetLastWriteTime(profile);
 
-				Save(newProfile);
+					profiles.Add(newProfile);
+				}
+				else
+				{
+					Log.Error($"Could not load the profile: '{profile}'");
+				}
 
 #if !DEBUG
 				File.Delete(profile);
@@ -189,6 +203,8 @@ public static class ProfileManager
 
 				if (newProfile != null)
 				{
+					newProfile.LastEditDate = File.GetLastWriteTime(profile);
+
 					profiles.Add(newProfile);
 				}
 				else
@@ -325,5 +341,55 @@ public static class ProfileManager
 
 		// Return the valid file name
 		return Path.GetFileNameWithoutExtension(startName);
+	}
+
+	internal static System.Drawing.Bitmap GetIcon(this Profile profile)
+	{
+		if (profile.Temporary)
+		{
+			return Properties.Resources.I_TempProfile;
+		}
+		else if (profile.ForAssetEditor)
+		{
+			return Properties.Resources.I_Tools;
+		}
+		else if (profile.ForGameplay)
+		{
+			return Properties.Resources.I_City;
+		}
+		else
+		{
+			return Properties.Resources.I_ProfileSettings;
+		}
+	}
+
+	internal static List<Package> GetInvalidPackages(bool gameplay, bool editor)
+	{
+		if (gameplay)
+		{
+			return new List<Package>(CentralManager.Packages.Where(x => x.IsIncluded && x.ForAssetEditor == true));
+		}
+
+		if (editor)
+		{
+			return new List<Package>(CentralManager.Packages.Where(x => x.IsIncluded && x.ForNormalGame == true));
+		}
+
+		return new();
+	}
+
+	internal static void MergeProfile(Profile obj, BasePanelForm form)
+	{
+		throw new NotImplementedException();
+	}
+
+	internal static void ExcludeProfile(Profile obj, BasePanelForm form)
+	{
+		throw new NotImplementedException();
+	}
+
+	internal static void DeleteProfile(Profile obj)
+	{
+		throw new NotImplementedException();
 	}
 }

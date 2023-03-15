@@ -57,8 +57,8 @@ public class Package : IPackage
 	public string? SteamPage { get; set; }
 	public SteamUser? Author { get; set; }
 	public string? Class { get; set; }
-	public Bitmap? IconImage { get; set; }
-	public Bitmap? AuthorIconImage { get; set; }
+	public Bitmap? IconImage => ImageManager.GetImage(IconUrl, true);
+	public Bitmap? AuthorIconImage => ImageManager.GetImage(Author?.AvatarUrl, true);
 	public string? IconUrl { get; set; }
 	public string Name { get; set; }
 	public bool RemovedFromSteam { get; set; }
@@ -69,12 +69,13 @@ public class Package : IPackage
 	public bool SteamInfoLoaded { get; set; }
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
+	public bool IsRequired { get; set; }
+	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
+	Package IPackage.Package => this;
 
 	internal CompatibilityManager.ReportInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
-	Package IPackage.Package => this;
-	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
-
-	public bool IsRequired { get; set; }
+	internal bool? ForAssetEditor => CompatibilityManager.IsForAssetEditor(this);
+	internal bool? ForNormalGame => CompatibilityManager.IsForNormalGame(this);
 
 	public override string ToString()
 	{

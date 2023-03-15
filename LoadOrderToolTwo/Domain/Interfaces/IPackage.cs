@@ -13,8 +13,8 @@ public interface IPackage
 	string? Class { get; set; }
 	string Folder { get; }
 	string? VirtualFolder { get; }
-	Bitmap? IconImage { get; set; }
-	Bitmap? AuthorIconImage { get; set; }
+	Bitmap? IconImage { get; }
+	Bitmap? AuthorIconImage { get; }
 	string? IconUrl { get; set; }
 	long LocalSize { get; }
 	DateTime LocalTime { get; }

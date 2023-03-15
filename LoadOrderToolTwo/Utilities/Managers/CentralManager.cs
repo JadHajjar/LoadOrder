@@ -113,20 +113,6 @@ internal static class CentralManager
 				package.StatusReason = reason;
 
 				InformationUpdate(package);
-
-				if (!string.IsNullOrWhiteSpace(package.IconUrl))
-				{
-					package.IconImage = ImageManager.GetImage(package.IconUrl!, true);
-
-					InformationUpdate(package);
-				}
-
-				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
-				{
-					package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!, true);
-
-					InformationUpdate(package);
-				}
 			});
 		}
 
@@ -146,18 +132,16 @@ internal static class CentralManager
 
 			Parallel.ForEach(Packages.OrderBy(x => x.Mod == null).ThenBy(x => x.Name), (package, state) =>
 			{
-				if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage is null)
+				if (!string.IsNullOrWhiteSpace(package.IconUrl))
 				{
-					package.IconImage = ImageManager.GetImage(package.IconUrl!);
-
-					InformationUpdate(package);
+					if (ImageManager.Ensure(package.IconUrl))
+						InformationUpdate(package);
 				}
 
-				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl) && package.AuthorIconImage is null)
+				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
 				{
-					package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!);
-
-					InformationUpdate(package);
+					if (ImageManager.Ensure(package.Author?.AvatarUrl))
+						InformationUpdate(package);
 				}
 			});
 
@@ -310,18 +294,16 @@ internal static class CentralManager
 
 			WorkshopInfoUpdated?.Invoke();
 
-			if (!string.IsNullOrWhiteSpace(package.IconUrl) && package.IconImage is null)
+			if (!string.IsNullOrWhiteSpace(package.IconUrl))
 			{
-				package.IconImage = ImageManager.GetImage(package.IconUrl!);
-
-				InformationUpdate(package);
+				if (ImageManager.Ensure(package.IconUrl))
+					InformationUpdate(package);
 			}
 
-			if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl) && package.AuthorIconImage is null)
+			if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
 			{
-				package.AuthorIconImage = ImageManager.GetImage(package.Author!.AvatarUrl!);
-
-				InformationUpdate(package);
+				if (ImageManager.Ensure(package.Author?.AvatarUrl))
+					InformationUpdate(package);
 			}
 
 			WorkshopInfoUpdated?.Invoke();

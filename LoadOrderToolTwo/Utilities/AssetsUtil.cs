@@ -31,7 +31,7 @@ internal class AssetsUtil
 
 	public static IEnumerable<Asset> GetAssets(Package package)
 	{
-		foreach (var file in Directory.EnumerateFiles(package.Folder, $"*.crp"))
+		foreach (var file in Directory.EnumerateFiles(package.Folder, $"*.crp", SearchOption.AllDirectories))
 		{
 			yield return new Asset(package, file);
 		}
@@ -66,9 +66,8 @@ internal class AssetsUtil
 			return;
 		}
 
-		_config.Assets = CentralManager.Assets
-				.Where(x => !x.IsIncluded)
-				.Select(x => new AssetInfo { Excluded = true, Path = x.FileName })
+		_config.Assets = ExcludedHashSet
+				.Select(x => new AssetInfo { Excluded = true, Path = x })
 				.ToArray();
 
 		_config.Serialize();

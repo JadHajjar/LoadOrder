@@ -106,11 +106,31 @@ internal static class CompatibilityManager
 			if (reportInfo.Severity < ReportSeverity.Unsubscribe)
 			{
 				reportInfo.Messages.AddIfNotNull(Recommendations(subscribedMod));
-				reportInfo.Messages.AddRange(ExtraStatuses(subscribedMod, package, authorRetired: subscriptionAuthor != null && subscriptionAuthor.Retired));
+				reportInfo.Messages.AddRange(ExtraStatuses(subscribedMod));
 			}
 		}
 
 		return reportInfo;
+	}
+
+	internal static bool? IsForAssetEditor(Domain.Package package)
+	{
+		if (Catalog is null || !package.Workshop)
+		{
+			return null;
+		}
+
+		return Catalog.GetMod(package.SteamId)?.Statuses.Any(x => x == Status.ModForModders);
+	}
+
+	internal static bool? IsForNormalGame(Domain.Package package)
+	{
+		if (Catalog is null || !package.Workshop)
+		{
+			return null;
+		}
+
+		return Catalog.GetMod(package.SteamId)?.Statuses.Any(x => x == Status.BreaksEditors);
 	}
 
 	private static ReportMessage Stability(Mod subscribedMod)
@@ -270,7 +290,7 @@ internal static class CompatibilityManager
 		}
 	}
 
-	private static IEnumerable<ReportMessage> ExtraStatuses(Mod subscribedMod, Domain.Package package, bool authorRetired)
+	private static IEnumerable<ReportMessage> ExtraStatuses(Mod subscribedMod)
 	{
 		// Several statuses only listed if there are no breaking issues.
 		if (subscribedMod.Statuses.Contains(Status.Reupload))

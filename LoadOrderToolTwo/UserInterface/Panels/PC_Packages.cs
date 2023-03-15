@@ -126,9 +126,10 @@ public partial class PC_Packages : PanelContent
 
 		if (!doNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
-			doNotDraw = !(mod.Name.SearchCheck(TB_Search.Text)
-				|| (mod.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
-				|| mod.SteamId.ToString().SearchCheck(TB_Search.Text));
+			doNotDraw = !(
+				TB_Search.Text.SearchCheck(mod.Name) ||
+				TB_Search.Text.SearchCheck(mod.Author?.Name) ||
+				TB_Search.Text.SearchCheck(mod.SteamId.ToString()));
 		}
 
 		return doNotDraw;

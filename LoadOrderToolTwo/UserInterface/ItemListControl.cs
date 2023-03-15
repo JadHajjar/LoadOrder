@@ -154,7 +154,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		}
 		else if (!Items.Any())
 		{
-			e.Graphics.DrawString(Locale.NoLocalPackagesFound, UI.Font(9.75F, FontStyle.Italic), new SolidBrush(ForeColor), ClientRectangle, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+			e.Graphics.DrawString(Locale.NoLocalPackagesFound +"\r\n" + Locale.CheckFolderInOptions, UI.Font(9.75F, FontStyle.Italic), new SolidBrush(ForeColor), ClientRectangle, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 		}
 		else if (!SafeGetItems().Any())
 		{
@@ -211,7 +211,8 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		var iconRectangle = rects.IconRect;
 		var textRect = rects.TextRect;
 
-		e.Graphics.DrawRoundedImage(e.Item.IconImage ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale), FormDesign.Design.AccentBackColor);
+		using (var iconImg = e.Item.IconImage)
+			e.Graphics.DrawRoundedImage(iconImg ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale), FormDesign.Design.AccentBackColor);
 
 		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?").RemoveDoubleSpaces(), UI.Font(large ? 11.25F : 9F, FontStyle.Bold), new SolidBrush(e.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : rects.CenterRect.Contains(CursorLocation) && e.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
@@ -239,9 +240,9 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 
 				e.Graphics.DrawString("by " + e.Item.Author.Name, UI.Font(9.75F), new SolidBrush(FormDesign.Design.ForeColor), authorRect.Pad(avatarRect.Width + Padding.Horizontal, 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Center });
 
-				if (e.Item.AuthorIconImage is not null)
+				using (var authorImg = e.Item.AuthorIconImage)
 				{
-					e.Graphics.DrawRoundImage(e.Item.AuthorIconImage ?? Properties.Resources.I_AuthorIcon.Color(FormDesign.Design.IconColor), avatarRect);
+					e.Graphics.DrawRoundImage(authorImg ?? Properties.Resources.I_AuthorIcon.Color(FormDesign.Design.IconColor), avatarRect);
 				}
 			}
 			else

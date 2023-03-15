@@ -8,10 +8,12 @@ using System;
 using LoadOrderToolTwo.Domain;
 using System.Windows.Forms;
 using System.Drawing;
+using LoadOrderToolTwo.Domain.Utilities;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
 public partial class PC_Assets : PanelContent
 {
+	private DelayedAction _delayedSearch = new(350);
 	private ItemListControl<Asset> LC_Assets;
 
 	public PC_Assets()
@@ -51,6 +53,21 @@ public partial class PC_Assets : PanelContent
 			e.DoNotDraw = e.Item.Workshop;
 		}
 
+		if (!e.DoNotDraw && CentralManager.CurrentProfile.ForAssetEditor)
+		{
+			e.DoNotDraw = e.Item.Package.ForNormalGame == true;
+		}
+
+		if (!e.DoNotDraw && CentralManager.CurrentProfile.ForGameplay)
+		{
+			e.DoNotDraw = e.Item.Package.ForAssetEditor == true;
+		}
+
+		if (!e.DoNotDraw && CentralManager.SessionSettings.LinkModAssets)
+		{
+			e.DoNotDraw = e.Item.Package.Mod is not null;
+		}
+
 		if (!e.DoNotDraw && OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			e.DoNotDraw = OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.Workshop;
@@ -75,9 +92,10 @@ public partial class PC_Assets : PanelContent
 
 		if (!e.DoNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
-			e.DoNotDraw = !(e.Item.Name.SearchCheck(TB_Search.Text)
-				|| (e.Item.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
-				|| e.Item.SteamId.ToString().SearchCheck(TB_Search.Text));
+			e.DoNotDraw = !(
+				TB_Search.Text.SearchCheck(e.Item.Name) ||
+				TB_Search.Text.SearchCheck(e.Item.Author?.Name) ||
+				TB_Search.Text.SearchCheck(e.Item.SteamId.ToString()));
 		}
 	}
 
@@ -126,5 +144,17 @@ public partial class PC_Assets : PanelContent
 	private void I_ClearFilters_Click(object sender, EventArgs e)
 	{
 		this.ClearForm();
+	}
+
+	private void TB_Search_TextChanged(object sender, EventArgs e)
+	{
+		TB_Search.Loading = true;
+		_delayedSearch.Run(DelayedFilterChanged);
+	}
+
+	private void DelayedFilterChanged()
+	{
+		LC_Assets.FilterChanged();
+		TB_Search.Loading = false;
 	}
 }

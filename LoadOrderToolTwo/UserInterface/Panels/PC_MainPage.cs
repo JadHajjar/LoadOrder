@@ -57,7 +57,7 @@ public partial class PC_MainPage : PanelContent
 	{
 		if (e.Button == MouseButtons.Left)
 		{
-			Form.PushPanel<PC_Profiles>(null);
+			Form.PushPanel<PC_Profiles>((Form as MainForm)?.PI_Profiles);
 		}
 	}
 

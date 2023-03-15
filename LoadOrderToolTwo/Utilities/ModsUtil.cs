@@ -46,7 +46,7 @@ internal class ModsUtil
 
 	private static bool IsValidModFolder(string dir, out string? dllPath, out Version? version)
 	{
-		var files = Directory.GetFiles(dir, "*.dll");
+		var files = Directory.GetFiles(dir, "*.dll", SearchOption.AllDirectories);
 
 		if (files != null && files.Length > 0)
 		{

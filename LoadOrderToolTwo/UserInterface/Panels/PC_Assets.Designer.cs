@@ -132,7 +132,7 @@ partial class PC_Assets
 			this.TB_Search.SelectionStart = 0;
 			this.TB_Search.Size = new System.Drawing.Size(375, 68);
 			this.TB_Search.TabIndex = 0;
-			this.TB_Search.TextChanged += new System.EventHandler(this.FilterChanged);
+			this.TB_Search.TextChanged += new System.EventHandler(this.TB_Search_TextChanged);
 			// 
 			// OT_Included
 			// 

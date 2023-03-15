@@ -151,4 +151,8 @@ internal class Locale : LocaleHelper
 	public static string Preferences => _instance.GetText(nameof(Preferences));
 	public static string StartScratch => _instance.GetText(nameof(StartScratch));
 	public static string ContinueFromCurrent => _instance.GetText(nameof(ContinueFromCurrent));
+	public static string ProfileUsage => _instance.GetText(nameof(ProfileUsage));
+	public static string CheckFolderInOptions => _instance.GetText(nameof(CheckFolderInOptions));
+	public static string SomePackagesWillBeDisabled => _instance.GetText(nameof(SomePackagesWillBeDisabled));
+	public static string AffectedPackagesAre => _instance.GetText(nameof(AffectedPackagesAre));
 }

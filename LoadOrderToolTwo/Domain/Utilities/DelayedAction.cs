@@ -39,3 +39,36 @@ public class DelayedAction<TKey>
 		}
 	}
 }
+
+public class DelayedAction
+{
+	private Timer? _timer;
+	private readonly int _delayMilliseconds;
+
+	public DelayedAction(int delayMilliseconds)
+	{
+		_delayMilliseconds = delayMilliseconds;
+	}
+
+	public void Run(Action action)
+	{
+		lock (this)
+		{
+			if (_timer != null)
+			{
+				_timer.Change(_delayMilliseconds, Timeout.Infinite);
+			}
+			else
+			{
+				_timer = new Timer(_ =>
+				{
+					lock (this)
+					{
+						action();
+						_timer = null;
+					}
+				}, null, _delayMilliseconds, Timeout.Infinite);
+			}
+		}
+	}
+}

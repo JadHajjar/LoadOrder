@@ -92,6 +92,16 @@ public partial class PC_Mods : PanelContent
 			doNotDraw = mod.Workshop;
 		}
 
+		if (!doNotDraw && CentralManager.CurrentProfile.ForAssetEditor)
+		{
+			doNotDraw = mod.Package.ForNormalGame == true;
+		}
+
+		if (!doNotDraw && CentralManager.CurrentProfile.ForGameplay)
+		{
+			doNotDraw = mod.Package.ForAssetEditor == true;
+		}
+
 		if (!doNotDraw && OT_Workshop.SelectedValue != ThreeOptionToggle.Value.None)
 		{
 			doNotDraw = OT_Workshop.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.Workshop;
@@ -126,9 +136,10 @@ public partial class PC_Mods : PanelContent
 
 		if (!doNotDraw && !string.IsNullOrWhiteSpace(TB_Search.Text))
 		{
-			doNotDraw = !(mod.Name.SearchCheck(TB_Search.Text)
-				|| (mod.Author?.Name.SearchCheck(TB_Search.Text) ?? false)
-				|| mod.SteamId.ToString().SearchCheck(TB_Search.Text));
+			doNotDraw = !(
+				TB_Search.Text.SearchCheck(mod.Name) ||
+				TB_Search.Text.SearchCheck(mod.Author?.Name) ||
+				TB_Search.Text.SearchCheck(mod.SteamId.ToString()));
 		}
 
 		return doNotDraw;

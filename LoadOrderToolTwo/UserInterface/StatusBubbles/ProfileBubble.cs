@@ -3,10 +3,7 @@
 using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
-using SlickControls;
-
 using System;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.StatusBubbles;
@@ -24,8 +21,25 @@ internal class ProfileBubble : StatusBubbleBase
 			return;
 		}
 
-		Image = Properties.Resources.I_ProfileSettings;
 		Text = Locale.ProfileBubble;
+		Image = CentralManager.CurrentProfile.GetIcon();
+
+		ProfileManager.ProfileChanged += ProfileManager_ProfileChanged;
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		if (disposing)
+		{
+			ProfileManager.ProfileChanged -= ProfileManager_ProfileChanged;
+		}
+
+		base.Dispose(disposing);
+	}
+
+	private void ProfileManager_ProfileChanged(Domain.Profile obj)
+	{
+		Image = CentralManager.CurrentProfile.GetIcon();
 	}
 
 	protected override void CustomDraw(PaintEventArgs e, ref int targetHeight)

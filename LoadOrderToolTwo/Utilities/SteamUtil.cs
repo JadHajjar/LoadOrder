@@ -272,8 +272,6 @@ public static class SteamUtil
 		if (package.IconUrl != steamWorkshopItem.PreviewURL)
 		{
 			package.IconUrl = steamWorkshopItem.PreviewURL;
-			package.IconImage?.Dispose();
-			package.IconImage = null;
 		}
 
 		if (!cache)

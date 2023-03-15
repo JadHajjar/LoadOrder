@@ -44,40 +44,56 @@ public static class ImageManager
 
 	public static FileInfo File(string url)
 	{
-		var filePath = Path.Combine(ISave.DocsFolder, "Thumbs", Path.GetFileName(url.TrimEnd('/', '\\')) + ".png");
+		var filePath = Path.Combine(ISave.DocsFolder, "Thumbs", Path.GetFileNameWithoutExtension(url.TrimEnd('/', '\\')) + Path.GetExtension(url).IfEmpty(".png"));
 
 		return new FileInfo(filePath);
 	}
 
-	public static Bitmap? GetImage(string url) => GetImage(url, false);
+	public static Bitmap? GetImage(string? url) => GetImage(url, false);
 
-	public static Bitmap? GetImage(string url, bool localOnly)
+	public static Bitmap? GetImage(string? url, bool localOnly)
 	{
-		if (string.IsNullOrWhiteSpace(url) || _badURLs.Contains(url))
+		if (url is null || !Ensure(url, localOnly))
 		{
 			return null;
 		}
 
-		var filePath = Path.Combine(ISave.DocsFolder, "Thumbs", Path.GetFileNameWithoutExtension(url.TrimEnd('/', '\\')) + Path.GetExtension(url).IfEmpty(".png"));
+		var filePath = File(url);
 
 		lock (LockObj(url))
 		{
-			var imgPath = new FileInfo(filePath);
-
-			if (imgPath.Exists)
+			if (filePath.Exists)
 			{
 				try
 				{
-					var image = (Bitmap)Image.FromFile(filePath);
-
-					return image;
+					return (Bitmap)Image.FromFile(filePath.FullName);
 				}
 				catch { }
+			}
+		}
+
+		return null;
+	}
+
+	public static bool Ensure(string? url, bool localOnly = false)
+	{
+		if (url is null or "" || _badURLs.Contains(url!))
+		{
+			return false;
+		}
+
+		var filePath = File(url);
+
+		lock (LockObj(url))
+		{
+			if (filePath.Exists)
+			{
+				return true;
 			}
 
 			if (localOnly)
 			{
-				return null;
+				return false;
 			}
 
 			var tries = 1;
@@ -85,7 +101,7 @@ public static class ImageManager
 
 			if (!ConnectionHandler.IsConnected)
 			{
-				return null;
+				return false;
 			}
 
 			try
@@ -98,7 +114,7 @@ public static class ImageManager
 
 				var squareSize = img.Width <= 64 ? img.Width : 256;
 				var size = img.Size.GetProportionalDownscaledSize(squareSize);
-				var image = new Bitmap(squareSize, squareSize);
+				using var image = new Bitmap(squareSize, squareSize);
 
 				using (var imageGraphics = Graphics.FromImage(image))
 				{
@@ -106,18 +122,18 @@ public static class ImageManager
 					imageGraphics.DrawImage(img, new Rectangle((squareSize - size.Width) / 2, (squareSize - size.Height) / 2, size.Width, size.Height));
 				}
 
-				Directory.GetParent(filePath).Create();
+				Directory.GetParent(filePath.FullName).Create();
 
-				if (filePath.EndsWith(".jpg", StringComparison.InvariantCultureIgnoreCase) || filePath.EndsWith(".jpeg", StringComparison.InvariantCultureIgnoreCase))
+				if (filePath.FullName.EndsWith(".jpg", StringComparison.InvariantCultureIgnoreCase) || filePath.FullName.EndsWith(".jpeg", StringComparison.InvariantCultureIgnoreCase))
 				{
-					image.Save(filePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+					image.Save(filePath.FullName, System.Drawing.Imaging.ImageFormat.Jpeg);
 				}
 				else
 				{
-					image.Save(filePath);
+					image.Save(filePath.FullName);
 				}
 
-				return image;
+				return true;
 			}
 			catch (Exception ex)
 			{
@@ -140,7 +156,7 @@ public static class ImageManager
 						ISave.Save(_badURLs.ToArray(), "BadSteamURLs.tf");
 					}
 
-					return null;
+					return false;
 				}
 			}
 		}

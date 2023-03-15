@@ -4,6 +4,7 @@ using LoadOrderToolTwo.Utilities.Managers;
 
 using Newtonsoft.Json;
 
+using System;
 using System.Collections.Generic;
 
 namespace LoadOrderToolTwo.Domain;
@@ -39,6 +40,9 @@ public class Profile
 	public LaunchSettings LaunchSettings { get; set; }
 	public string? LsmSkipFile { get; set; }
 	public bool AutoSave { get; set; }
+	public DateTime LastEditDate { get; set; }
+	public bool ForAssetEditor { get; set; }
+	public bool ForGameplay { get; set; }
 
 	public class Asset
 	{

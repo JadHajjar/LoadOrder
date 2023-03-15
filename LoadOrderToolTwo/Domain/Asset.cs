@@ -42,7 +42,7 @@ public class Asset : IPackage
 	public bool Workshop => ((IPackage)Package).Workshop;
 	public SteamUser? Author { get => ((IPackage)Package).Author; set => ((IPackage)Package).Author = value; }
 	public string? Class { get => ((IPackage)Package).Class; set => ((IPackage)Package).Class = value; }
-	public Bitmap? IconImage { get => ((IPackage)Package).IconImage; set => ((IPackage)Package).IconImage = value; }
+	public Bitmap? IconImage { get => ((IPackage)Package).IconImage; }
 	public string? IconUrl { get => ((IPackage)Package).IconUrl; set => ((IPackage)Package).IconUrl = value; }
 	public long LocalSize { get => ((IPackage)Package).LocalSize; }
 	public DateTime LocalTime { get => ((IPackage)Package).LocalTime; }
@@ -55,7 +55,7 @@ public class Asset : IPackage
 	public string[]? Tags { get => ((IPackage)Package).Tags; set => ((IPackage)Package).Tags = value; }
 	public string? SteamDescription { get => ((IPackage)Package).SteamDescription; set => ((IPackage)Package).SteamDescription = value; }
 	public string? VirtualFolder => ((IPackage)Package).VirtualFolder;
-	public Bitmap? AuthorIconImage { get => ((IPackage)Package).AuthorIconImage; set => ((IPackage)Package).AuthorIconImage = value; }
+	public Bitmap? AuthorIconImage { get => ((IPackage)Package).AuthorIconImage; }
 	public bool IsRequired { get => ((IPackage)Package).IsRequired; set => ((IPackage)Package).IsRequired = value; }
 
 	public override string ToString()
