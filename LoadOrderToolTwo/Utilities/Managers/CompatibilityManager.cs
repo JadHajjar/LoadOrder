@@ -113,6 +113,44 @@ internal static class CompatibilityManager
 		return reportInfo;
 	}
 
+	internal static ReportInfo? GetCompatibilityReport(ulong packageId)
+	{
+		if (Catalog is null || packageId is 0)
+		{
+			return null;
+		}
+
+		var subscribedMod = Catalog.GetMod(packageId);
+
+		if (subscribedMod is null)
+		{
+			return null;
+		}
+
+		var reportInfo = new ReportInfo(null);
+		var subscriptionAuthor = Catalog.GetAuthor(subscribedMod.AuthorID, subscribedMod.AuthorUrl);
+
+		reportInfo.Messages.AddIfNotNull(Stability(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(RequiredDlc(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(UnneededDependencyMod(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(Disabled(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(Successors(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(Alternatives(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(RequiredMods(subscribedMod));
+		reportInfo.Messages.AddIfNotNull(ModNote(subscribedMod));
+
+		reportInfo.Messages.AddRange(Compatibilities(subscribedMod));
+		reportInfo.Messages.AddRange(Statuses(subscribedMod, null, authorRetired: subscriptionAuthor != null && subscriptionAuthor.Retired));
+
+		if (reportInfo.Severity < ReportSeverity.Unsubscribe)
+		{
+			reportInfo.Messages.AddIfNotNull(Recommendations(subscribedMod));
+			reportInfo.Messages.AddRange(ExtraStatuses(subscribedMod));
+		}
+
+		return reportInfo;
+	}
+
 	internal static bool? IsForAssetEditor(Domain.Package package)
 	{
 		if (Catalog is null || !package.Workshop)
@@ -209,7 +247,7 @@ internal static class CompatibilityManager
 				, Locale.CR_Obsolete);
 		}
 
-		if (subscribedMod.Statuses.Contains(Status.RemovedFromWorkshop) || package.Status == Domain.DownloadStatus.Removed)
+		if (subscribedMod.Statuses.Contains(Status.RemovedFromWorkshop) || package?.Status == Domain.DownloadStatus.Removed)
 		{
 			yield return new ReportMessage(ReportType.Status
 				, ReportSeverity.MajorIssues
@@ -664,6 +702,11 @@ internal static class CompatibilityManager
 			ReportSeverity.Remarks or (ReportSeverity)(-1) => FormDesign.Design.ForeColor,
 			_ => FormDesign.Design.GreenColor
 		};
+	}
+
+	internal static object GetCompatibilityReport(string id)
+	{
+		throw new NotImplementedException();
 	}
 
 	internal class ModInfo

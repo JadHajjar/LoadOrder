@@ -24,13 +24,14 @@ public partial class PC_ImportCollection : PanelContent
 		Text = Locale.CollectionTitle;
 		_id = collection.PublishedFileID;
 		L_Title.Text = collection.Title.Replace("&", "&&");
+
 		PB_Icon.Collection = true;
 		PB_Icon.LoadImage(collection.PreviewURL, ImageManager.GetImage);
 
 		TLP_Contents.RowCount = 0;
 		TLP_Contents.RowStyles.Clear();
 
-		foreach (var item in contents.Values.Skip(1))
+		foreach (var item in contents.Values)
 		{
 			if (Controls.Count % 2 == 0)
 			{
@@ -41,10 +42,12 @@ public partial class PC_ImportCollection : PanelContent
 			TLP_Contents.Controls.Add(new SteamPackageViewControl(item), Controls.Count % 2, TLP_Contents.RowCount - 1);
 		}
 	}
+
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
+		B_ExInclude.Width = (int)(250 * UI.FontScale);
 		PB_Icon.Width = TLP_Top.Height = (int)(128 * UI.FontScale);
 		TLP_Top.Height += 20;
 		L_Title.Font = UI.Font(14F, FontStyle.Bold);

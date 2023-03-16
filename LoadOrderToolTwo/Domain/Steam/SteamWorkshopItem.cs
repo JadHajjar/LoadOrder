@@ -30,7 +30,7 @@ public class SteamWorkshopItem
 		UpdatedUTC = _epoch.AddSeconds((ulong)entry.time_updated);
 		Tags = (entry.tags
 			?.Select(item => item.tag)
-			?.Where(item => item.IndexOf("compatible", StringComparison.OrdinalIgnoreCase) >= 0)
+			?.Where(item => item.IndexOf("compatible", StringComparison.OrdinalIgnoreCase) < 0)
 			?.ToArray()) ?? new string[0];
 
 		if (Tags.Any(tag => tag.ToLower() == "mod"))

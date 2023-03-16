@@ -2,21 +2,17 @@
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Steam;
-using LoadOrderToolTwo.Domain.Steam.Markdown;
 using LoadOrderToolTwo.Utilities.Managers;
-
-using Newtonsoft.Json.Serialization;
 
 using SlickControls;
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using static CompatibilityReport.CatalogData.Enums;
 
 namespace LoadOrderToolTwo.UserInterface;
 internal class SteamPackageViewControl : SlickImageControl
@@ -26,17 +22,24 @@ internal class SteamPackageViewControl : SlickImageControl
 		Item = item;
 		Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
-		var bb=BBCode.Parse(item.Description);
+		var steamId = ulong.Parse(item.PublishedFileID);
+		_compatibilityReport = CompatibilityManager.GetCompatibilityReport(steamId);
+		LocalPackage = CentralManager.Packages.FirstOrDefault(x => x.SteamId == steamId);
 
 		LoadImage(item.PreviewURL, ImageManager.GetImage);
 	}
 
 	public SteamWorkshopItem Item { get; }
 
+	private readonly CompatibilityManager.ReportInfo? _compatibilityReport;
+
+	public Package? LocalPackage { get; }
+
 	protected override void UIChanged()
 	{
-		Padding = UI.Scale(new Padding(5), UI.FontScale);
-		Height = (int)(64 * UI.FontScale);
+		Padding = Margin = UI.Scale(new Padding(5), UI.FontScale);
+		Height = (int)(70 * UI.FontScale);
+		Font = UI.Font(9F, FontStyle.Bold);
 	}
 
 	protected override void OnMouseClick(MouseEventArgs e)
@@ -46,11 +49,16 @@ internal class SteamPackageViewControl : SlickImageControl
 
 	protected override void OnPaint(PaintEventArgs e)
 	{
-		e.Graphics.Clear(BackColor);
+		e.Graphics.SetUp(BackColor);
 
-		e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-		e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-		e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+		e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.BackColor), ClientRectangle.Pad(Padding), Padding.Left);
+		e.Graphics.DrawRoundedRectangle(new Pen(FormDesign.Design.AccentColor, (float)(1.5 * UI.FontScale)), ClientRectangle.Pad(Padding), Padding.Left);
+
+		if (HoverState.HasFlag(HoverState.Hovered))
+		{
+			using var brush = new LinearGradientBrush(ClientRectangle, Color.FromArgb(FormDesign.Design.Type == FormDesignType.Light ? 150 : 220, FormDesign.Design.AccentColor), Color.Empty, LinearGradientMode.Horizontal);
+			e.Graphics.FillRoundedRectangle(brush, ClientRectangle.Pad(Padding), Padding.Left);
+		}
 
 		var iconRect = new Rectangle(Padding.Left, Padding.Top, Height - Padding.Vertical, Height - Padding.Vertical);
 
@@ -60,9 +68,84 @@ internal class SteamPackageViewControl : SlickImageControl
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left, FormDesign.Design.IconColor);
+			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left, FormDesign.Design.IconColor, topRight: false, botRight: false);
 		}
 
-		e.Graphics.DrawString(Item.Title, Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, 0, 0, 0));
+		e.Graphics.DrawString(Item.Title.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?"), Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, Padding.Top, 0, 0));
+
+		var x = Padding.Left + iconRect.Width;
+		var y = (int)e.Graphics.Measure(Item.Title, Font).Height + Padding.Top;
+		var secondY = y;
+
+		if (Item.Tags is not null)
+		{
+			foreach (var tag in Item.Tags)
+			{
+				var tagRect = DrawLabel(e, tag, null, FormDesign.Design.ButtonColor, ClientRectangle.Pad(x, y, 0, 0), ContentAlignment.TopLeft);
+				secondY = Math.Max(secondY, tagRect.Bottom);
+				x = tagRect.Right;
+			}
+		}
+
+		x = Padding.Left + iconRect.Width;
+
+		if (Item.Author is not null)
+		{
+			var authorRect = DrawLabel(e, Item.Author.Name, Properties.Resources.I_Developer_16, FormDesign.Design.ButtonColor.MergeColor(FormDesign.Design.ActiveColor, 75), ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+
+			x = authorRect.Right;
+		}
+
+		if (_compatibilityReport is not null)
+		{
+			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{_compatibilityReport.Severity}"), Properties.Resources.I_CompatibilityReport_16, (_compatibilityReport.Severity switch
+			{
+				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
+				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
+				ReportSeverity.Unsubscribe => FormDesign.Design.RedColor,
+				ReportSeverity.Remarks => FormDesign.Design.ButtonColor,
+				_ => FormDesign.Design.GreenColor
+			}).MergeColor(FormDesign.Design.BackColor, 60), ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+		}
+
+		var buttonSize = SlickButton.GetSize(e.Graphics, Properties.Resources.I_Add, "Subscribe", new Font(Font, FontStyle.Regular));
+		var buttonRect = ClientRectangle.Pad(Padding).Pad(Padding).Align(buttonSize, ContentAlignment.BottomRight);
+		var hovered = buttonRect.Contains(PointToClient(Cursor.Position));
+
+		SlickButton.DrawButton(e, buttonRect, "Subscribe", new Font(Font, FontStyle.Regular), Properties.Resources.I_Add, null, hovered ? HoverState & ~HoverState.Focused : HoverState.Normal);
+
+		Cursor = hovered ? Cursors.Hand : Cursors.Default;
+	}
+
+	private Rectangle DrawLabel(PaintEventArgs e, string? text, Bitmap? icon, Color color, Rectangle rectangle, ContentAlignment alignment)
+	{
+		if (text == null)
+		{
+			return Rectangle.Empty;
+		}
+
+		var size = e.Graphics.Measure(text, UI.Font(7.5F)).ToSize();
+
+		if (icon is not null)
+		{
+			size.Width += icon.Width + Padding.Left;
+		}
+
+		size.Width += Padding.Left;
+
+		rectangle = rectangle.Pad(Padding).Align(size, alignment);
+
+		using var backBrush = rectangle.Gradient(color);
+		using var foreBrush = new SolidBrush(color.GetTextColor());
+
+		e.Graphics.FillRoundedRectangle(backBrush, rectangle, (int)(3 * UI.FontScale));
+		e.Graphics.DrawString(text, UI.Font(7.5F), foreBrush, icon is null ? rectangle : rectangle.Pad(icon.Width + (Padding.Left * 2) - 2, 0, 0, 0), new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
+		if (icon is not null)
+		{
+			e.Graphics.DrawImage(icon.Color(color.GetTextColor()), rectangle.Pad(Padding.Left, 0, 0, 0).Align(icon.Size, ContentAlignment.MiddleLeft));
+		}
+
+		return rectangle;
 	}
 }

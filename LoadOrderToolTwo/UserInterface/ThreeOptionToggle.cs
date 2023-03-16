@@ -153,6 +153,11 @@ public class ThreeOptionToggle : SlickControl, ISupportsReset
 
 		using var slash = Properties.Resources.I_Slash.Color(textColorNone);
 		e.Graphics.DrawImage(slash, ClientRectangle.CenterR(iconSize, iconSize));
+
+		if (!Enabled)
+		{
+			e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, BackColor)), ClientRectangle);
+		}
 	}
 
 	public void ResetValue()
