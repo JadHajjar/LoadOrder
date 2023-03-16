@@ -13,9 +13,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
+using System.Text.RegularExpressions;
 
 namespace LoadOrderToolTwo.Utilities;
-internal class ModsUtil
+internal static class ModsUtil
 {
 	private static readonly CachedSaveLibrary<CachedModInclusion, Mod, bool> _includedLibrary = new();
 	private static readonly CachedSaveLibrary<CachedModEnabled, Mod, bool> _enabledLibrary = new();
@@ -289,5 +290,11 @@ internal class ModsUtil
 	internal static Mod FindMod(ulong steamID)
 	{
 		return CentralManager.Mods.FirstOrDefault(x => x.SteamId == steamID);
+	}
+
+	internal static string RemoveVersionText(this string name)
+	{
+		return Regex.Replace(name, @"v?\d+\.\d+(\.\d+)*(-[\d\w]+)*", x => string.Empty, RegexOptions.IgnoreCase)
+			.RemoveDoubleSpaces();
 	}
 }

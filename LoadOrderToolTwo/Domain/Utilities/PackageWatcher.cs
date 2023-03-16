@@ -42,26 +42,16 @@ internal class PackageWatcher : FileSystemWatcher
 		}
 
 		var path = GetFirstFolderOrFileName(e.FullPath, Path);
-		var package = CentralManager.Packages.FirstOrDefault(x => x.Folder.PathEquals(path));
 
-		if (package != null)
-		{
-			_delayedPackageAction.Run(package, TriggerUpdate);
-		}
-		else
+		if (path != Path)
 		{
 			_delayedPathAction.Run(path, TriggerUpdate);
 		}
 	}
 
-	private void TriggerUpdate(Package package)
-	{
-		ContentUtil.RefreshPackage(package);
-	}
-
 	private void TriggerUpdate(string path)
 	{
-		ContentUtil.LoadNewPackage(path, BuiltIn, Workshop);
+		ContentUtil.ContentUpdated(path, BuiltIn, Workshop);
 	}
 
 	public string GetFirstFolderOrFileName(string filePath, string sourceFolder)

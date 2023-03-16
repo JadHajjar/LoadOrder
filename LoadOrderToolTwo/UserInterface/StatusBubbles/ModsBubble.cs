@@ -57,14 +57,13 @@ internal class ModsBubble : StatusBubbleBase
 			return;
 		}
 
-		var allIncludedModsAreAlsoEnabled = CentralManager.Mods.All(x => x.IsIncluded == x.IsEnabled);
 		var modsIncluded = CentralManager.Mods.Count(x => x.IsIncluded);
-		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled);
+		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled && x.IsIncluded);
 		var modsOutOfDate = CentralManager.Mods.Count(x => x.IsIncluded && x.Status == Domain.DownloadStatus.OutOfDate);
 		var modsIncomplete = CentralManager.Mods.Count(x => x.IsIncluded && x.Status == Domain.DownloadStatus.PartiallyDownloaded);
 		var multipleModsIncluded = ModsUtil.GetDuplicateMods().Any();
 
-		if (allIncludedModsAreAlsoEnabled)
+		if (modsIncluded == modsEnabled)
 		{
 			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural);
 		}

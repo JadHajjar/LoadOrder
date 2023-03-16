@@ -31,7 +31,14 @@ internal class AssetsUtil
 
 	public static IEnumerable<Asset> GetAssets(Package package)
 	{
-		foreach (var file in Directory.EnumerateFiles(package.Folder, $"*.crp", SearchOption.AllDirectories))
+		if (!Directory.Exists(package.Folder))
+		{
+			yield break;
+		}
+
+		var files = Directory.GetFiles(package.Folder, $"*.crp", SearchOption.AllDirectories);
+
+		foreach (var file in files)
 		{
 			yield return new Asset(package, file);
 		}

@@ -15,6 +15,8 @@ internal class ContentUtil
 {
 	public const string EXCLUDED_FILE_NAME = ".excluded";
 
+	private static readonly object _contentUpdateLock = new();
+
 	public static IEnumerable<ulong> GetSubscribedItems()
 	{
 		foreach (var path in GetSubscribedItemPaths())
@@ -136,7 +138,24 @@ internal class ContentUtil
 		}
 	}
 
-	internal static void LoadNewPackage(string path, bool builtIn, bool workshop)
+	internal static void ContentUpdated(string path, bool builtIn, bool workshop)
+	{
+		lock (_contentUpdateLock)
+		{
+			var existingPackage = CentralManager.Packages.FirstOrDefault(x => x.Folder.PathEquals(path));
+
+			if (existingPackage != null)
+			{
+				RefreshPackage(existingPackage);
+			}
+			else
+			{
+				AddNewPackage(path, builtIn, workshop);
+			}
+		}
+	}
+
+	private static void AddNewPackage(string path, bool builtIn, bool workshop)
 	{
 		var package = new Package(path, builtIn, workshop);
 

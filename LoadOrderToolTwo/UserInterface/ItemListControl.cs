@@ -214,7 +214,7 @@ internal class ItemListControl<T> : SlickStackedListControl<T> where T : IPackag
 		using (var iconImg = e.Item.IconImage)
 			e.Graphics.DrawRoundedImage(iconImg ?? Properties.Resources.I_ModIcon.Color(FormDesign.Design.IconColor), iconRectangle, (int)(4 * UI.FontScale), FormDesign.Design.AccentBackColor);
 
-		e.Graphics.DrawString(e.Item.Name.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?").RemoveDoubleSpaces(), UI.Font(large ? 11.25F : 9F, FontStyle.Bold), new SolidBrush(e.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : rects.CenterRect.Contains(CursorLocation) && e.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
+		e.Graphics.DrawString(e.Item.Name.RemoveVersionText(), UI.Font(large ? 11.25F : 9F, FontStyle.Bold), new SolidBrush(e.HoverState.HasFlag(HoverState.Pressed) ? FormDesign.Design.ActiveForeColor : rects.CenterRect.Contains(CursorLocation) && e.HoverState.HasFlag(HoverState.Hovered) ? FormDesign.Design.ActiveColor : ForeColor), textRect, new StringFormat { Trimming = StringTrimming.EllipsisCharacter });
 
 		var versionRect = DrawLabel(e, e.Item is Package pkg
 			? (pkg.Mod is null ? "" : (e.Item.BuiltIn ? Locale.Vanilla : "v" + e.Item.Package.Mod?.Version.GetString())) : e.Item is Mod

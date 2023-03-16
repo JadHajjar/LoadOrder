@@ -37,9 +37,9 @@ namespace LoadOrderIPatch.Patches {
                 assemblyDefinition = ImproveLoggingPatch(assemblyDefinition);
                 assemblyDefinition = BindEnableDisableAllPatch(assemblyDefinition);
                 //assemblyDefinition = NewsFeedPanelPatch(assemblyDefinition); // handled by harmony patch
-                InstallResolverLog();
-                if (ConfigUtil.Config.AddHarmonyResolver)
-                    InstallHarmonyResolver();
+                //InstallResolverLog();
+                //if (ConfigUtil.Config.AddHarmonyResolver)
+                //    InstallHarmonyResolver();
 
                 assemblyDefinition = SubscriptionManagerPatch(assemblyDefinition); // must be called to check if patch loader is effective.
 
@@ -143,7 +143,7 @@ namespace LoadOrderIPatch.Patches {
             Application.SetStackTraceLogType(LogType.Warning, StackTraceLogType.None);
             Application.SetStackTraceLogType(LogType.Error, StackTraceLogType.ScriptOnly);
             Application.SetStackTraceLogType(LogType.Exception, StackTraceLogType.ScriptOnly);
-            Debug.Log("************************** Removed logging stacktrace bloat **************************");
+            //Debug.Log("************************** Removed logging stacktrace bloat **************************");
         }
 
         public AssemblyDefinition BindEnableDisableAllPatch(AssemblyDefinition ASC)
@@ -201,12 +201,12 @@ namespace LoadOrderIPatch.Patches {
         //        }
 
         public void InstallResolverLog() {
-            Log.StartPatching();
-            ResolveEventHandler resolver = Inject.Logs.ResolverLog;
-            AppDomain.CurrentDomain.AssemblyResolve += resolver;
-            AppDomain.CurrentDomain.TypeResolve += resolver;
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolver;
-            Log.Successful();
+            //Log.StartPatching();
+            //ResolveEventHandler resolver = Inject.Logs.ResolverLog;
+            //AppDomain.CurrentDomain.AssemblyResolve += resolver;
+            //AppDomain.CurrentDomain.TypeResolve += resolver;
+            //AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += resolver;
+            //Log.Successful();
         }
 
         private static readonly Version MinHarmonyVersionToHandle = new Version(2, 0, 0, 8);

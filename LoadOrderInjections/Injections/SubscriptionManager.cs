@@ -542,18 +542,16 @@ namespace LoadOrderInjections {
             if (Initialized) return;
             Initialized = true; // used to check if patch loader is effective.
             Log.Debug(Environment.StackTrace);
-            PlatformService.eventSteamControllerInit += OnInitSteamController;
-
-            PlatformService.eventGameOverlayActivated += OnGameOverlayActivated;
-            PlatformService.workshop.eventSubmitItemUpdate += OnSubmitItemUpdate;
-            PlatformService.workshop.eventWorkshopItemInstalled += OnWorkshopItemInstalled;
-            PlatformService.workshop.eventWorkshopSubscriptionChanged -= OnWorkshopSubscriptionChanged;
-            PlatformService.workshop.eventWorkshopSubscriptionChanged += OnWorkshopSubscriptionChanged;
-            PlatformService.workshop.eventUGCQueryCompleted += OnUGCQueryCompleted;
-            PlatformService.workshop.eventUGCRequestUGCDetailsCompleted += OnUGCRequestUGCDetailsCompleted;
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        }
+			PlatformService.eventSteamControllerInit += SteamUtilities.OnInitSteamController;
+			PlatformService.eventGameOverlayActivated += SteamUtilities.OnGameOverlayActivated;
+			PlatformService.workshop.eventSubmitItemUpdate += SteamUtilities.OnSubmitItemUpdate;
+			PlatformService.workshop.eventWorkshopItemInstalled += SteamUtilities.OnWorkshopItemInstalled;
+			PlatformService.workshop.eventWorkshopSubscriptionChanged -= SteamUtilities.OnWorkshopSubscriptionChanged;
+			PlatformService.workshop.eventWorkshopSubscriptionChanged += SteamUtilities.OnWorkshopSubscriptionChanged;
+			PlatformService.workshop.eventUGCQueryCompleted += SteamUtilities.OnUGCQueryCompleted;
+			PlatformService.workshop.eventUGCRequestUGCDetailsCompleted += SteamUtilities.OnUGCRequestUGCDetailsCompleted;
+			AppDomain.CurrentDomain.UnhandledException += SteamUtilities.CurrentDomain_UnhandledException;
+		}
         public static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs args) {
             Exception ex = (Exception)args.ExceptionObject;
             ex.Log(showInPannel:false);
@@ -566,7 +564,6 @@ namespace LoadOrderInjections {
                 return;
             firstTime = false;
 
-            Log.Debug(Environment.StackTrace);
             var items = PlatformService.workshop.GetSubscribedItems();
             Log.Info("Subscribed Items are: " + items.ToSTR());
 

@@ -134,7 +134,7 @@ namespace LoadOrderMod {
         public void CheckPatchLoader() {
             Log.Info("SteamUtilities.Initialized=" + SteamUtilities.Initialized);
             if(!SteamUtilities.Initialized && PatchLoaderStatus.Instance.IsAvailbleAndEnabled) {
-                Log.DisplayWarning("Patch Loader Ineffective. Some LOM features might not work!\n\n" + PatchLoaderStatus.WindowsCriticalErrorSolutions);
+                Log.DisplayWarning(SteamUtilities.Initialized+" Patch Loader Ineffective. Some LOM features might not work!\n\n" + PatchLoaderStatus.WindowsCriticalErrorSolutions);
             }
         }
 

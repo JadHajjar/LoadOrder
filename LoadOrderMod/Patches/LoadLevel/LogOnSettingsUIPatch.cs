@@ -43,7 +43,7 @@ namespace LoadOrderMod.Patches.LoadLevel {
             sw_total.Start();
         }
 
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions) {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original) {
             try {
                 List<CodeInstruction> codes = instructions.ToCodeList();
                 var Call_BeforeSettingsUI = new CodeInstruction(OpCodes.Call, mBeforeSettingsUI);
@@ -52,8 +52,8 @@ namespace LoadOrderMod.Patches.LoadLevel {
                 int index = codes.Search(c => c.Calls(mInvoke));
                 codes.InsertInstructions(index + 1, new[] { Call_AfterSettingsUI }); // insert after.
 
-                // insert after instances[0]
-                index = codes.Search(c => c.opcode == OpCodes.Ldelem_Ref, startIndex: index, count: -1);
+				// insert after instances[0]
+				index = codes.Search((CodeInstruction c) => c.IsLdLoc(typeof(IUserMod), original), index, -1, true);
                 codes.InsertInstructions(index+1, new[] { Call_BeforeSettingsUI }); 
 
                 return codes;

@@ -11,7 +11,7 @@ namespace LoadOrderMod.Patches.ContentManager {
     /// <summary>
     /// Options panel Skips plugins with no user mod to avoid errors.
     /// </summary>
-    [HarmonyPatch(typeof(OptionsMainPanel), "AddUserMods")]
+   // [HarmonyPatch(typeof(OptionsMainPanel), "AddUserMods")]
     public static class OptionsMainPanel_AddUserMods_Patch {
         public static IEnumerable<CodeInstruction> Transpiler(ILGenerator il, IEnumerable<CodeInstruction> instructions) {
             try {

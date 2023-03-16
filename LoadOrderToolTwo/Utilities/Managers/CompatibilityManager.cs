@@ -136,7 +136,6 @@ internal static class CompatibilityManager
 		reportInfo.Messages.AddIfNotNull(Disabled(subscribedMod));
 		reportInfo.Messages.AddIfNotNull(Successors(subscribedMod));
 		reportInfo.Messages.AddIfNotNull(Alternatives(subscribedMod));
-		reportInfo.Messages.AddIfNotNull(RequiredMods(subscribedMod));
 		reportInfo.Messages.AddIfNotNull(ModNote(subscribedMod));
 
 		reportInfo.Messages.AddRange(Compatibilities(subscribedMod));

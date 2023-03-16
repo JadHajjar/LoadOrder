@@ -2,11 +2,13 @@
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Steam;
+using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
@@ -32,18 +34,57 @@ internal class SteamPackageViewControl : SlickImageControl
 	public SteamWorkshopItem Item { get; }
 
 	private readonly CompatibilityManager.ReportInfo? _compatibilityReport;
+	private Rectangle buttonRect;
 
 	public Package? LocalPackage { get; }
 
 	protected override void UIChanged()
 	{
-		Padding = Margin = UI.Scale(new Padding(5), UI.FontScale);
-		Height = (int)(70 * UI.FontScale);
+		Padding = UI.Scale(new Padding(5), UI.FontScale);
+		Margin = UI.Scale(new Padding(3), UI.FontScale);
+		Height = (int)(75 * UI.FontScale);
 		Font = UI.Font(9F, FontStyle.Bold);
+	}
+
+	private State GetState()
+	{
+		if (LocalPackage == null)
+		{
+			return State.Unsubscribed;
+		}
+
+		if (LocalPackage.IsIncluded)
+		{
+			return (LocalPackage.Mod?.IsEnabled ?? true) ? State.Enabled : State.Disabled;
+		}
+
+		return State.Excluded;
+	}
+
+	private enum State
+	{
+		Unsubscribed,
+		Disabled,
+		Enabled,
+		Excluded
 	}
 
 	protected override void OnMouseClick(MouseEventArgs e)
 	{
+		var iconRect = new Rectangle(Padding.Left, Padding.Top, Height - Padding.Vertical, Height - Padding.Vertical);
+
+		if (iconRect.Contains(e.Location))
+		{
+			try
+			{ Process.Start($"https://steamcommunity.com/workshop/filedetails/?id={Item.PublishedFileID}"); }
+			catch { }
+		}
+
+		if (buttonRect.Contains(e.Location))
+		{
+
+		}
+
 		base.OnMouseClick(e);
 	}
 
@@ -71,7 +112,7 @@ internal class SteamPackageViewControl : SlickImageControl
 			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left, FormDesign.Design.IconColor, topRight: false, botRight: false);
 		}
 
-		e.Graphics.DrawString(Item.Title.RegexRemove(@"v?\d+\.\d+(\.\d+)?(\.\d+)?"), Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, Padding.Top, 0, 0));
+		e.Graphics.DrawString(Item.Title.RemoveVersionText(), Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, Padding.Top, 0, 0));
 
 		var x = Padding.Left + iconRect.Width;
 		var y = (int)e.Graphics.Measure(Item.Title, Font).Height + Padding.Top;
@@ -108,13 +149,14 @@ internal class SteamPackageViewControl : SlickImageControl
 			}).MergeColor(FormDesign.Design.BackColor, 60), ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
 		}
 
+		//var buttonIcon = GetState() switch { State.Excluded => Locale.Include, State.Enabled  State.Unsubscribed => Locale.Subscribe}
 		var buttonSize = SlickButton.GetSize(e.Graphics, Properties.Resources.I_Add, "Subscribe", new Font(Font, FontStyle.Regular));
-		var buttonRect = ClientRectangle.Pad(Padding).Pad(Padding).Align(buttonSize, ContentAlignment.BottomRight);
+		buttonRect = ClientRectangle.Pad(Padding).Pad(Padding).Align(buttonSize, ContentAlignment.BottomRight);
 		var hovered = buttonRect.Contains(PointToClient(Cursor.Position));
 
 		SlickButton.DrawButton(e, buttonRect, "Subscribe", new Font(Font, FontStyle.Regular), Properties.Resources.I_Add, null, hovered ? HoverState & ~HoverState.Focused : HoverState.Normal);
 
-		Cursor = hovered ? Cursors.Hand : Cursors.Default;
+		Cursor = hovered || iconRect.Contains(PointToClient(Cursor.Position)) ? Cursors.Hand : Cursors.Default;
 	}
 
 	private Rectangle DrawLabel(PaintEventArgs e, string? text, Bitmap? icon, Color color, Rectangle rectangle, ContentAlignment alignment)

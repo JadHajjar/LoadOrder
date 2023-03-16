@@ -188,6 +188,8 @@ internal static class CentralManager
 			CompatibilityManager.LoadCompatibilityReport(compatibilityReport);
 		}
 
+		return;
+
 		if (plm != null)
 		{
 			plm.IsRequired = true;
@@ -265,12 +267,12 @@ internal static class CentralManager
 			package.SetSteamInformation(cachedSteamInfo[package.SteamId], true);
 		}
 
-		var newPackages = new List<Package>(packages)
+		if (packages is null)
 		{
-			package
-		};
-
-		packages = newPackages;
+			packages = new List<Package>() { package };
+		}
+		else
+			packages.Add(package);
 
 		RefreshSteamInfo(package);
 		ContentLoaded?.Invoke();
@@ -312,11 +314,7 @@ internal static class CentralManager
 
 	internal static void RemovePackage(Package package)
 	{
-		var newPackages = new List<Package>(packages);
-
-		newPackages.Remove(package);
-
-		packages = newPackages;
+		packages?.Remove(package);
 
 		package.Status = DownloadStatus.NotDownloaded;
 		ContentLoaded?.Invoke();
