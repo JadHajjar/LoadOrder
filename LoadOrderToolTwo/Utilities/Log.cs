@@ -105,7 +105,7 @@ public static class Log
 
 
 	public const int MAX_WAIT_ID = 1000;
-	static readonly DateTime[] times_ = new DateTime[MAX_WAIT_ID];
+	private static readonly DateTime[] times_ = new DateTime[MAX_WAIT_ID];
 
 	[Conditional("DEBUG")]
 	public static void DebugWait(string message, int id, float seconds = 0.5f, bool copyToGameLog = true)
@@ -198,8 +198,10 @@ public static class Log
 
 			LogImpl(message, LogLevel.Exception, true);
 
-			if(showInPanel)
-			MessagePrompt.Show(e, m);
+			if (showInPanel)
+			{
+				MessagePrompt.Show(e, m);
+			}
 		}
 		catch (Exception ex)
 		{
@@ -208,7 +210,8 @@ public static class Log
 		}
 	}
 
-	static readonly string nl = Environment.NewLine;
+	private static readonly string nl = Environment.NewLine;
+	private static bool loggingFailed;
 
 	/// <summary>
 	/// Write a message to log file.
@@ -220,6 +223,11 @@ public static class Log
 	{
 		try
 		{
+			if (loggingFailed)
+			{
+				return;
+			}
+
 			var ticks = Timer?.ElapsedTicks ?? 0;
 			var m = "";
 			if (ShowLevel)
@@ -259,8 +267,8 @@ public static class Log
 		}
 		catch (Exception ex)
 		{
-			new ThreadExceptionDialog(new Exception("LogImpl failed" + Environment.StackTrace, ex))
-				.ShowDialog();
+			loggingFailed = true;
+			MessagePrompt.Show(ex, "Logging failed");
 		}
 	}
 
