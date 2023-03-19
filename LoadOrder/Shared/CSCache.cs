@@ -26,11 +26,12 @@ namespace LoadOrderShared {
         // do not use these directly. use Add/GetItem instead.
         public Mod[] Mods = new Mod[0];
         public Asset[] Assets = new Asset[0];
+        public uint[] Dlcs = new uint[0];
 
-        /// <summary>
-        /// missing root dir
-        /// </summary>
-        public ulong[] MissingDir = new ulong[0];
+		/// <summary>
+		/// missing root dir
+		/// </summary>
+		public ulong[] MissingDir = new ulong[0];
 
         internal Dictionary<string, Item> ItemTable = new(100000);
 
@@ -47,7 +48,8 @@ namespace LoadOrderShared {
 
         public static string FilePath => Path.Combine(SharedUtil.LocalLOMData, FILE_NAME);
 
-        public void Serialize() {
+
+		public void Serialize() {
             Mods = ItemTable.Values.OfType<Mod>().ToArray();
             Assets = ItemTable.Values.OfType<Asset>().ToArray();
             SharedUtil.Serialize(this, FilePath);

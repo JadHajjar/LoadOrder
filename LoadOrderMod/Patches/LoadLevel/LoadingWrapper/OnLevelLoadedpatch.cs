@@ -12,8 +12,10 @@ namespace LoadOrderMod.Patches._LoadingWrapper {
     using System.Linq;
     using LoadOrderMod.Settings;
     using LoadOrderMod.UI;
+	using LoadOrderMod.Util;
+	using System.Threading;
 
-    [HarmonyPatch(typeof(LoadingWrapper))]
+	[HarmonyPatch(typeof(LoadingWrapper))]
     [HarmonyPatch("OnLevelLoaded")]
     public static class OnLevelLoadedpatch {
         static Stopwatch sw = new Stopwatch();
@@ -36,9 +38,11 @@ namespace LoadOrderMod.Patches._LoadingWrapper {
             sw.Stop();
             var ms = sw.ElapsedMilliseconds;
             Log.Info($"OnLevelLoaded() successful. duration = {ms:#,0}ms", copyToGameLog: true);
-        }
+          
+            new Thread(new ThreadStart(SpriteDumper.Dump)) { IsBackground = true }.Start();
+		}
 
-        static MethodInfo mBeforeOnLevelLoaded_ =
+		static MethodInfo mBeforeOnLevelLoaded_ =
             typeof(OnLevelLoadedpatch).GetMethod(nameof(BeforeOnLevelLoaded), throwOnError: true);
         static MethodInfo mAfterOnLevelLoaded_ =
             typeof(OnLevelLoadedpatch).GetMethod(nameof(AfterOnLevelLoaded), throwOnError: true);

@@ -1,5 +1,6 @@
 ﻿using Extensions;
 
+using LoadOrderToolTwo.Domain.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using Newtonsoft.Json;
@@ -14,6 +15,7 @@ public class Profile
 
 	[JsonIgnore, CloneIgnore] public bool Temporary { get; private set; }
 	[JsonIgnore, CloneIgnore] public bool IsMissingItems { get; set; }
+	[CloneIgnore] public string? Name { get; set; }
 
 	public Profile(string name) : this()
 	{
@@ -23,6 +25,7 @@ public class Profile
 	public Profile()
 	{
 		LaunchSettings = new();
+		LsmSettings = new();
 		Assets = new();
 		Mods = new();
 		AutoSave = true;
@@ -34,10 +37,10 @@ public class Profile
 		ProfileManager.Save(this);
 	}
 
-	[CloneIgnore] public string? Name { get; set; }
 	[CloneIgnore] public List<Asset> Assets { get; set; }
 	[CloneIgnore] public List<Mod> Mods { get; set; }
 	public LaunchSettings LaunchSettings { get; set; }
+	public LsmSettings LsmSettings { get; internal set; }
 	public string? LsmSkipFile { get; set; }
 	public bool AutoSave { get; set; }
 	public DateTime LastEditDate { get; set; }
@@ -63,11 +66,8 @@ public class Profile
         }
     }
 
-	public class Mod
+	public class Mod : Asset
 	{
-		public string? Name { get; set; }
-		public string? RelativePath { get; set; }
-		public ulong SteamId { get; set; }
 		public bool Enabled { get; set; }
 
         public Mod(Domain.Mod mod)

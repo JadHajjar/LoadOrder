@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.Domain;
+using LoadOrderToolTwo.Domain.Utilities;
 
 using SlickControls;
 
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 public static class ProfileManager
@@ -68,7 +70,128 @@ public static class ProfileManager
 		}).Run();
 	}
 
-	internal static void SetProfile(Profile profile, SlickControls.BasePanelForm form)
+	internal static void MergeProfile(Profile profile, BasePanelForm form)
+	{
+		new BackgroundAction("Applying profile", apply).Run();
+
+		void apply()
+		{
+			var unprocessedMods = CentralManager.Mods.ToList();
+			var unprocessedAssets = CentralManager.Assets.ToList();
+			var missingMods = new List<Profile.Mod>();
+			var missingAssets = new List<Profile.Asset>();
+
+			ApplyingProfile = true;
+
+			foreach (var mod in profile.Mods)
+			{
+				var localMod = GetMod(mod);
+
+				if (localMod != null)
+				{
+					localMod.IsIncluded = true;
+					localMod.IsEnabled |= mod.Enabled;
+
+					unprocessedMods.Remove(localMod);
+				}
+				else
+				{
+					missingMods.Add(mod);
+				}
+			}
+
+			foreach (var asset in profile.Assets)
+			{
+				var localAsset = GetAsset(asset);
+
+				if (localAsset != null)
+				{
+					localAsset.IsIncluded = true;
+
+					unprocessedAssets.Remove(localAsset);
+				}
+				else
+				{
+					missingAssets.Add(asset);
+				}
+			}
+
+			if (missingMods.Count > 0 || missingAssets.Count > 0)
+			{
+				UserInterface.Panels.PC_MissingPackages.PromptMissingPackages(form, missingMods, missingAssets);
+			}
+
+			ApplyingProfile = false;
+			disableAutoSave = true;
+
+			ModsUtil.SavePendingValues();
+			AssetsUtil.SaveChanges();
+
+			disableAutoSave = false;
+
+			ProfileChanged?.Invoke(CurrentProfile);
+
+			TriggerAutoSave();
+		}
+	}
+
+	internal static void ExcludeProfile(Profile profile)
+	{
+		new BackgroundAction("Applying profile", apply).Run();
+
+		void apply()
+		{
+			var unprocessedMods = CentralManager.Mods.ToList();
+			var unprocessedAssets = CentralManager.Assets.ToList();
+			var missingMods = new List<Profile.Mod>();
+			var missingAssets = new List<Profile.Asset>();
+
+			ApplyingProfile = true;
+
+			foreach (var mod in profile.Mods)
+			{
+				var localMod = GetMod(mod);
+
+				if (localMod != null)
+				{
+					localMod.IsIncluded = false;
+					localMod.IsEnabled = false;
+				}
+			}
+
+			foreach (var asset in profile.Assets)
+			{
+				var localAsset = GetAsset(asset);
+
+				if (localAsset != null)
+				{
+					localAsset.IsIncluded = false;
+				}
+			}
+
+			ApplyingProfile = false;
+			disableAutoSave = true;
+
+			ModsUtil.SavePendingValues();
+			AssetsUtil.SaveChanges();
+
+			disableAutoSave = false;
+
+			ProfileChanged?.Invoke(CurrentProfile);
+
+			TriggerAutoSave();
+		}
+	}
+
+	internal static void DeleteProfile(Profile profile, BasePanelForm form)
+	{
+		File.Delete(Path.Combine(LocationManager.LotProfilesAppDataPath, $"{profile.Name}.json"));
+
+		if (profile == CurrentProfile)
+			SetProfile(Profile.TemporaryProfile, form);
+	}
+
+	internal static void SetProfile(Profile profile, BasePanelForm form)
 	{
 		CurrentProfile = profile;
 
@@ -153,6 +276,10 @@ public static class ProfileManager
 			CentralManager.SessionSettings.CurrentProfile = profile.Name;
 			CentralManager.SessionSettings.Save();
 
+			try
+			{ SaveLsmSettings(profile); }
+			catch (Exception ex) { Log.Exception(ex, "Failed to apply the LSM settings for profile " + profile.Name); }
+
 			disableAutoSave = false;
 		}
 	}
@@ -203,6 +330,7 @@ public static class ProfileManager
 
 				if (newProfile != null)
 				{
+					newProfile.Name = Path.GetFileNameWithoutExtension(profile);
 					newProfile.LastEditDate = File.GetLastWriteTime(profile);
 
 					profiles.Add(newProfile);
@@ -288,31 +416,36 @@ public static class ProfileManager
 		var newName = Path.Combine(LocationManager.LotProfilesAppDataPath, $"{text}.json");
 		var oldName = Path.Combine(LocationManager.LotProfilesAppDataPath, $"{profile.Name}.json");
 
-		if (newName == oldName)
+		try
 		{
-			return true;
-		}
+			if (newName == oldName)
+			{
+				return true;
+			}
 
-		if (File.Exists(newName))
+			if (File.Exists(newName))
+			{
+				return false;
+			}
+
+			if (File.Exists(oldName))
+			{
+				File.Move(oldName, newName);
+
+				profile.Name = text;
+			}
+			else
+			{
+				profile.Name = text;
+
+				Save(profile);
+			}
+		}
+		finally
 		{
-			return false;
+			CentralManager.SessionSettings.CurrentProfile = text;
+			CentralManager.SessionSettings.Save();
 		}
-
-		if (File.Exists(oldName))
-		{
-			File.Move(oldName, newName);
-
-			profile.Name = text;
-		}
-		else
-		{
-			profile.Name = text;
-
-			Save(profile);
-		}
-
-		CentralManager.SessionSettings.CurrentProfile = text;
-		CentralManager.SessionSettings.Save();
 
 		return true;
 	}
@@ -378,18 +511,20 @@ public static class ProfileManager
 		return new();
 	}
 
-	internal static void MergeProfile(Profile obj, BasePanelForm form)
+	public static void SaveLsmSettings(Profile profile)
 	{
-		throw new NotImplementedException();
-	}
+		var current = LsmSettingsFile.Deserialize();
 
-	internal static void ExcludeProfile(Profile obj, BasePanelForm form)
-	{
-		throw new NotImplementedException();
-	}
+		if (current == null)
+		{
+			return;
+		}
 
-	internal static void DeleteProfile(Profile obj)
-	{
-		throw new NotImplementedException();
+		current.loadEnabled = profile.LsmSettings.LoadEnabled;
+		current.loadUsed = profile.LsmSettings.LoadUsed;
+		current.skipFile = profile.LsmSettings.SkipFile;
+		current.skipPrefabs = File.Exists(profile.LsmSettings.SkipFile);
+
+		current.SyncAndSerialize();
 	}
 }

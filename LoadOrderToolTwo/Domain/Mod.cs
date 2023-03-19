@@ -26,6 +26,7 @@ public class Mod : IPackage
 	public Version Version { get; }
 	public Package Package { get; }
 	public string Name { get => Package.Name.IfEmpty(_dllName); set => Package.Name = value; }
+	public long FileSize => ContentUtil.GetTotalSize(Folder);
 
 	public bool IsIncluded { get => ModsUtil.IsIncluded(this); set => ModsUtil.SetIncluded(this, value); }
 	public bool IsEnabled { get => ModsUtil.IsEnabled(this); set => ModsUtil.SetEnabled(this, value); }

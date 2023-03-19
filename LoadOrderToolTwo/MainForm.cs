@@ -7,6 +7,7 @@ using SlickControls;
 
 using System;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo;
@@ -49,6 +50,43 @@ public partial class MainForm : BasePanelForm
 		PI_ModUtilities.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Wrench));
 		PI_Troubleshoot.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_AskHelp));
 		PI_Packages.Icon = ImageManager.GetIcon(nameof(Properties.Resources.I_Package));
+	}
+
+	protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+	{
+		if (keyData == (Keys.Control | Keys.S) && CitiesManager.CitiesAvailable())
+		{
+			if (CurrentPanel is PC_MainPage mainPage)
+			{
+				mainPage.B_StartStop.Loading = true;
+			}
+
+			if (CitiesManager.IsRunning())
+			{
+				new BackgroundAction("Stopping Cities: Skylines", CitiesManager.Kill).Run();
+			}
+			else
+			{
+				new BackgroundAction("Starting Cities: Skylines", CitiesManager.Launch).Run();
+			}
+
+			return true;
+		}
+
+		return base.ProcessCmdKey(ref msg, keyData);
+	}
+
+	protected override void OnDeactivate(EventArgs e)
+	{
+		if (TopMost)
+		{
+			Thread.Sleep(100);
+			TopMost = false;
+			this.ShowUp();
+			return;
+		}
+
+		base.OnDeactivate(e);
 	}
 
 	protected override void OnCreateControl()

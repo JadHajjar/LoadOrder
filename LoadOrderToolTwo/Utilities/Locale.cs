@@ -1,5 +1,7 @@
 ﻿using Extensions;
 
+using System;
+
 namespace LoadOrderToolTwo.Utilities;
 internal class Locale : LocaleHelper
 {
@@ -155,4 +157,24 @@ internal class Locale : LocaleHelper
 	public static string CheckFolderInOptions => _instance.GetText(nameof(CheckFolderInOptions));
 	public static string SomePackagesWillBeDisabled => _instance.GetText(nameof(SomePackagesWillBeDisabled));
 	public static string AffectedPackagesAre => _instance.GetText(nameof(AffectedPackagesAre));
+	public static string ConfirmDeleteProfile => _instance.GetText(nameof(ConfirmDeleteProfile));
+	public static string ProfileReplace => _instance.GetText(nameof(ProfileReplace));
+	public static string ProfileExclude => _instance.GetText(nameof(ProfileExclude));
+	public static string ProfileMerge => _instance.GetText(nameof(ProfileMerge));
+	public static string ProfileDelete => _instance.GetText(nameof(ProfileDelete));
+	public static string ShouldNotBeSubscribed => _instance.GetText(nameof(ShouldNotBeSubscribed));
+	public static string MissingPackages => _instance.GetText(nameof(MissingPackages));
+	public static string LoadingScreenMod => _instance.GetText(nameof(LoadingScreenMod));
+	public static string ExcludeInclude => _instance.GetText(nameof(ExcludeInclude));
+	public static string EnableDisable => _instance.GetText(nameof(EnableDisable));
+	public static string OpenPackagePage => _instance.GetText(nameof(OpenPackagePage));
+	public static string OpenLocalFolder => _instance.GetText(nameof(OpenLocalFolder));
+	public static string ViewOnSteam => _instance.GetText(nameof(ViewOnSteam));
+	public static string ReDownloadPackage => _instance.GetText(nameof(ReDownloadPackage));
+	public static string CopySteamId => _instance.GetText(nameof(CopySteamId));
+	public static string OpenAuthorPage => _instance.GetText(nameof(OpenAuthorPage));
+	public static string Total => _instance.GetText(nameof(Total));
+	public static string Sorting => _instance.GetText(nameof(Sorting));
+	public static string FolderSettings => _instance.GetText(nameof(FolderSettings));
+	public static string ChangingFoldersRequiresRestart => _instance.GetText(nameof(ChangingFoldersRequiresRestart));
 }

@@ -138,7 +138,7 @@ public partial class PC_Assets : PanelContent
 
 	private void FilterChanged(object sender, EventArgs e)
 	{
-		LC_Assets.FilterChanged();
+		LC_Assets.FilterOrSortingChanged();
 	}
 
 	private void I_ClearFilters_Click(object sender, EventArgs e)
@@ -154,7 +154,7 @@ public partial class PC_Assets : PanelContent
 
 	private void DelayedFilterChanged()
 	{
-		LC_Assets.FilterChanged();
+		LC_Assets.FilterOrSortingChanged();
 		TB_Search.Loading = false;
 	}
 }

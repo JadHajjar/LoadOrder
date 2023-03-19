@@ -61,16 +61,7 @@ public static class Log
 				return;
 			}
 
-			string logfileDir;
-			if (Directory.Exists(LocationManager.GamePath))
-			{
-				logfileDir = Path.Combine(LocationManager.DataPath, "Logs");
-			}
-			else
-			{
-				logfileDir = LocationManager.CurrentDirectory;
-			}
-			LogFilePath = Path.Combine(logfileDir, LogFileName);
+			LogFilePath = Path.Combine(LocationManager.CurrentDirectory, LogFileName);
 			if (File.Exists(LogFilePath))
 			{
 				File.Delete(LogFilePath);

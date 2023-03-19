@@ -41,6 +41,7 @@
   <ItemGroup>
     <Reference Include="ColossalManaged" />
     <Reference Include="ICities" />
+    <Reference Include="System.Configuration" />
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.UI" />
     <Reference Include="Patch.API" />

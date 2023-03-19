@@ -147,7 +147,7 @@ public partial class PC_Packages : PanelContent
 
 	private void FilterChanged(object sender, EventArgs e)
 	{
-		LC_Mods.FilterChanged();
+		LC_Mods.FilterOrSortingChanged();
 	}
 
 	private void I_ClearFilters_Click(object sender, EventArgs e)

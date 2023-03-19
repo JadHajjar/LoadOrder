@@ -15,7 +15,7 @@ public class GameSettings : SingletonLite<GameSettings>
 
 	private static bool m_Run;
 
-	private static Thread m_SaveThread;
+	private static Thread? m_SaveThread;
 
 	private static readonly object m_LockObject = new object();
 
@@ -129,7 +129,6 @@ public class GameSettings : SingletonLite<GameSettings>
 		{
 			sInstance = this;
 			Log.Info("Creating GameSettings Monitor ...", false);
-			Log.Debug(Environment.StackTrace);
 			m_SaveThread = new Thread(new ThreadStart(MonitorSave))
 			{
 				Name = "SaveSettingsThread",

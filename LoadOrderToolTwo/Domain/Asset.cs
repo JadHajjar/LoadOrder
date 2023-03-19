@@ -42,7 +42,7 @@ public class Asset : IPackage
 	public bool Workshop => ((IPackage)Package).Workshop;
 	public SteamUser? Author { get => ((IPackage)Package).Author; set => ((IPackage)Package).Author = value; }
 	public string? Class { get => ((IPackage)Package).Class; set => ((IPackage)Package).Class = value; }
-	public Bitmap? IconImage { get => ((IPackage)Package).IconImage; }
+	public Bitmap? IconImage { get => AssetsUtil.GetIcon(this) ?? ((IPackage)Package).IconImage; }
 	public string? IconUrl { get => ((IPackage)Package).IconUrl; set => ((IPackage)Package).IconUrl = value; }
 	public long LocalSize { get => ((IPackage)Package).LocalSize; }
 	public DateTime LocalTime { get => ((IPackage)Package).LocalTime; }

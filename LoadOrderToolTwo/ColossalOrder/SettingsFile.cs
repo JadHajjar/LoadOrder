@@ -227,6 +227,11 @@ public class SettingsFile
 
 	private bool ValidateID(char[] id)
 	{
+		if (id.Length != 4)
+		{
+			return false;
+		}
+
 		for (var i = 0; i < 4; i++)
 		{
 			if (id[i] != settingsIdentifier[i])
@@ -234,6 +239,7 @@ public class SettingsFile
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -318,7 +324,6 @@ public class SettingsFile
 			if (IsValid())
 			{
 				Log.Info("Loading " + m_PathName, false);
-				Log.Debug(Environment.StackTrace);
 				using var stream = CreateReadStream();
 
 				if (stream != null)

@@ -19,9 +19,14 @@ internal class CachedSaveLibrary<TItem, TKey, TValue> where TItem : CachedSaveIt
 		var entry = (Activator.CreateInstance(typeof(TItem), key, value) as TItem)!;
 
 		if (entry.IsStateValid())
-		{ 
+		{
 			lock (_dictionary)
-				_dictionary[key] = entry; 
+				_dictionary[key] = entry;
+		}
+		else
+		{
+			lock (_dictionary)
+				_dictionary.Remove(key);
 		}
 	}
 

@@ -1,5 +1,7 @@
 using Extensions;
 
+using LoadOrderShared;
+
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Steam;
 using LoadOrderToolTwo.Utilities.IO;
@@ -20,6 +22,7 @@ namespace LoadOrderToolTwo.Utilities;
 public static class SteamUtil
 {
 	private static string STEAM_CACHE_FILE = "SteamModsCache.json";
+	private static readonly CSCache _csCache = CSCache.Deserialize();
 
 	private static void SaveCache(Dictionary<ulong, SteamWorkshopItem> list)
 	{
@@ -96,33 +99,42 @@ public static class SteamUtil
 		var idString = string.Join(",", steamId64s);
 		var url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=706303B24FA0E63B1FB25965E081C2E1&steamids={idString}";
 
-		using var httpClient = new HttpClient();
-		var httpResponse = await httpClient.GetAsync(url);
-
-		if (httpResponse.IsSuccessStatusCode)
+		try
 		{
-			var response = await httpResponse.Content.ReadAsStringAsync();
+			using var httpClient = new HttpClient();
+			var httpResponse = await httpClient.GetAsync(url);
 
-			return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamUserRootResponse>(response)?.response.players.ToDictionary(x => x.steamid) ?? new();
+			if (httpResponse.IsSuccessStatusCode)
+			{
+				var response = await httpResponse.Content.ReadAsStringAsync();
+
+				return Newtonsoft.Json.JsonConvert.DeserializeObject<SteamUserRootResponse>(response)?.response.players.ToDictionary(x => x.steamid) ?? new();
+			}
+
+			Log.Error("failed to get steam author data: " + httpResponse.RequestMessage);
 		}
-
-		Log.Error("failed to get steam author data: " + httpResponse.RequestMessage);
+		catch (Exception ex)
+		{
+			Log.Exception(ex, "Failed to get steam author information");
+		}
 
 		return new();
 	}
 
-	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataAsync(ulong[] ids)
+	public static async Task<Dictionary<ulong, SteamWorkshopItem>> GetWorkshopInfoAsync(ulong[] ids)
 	{
-		var results = await ConvertInChunks(ids, 1000, LoadDataImplAsync);
+		var results = await ConvertInChunks(ids, 1000, GetWorkshopInfoAImplementationAsync);
 
 		SaveCache(results);
 
 		return results;
 	}
 
-	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadDataImplAsync(List<ulong> ids)
+	private static async Task<Dictionary<ulong, SteamWorkshopItem>> GetWorkshopInfoAImplementationAsync(List<ulong> ids)
 	{
 		var url = @"https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/";
+
+		ids.Remove(0);
 
 		var bodyDictionary = new Dictionary<string, string>
 		{
@@ -134,38 +146,45 @@ public static class SteamUtil
 			bodyDictionary[$"publishedfileids[{i}]"] = ids[i].ToString();
 		}
 
-		using var httpClient = new HttpClient();
-		var body = new FormUrlEncodedContent(bodyDictionary);
-		var httpResponse = await httpClient.PostAsync(url, body);
-
-		if (httpResponse.IsSuccessStatusCode)
+		try
 		{
-			var response = await httpResponse.Content.ReadAsStringAsync();
+			using var httpClient = new HttpClient();
+			var body = new FormUrlEncodedContent(bodyDictionary);
+			var httpResponse = await httpClient.PostAsync(url, body);
 
-			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopItemRootResponse>(response)?.response.publishedfiledetails
-				.Where(x => x.result is 1 or 17 or 86 or 9)
-				.Select(x => new SteamWorkshopItem(x))
-				.ToList() ?? new();
-
-			var users = await ConvertInChunks(data.Select(x => x.AuthorID).Distinct(), 100, GetSteamUsers);
-
-			foreach (var item in data)
+			if (httpResponse.IsSuccessStatusCode)
 			{
-				if (!string.IsNullOrEmpty(item.AuthorID) && users.ContainsKey(item.AuthorID))
+				var response = await httpResponse.Content.ReadAsStringAsync();
+
+				var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopItemRootResponse>(response)?.response.publishedfiledetails
+					.Where(x => x.result is 1 or 17 or 86 or 9)
+					.Select(x => new SteamWorkshopItem(x))
+					.ToList() ?? new();
+
+				var users = await ConvertInChunks(data.Select(x => x.AuthorID).Distinct(), 100, GetSteamUsers);
+
+				foreach (var item in data)
 				{
-					item.Author = new(users[item.AuthorID]);
+					if (!string.IsNullOrEmpty(item.AuthorID) && users.ContainsKey(item.AuthorID))
+					{
+						item.Author = new(users[item.AuthorID]);
+					}
 				}
+
+				return data.ToDictionary(x => ulong.Parse(x.PublishedFileID));
 			}
 
-			return data.ToDictionary(x => ulong.Parse(x.PublishedFileID));
+			Log.Error("failed to get steam data: " + httpResponse.RequestMessage);
 		}
-
-		Log.Error("failed to get steam data: " + httpResponse.RequestMessage);
+		catch (Exception ex)
+		{
+			Log.Exception(ex, "Failed to get steam information");
+		}
 
 		return new();
 	}
 
-	public static async Task<Dictionary<ulong, SteamWorkshopItem>> LoadCollectionContentsAsync(string collectionId)
+	public static async Task<Dictionary<ulong, SteamWorkshopItem>> GetCollectionContentsAsync(string collectionId)
 	{
 		var url = @"https://api.steampowered.com/ISteamRemoteStorage/GetCollectionDetails/v1/";
 
@@ -175,28 +194,35 @@ public static class SteamUtil
 			[$"publishedfileids[0]"] = collectionId
 		};
 
-		using var httpClient = new HttpClient();
-		var body = new FormUrlEncodedContent(bodyDictionary);
-		var httpResponse = await httpClient.PostAsync(url, body);
-
-		if (httpResponse.IsSuccessStatusCode)
+		try
 		{
-			var response = await httpResponse.Content.ReadAsStringAsync();
+			using var httpClient = new HttpClient();
+			var body = new FormUrlEncodedContent(bodyDictionary);
+			var httpResponse = await httpClient.PostAsync(url, body);
 
-			var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopCollectionRootResponse>(response)?.response.collectiondetails?.FirstOrDefault()?.children?
-				.Where(x => x.filetype == 0)
-				.Select(x => ulong.Parse(x.publishedfileid))
-				.ToList() ?? new();
+			if (httpResponse.IsSuccessStatusCode)
+			{
+				var response = await httpResponse.Content.ReadAsStringAsync();
 
-			if (data.Count == 0)
-				return new();
+				var data = Newtonsoft.Json.JsonConvert.DeserializeObject<SteamWorkshopCollectionRootResponse>(response)?.response.collectiondetails?.FirstOrDefault()?.children?
+					.Where(x => x.filetype == 0)
+					.Select(x => ulong.Parse(x.publishedfileid))
+					.ToList() ?? new();
 
-			data.Insert(0, ulong.Parse(collectionId));
+				if (data.Count == 0)
+					return new();
 
-			return await LoadDataAsync(data.ToArray());
+				data.Insert(0, ulong.Parse(collectionId));
+
+				return await GetWorkshopInfoAsync(data.ToArray());
+			}
+
+			Log.Error("failed to get steam data: " + httpResponse.RequestMessage);
 		}
-
-		Log.Error("failed to get steam data: " + httpResponse.RequestMessage);
+		catch (Exception ex)
+		{
+			Log.Exception(ex, "Failed to get steam collection information");
+		}
 
 		return new();
 	}
@@ -212,6 +238,8 @@ public static class SteamUtil
 				steamArguments.AppendFormat(" +workshop_download_item 255710 {0}", ids[i]);
 			}
 
+			Program.MainForm!.TryInvoke(() => Program.MainForm!.TopMost = true);
+
 			ExecuteSteam(steamArguments.ToString());
 
 			Thread.Sleep(100);
@@ -223,34 +251,8 @@ public static class SteamUtil
 
 	public static bool IsDlcInstalledLocally(uint dlcId)
 	{
-		const uint appId = 255710;
-		// Construct the path to the app manifest file
-		string appManifestPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Steam", "AppData", $"{appId}", "steam_appid.txt");
-
-		// Check if the app manifest file exists
-		if (!File.Exists(appManifestPath))
-		{
-			// The app manifest file does not exist, so the app is not installed
-			return false;
-		}
-
-		// Read the app ID from the app manifest file
-		uint installedAppId = uint.Parse(File.ReadAllText(appManifestPath).Trim());
-
-		// Check if the installed app ID matches the specified app ID
-		if (installedAppId != appId)
-		{
-			// The installed app ID does not match the specified app ID, so the app is not installed
-			return false;
-		}
-
-		// Construct the path to the DLC manifest file
-		string dlcManifestPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Steam", "depotcache", $"{dlcId}.manifest");
-
-		// Check if the DLC manifest file exists
-		return File.Exists(dlcManifestPath);
+		return _csCache?.Dlcs?.Contains(dlcId) ?? false;
 	}
-
 
 	public static void SetSteamInformation(this IPackage package, SteamWorkshopItem steamWorkshopItem, bool cache)
 	{

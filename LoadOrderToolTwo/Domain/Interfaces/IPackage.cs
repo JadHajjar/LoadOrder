@@ -30,6 +30,7 @@ public interface IPackage
 	string? SteamPage { get; }
 	string[]? Tags { get; set; }
 	bool Workshop { get; }
-	bool IsIncluded { get; }
+	bool IsIncluded { get; set; }
 	bool IsRequired { get; set; }
+	long FileSize { get; }
 }

@@ -36,9 +36,36 @@ public partial class PC_Mods : PanelContent
 		{
 			LC_Mods.SetItems(CentralManager.Mods);
 		}
+		
+		RefreshCounts();
 
 		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
-		CentralManager.WorkshopInfoUpdated += LC_Mods.Invalidate;
+		CentralManager.WorkshopInfoUpdated += CentralManager_WorkshopInfoUpdated;
+		CentralManager.ModInformationUpdated += _ => this.TryInvoke(RefreshCounts);
+	}
+
+	private void CentralManager_WorkshopInfoUpdated()
+	{
+		LC_Mods.Invalidate();
+
+		this.TryInvoke(RefreshCounts);
+	}
+
+	private void RefreshCounts()
+	{
+		var modsIncluded = CentralManager.Mods.Count(x => x.IsIncluded);
+		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled && x.IsIncluded);
+
+		if (modsIncluded == modsEnabled)
+		{
+			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+		}
+		else
+		{
+			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)} && {modsEnabled} {(modsEnabled == 1 ? Locale.ModEnabled : Locale.ModEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+		}
+
+		L_Counts.Location = new(I_ClearFilters.Left - P_Filters.Padding.Right - L_Counts.Width, P_Filters.Padding.Bottom + (I_ClearFilters.Height - L_Counts.Height) / 2);
 	}
 
 	protected override void LocaleChanged()
@@ -46,6 +73,7 @@ public partial class PC_Mods : PanelContent
 		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
 		DD_PackageStatus.Text = Locale.ModStatus;
 		DD_ReportSeverity.Text = Locale.ReportSeverity;
+		DD_Sorting.Text = Locale.Sorting;
 	}
 
 	protected override void UIChanged()
@@ -56,12 +84,11 @@ public partial class PC_Mods : PanelContent
 		TB_Search.Height = 1;
 		P_Filters.Margin = P_Actions.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
 		P_Filters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Filter));
-		//P_Actions.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Wrench));
-		B_ReDownload.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ReDownload));
-		B_ReDownload.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		I_ClearFilters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ClearFilter));
 		I_ClearFilters.Size = UI.FontScale >= 1.25 ? new(32, 32) : new(24, 24);
 		I_ClearFilters.Location = new(P_Filters.Width - P_Filters.Padding.Right - I_ClearFilters.Width, P_Filters.Padding.Bottom);
+		L_Counts.Font = UI.Font(7.5F, FontStyle.Bold);
+		L_Counts.Location = new(I_ClearFilters.Left - P_Filters.Padding.Right - L_Counts.Width, P_Filters.Padding.Bottom + (I_ClearFilters.Height - L_Counts.Height) / 2);
 	}
 
 	protected override void DesignChanged(FormDesign design)
@@ -71,6 +98,7 @@ public partial class PC_Mods : PanelContent
 		P_Filters.BackColor = P_Actions.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
 		BackColor = design.AccentBackColor;
 		LC_Mods.BackColor = design.BackColor;
+		L_Counts.ForeColor = design.InfoColor;
 	}
 
 	public override Color GetTopBarColor()
@@ -153,11 +181,13 @@ public partial class PC_Mods : PanelContent
 		}
 
 		LC_Mods.SetItems(CentralManager.Mods);
+
+		this.TryInvoke(RefreshCounts);
 	}
 
 	private void FilterChanged(object sender, EventArgs e)
 	{
-		LC_Mods.FilterChanged();
+		LC_Mods.FilterOrSortingChanged();
 	}
 
 	private void I_ClearFilters_Click(object sender, EventArgs e)
@@ -185,8 +215,8 @@ public partial class PC_Mods : PanelContent
 		ModsUtil.SetEnabled(CentralManager.Mods.Where(x => !IsFilteredOut(x)), true);
 	}
 
-	private void B_ReDownload_Click(object sender, EventArgs e)
+	private void DD_Sorting_SelectedItemChanged(object sender, EventArgs e)
 	{
-		SteamUtil.ReDownload(CentralManager.Mods.Where(x => x.Status is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded).Select(x => x.SteamId).ToArray());
+		LC_Mods.SetSorting(DD_Sorting.SelectedItem);
 	}
 }

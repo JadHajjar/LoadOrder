@@ -19,6 +19,7 @@ namespace LoadOrderToolTwo.UserInterface;
 
 internal class CompatibilityMessageControl : SlickControl
 {
+	private readonly List<ulong> _subscribingTo = new();
 	private readonly Dictionary<SmallMod, Rectangle> _buttonRects = new();
 	private readonly Dictionary<SmallMod, Rectangle> _modRects = new();
 
@@ -33,11 +34,39 @@ internal class CompatibilityMessageControl : SlickControl
 		{
 			Loading = true;
 			new BackgroundAction("Loading package info", LoadPackages).Run();
+
+			CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 		}
 		else
 		{
 			AutoInvalidate = false;
 		}
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		base.Dispose(disposing);
+
+		CentralManager.ContentLoaded -= CentralManager_ContentLoaded;
+	}
+
+	private void CentralManager_ContentLoaded()
+	{
+		if (LinkedMods is null)
+			return;
+
+		foreach (var package in LinkedMods)
+		{
+			var localMod = ModsUtil.FindMod(package.SteamId);
+
+			if (package.Package != localMod)
+			{
+				_subscribingTo.Remove(package.SteamId);
+				package.Package = localMod;
+			}
+		}
+
+		Loading = _subscribingTo.Any();
 	}
 
 	private async void LoadPackages()
@@ -63,7 +92,7 @@ internal class CompatibilityMessageControl : SlickControl
 		{
 			try
 			{
-				var steamData = await SteamUtil.LoadDataAsync(remainingPackages.ToArray());
+				var steamData = await SteamUtil.GetWorkshopInfoAsync(remainingPackages.ToArray());
 
 				foreach (var item in steamData)
 				{
@@ -130,13 +159,13 @@ internal class CompatibilityMessageControl : SlickControl
 
 		e.Graphics.DrawString(Message.Note, UI.Font(8.25F), new SolidBrush(Color.FromArgb(200, ForeColor)), ClientRectangle.Pad(iconRect.Width + pad, (int)messageSize.Height, 0, 0));
 
-		if (Loading)
+		if (Loading && LinkedMods is null)
 		{
 			DrawLoader(e.Graphics, ClientRectangle.Pad(iconRect.Width + pad, y, 0, 0).CenterR(24, 24));
 
 			y += 32;
 		}
-		else if (LinkedMods != null)
+		else if (LinkedMods is not null)
 		{
 			var rect = ClientRectangle.Pad(iconRect.Width + pad, y, 0, 0);
 
@@ -171,7 +200,12 @@ internal class CompatibilityMessageControl : SlickControl
 					e.Graphics.DrawString(Locale.ModOwned, UI.Font(7.5F, FontStyle.Italic), new SolidBrush(Color.FromArgb(150, fore)), rect.Pad((int)(55 * UI.FontScale), 0, 0, 0), new StringFormat { LineAlignment = StringAlignment.Far });
 				}
 
-				if (item.Package is null || !item.Package.IsIncluded || !item.Package.IsEnabled)
+				if (_subscribingTo.Contains(item.SteamId))
+				{
+					_buttonRects[item] = Rectangle.Empty;
+					DrawLoader(e.Graphics, rect.Align(new Size(24, 24), ContentAlignment.BottomRight));
+				}
+				else if (item.Package is null || !item.Package.IsIncluded || !item.Package.IsEnabled)
 				{
 					var buttonText =
 						item.Package is null ? Locale.Subscribe :
@@ -213,7 +247,7 @@ internal class CompatibilityMessageControl : SlickControl
 		{
 			if (item.Value.Contains(e.Location))
 			{
-				Clicked(item.Key);
+				Clicked(item.Key, true);
 				return;
 			}
 		}
@@ -228,7 +262,7 @@ internal class CompatibilityMessageControl : SlickControl
 				}
 				else
 				{
-					Clicked(item.Key);
+					Clicked(item.Key, false);
 				}
 
 				return;
@@ -236,13 +270,26 @@ internal class CompatibilityMessageControl : SlickControl
 		}
 	}
 
-	private void Clicked(SmallMod item)
+	private async void Clicked(SmallMod item, bool button)
 	{
 		if (item.Package is null)
 		{
 			try
-			{ Process.Start($"https://steamcommunity.com/workshop/filedetails/?id={item.SteamId}"); }
-			catch { }
+			{
+				if (button)
+				{
+					_subscribingTo.Add(item.SteamId);
+
+					Loading = true;
+
+					await CitiesManager.Subscribe(new[] { item.SteamId });
+				}
+				else
+				{
+					Process.Start($"https://steamcommunity.com/workshop/filedetails/?id={item.SteamId}");
+				}
+			}
+			catch { } 
 
 			return;
 		}

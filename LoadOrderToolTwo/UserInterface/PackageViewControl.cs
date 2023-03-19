@@ -2,6 +2,7 @@
 
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Steam;
+using LoadOrderToolTwo.UserInterface.Panels;
 using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
@@ -17,32 +18,52 @@ using System.Windows.Forms;
 using static CompatibilityReport.CatalogData.Enums;
 
 namespace LoadOrderToolTwo.UserInterface;
-internal class SteamPackageViewControl : SlickImageControl
+internal class PackageViewControl : SlickImageControl
 {
-	public SteamPackageViewControl(SteamWorkshopItem item)
+	private readonly bool _isMod;
+	private readonly bool _isLocal;
+
+	private SteamWorkshopItem? Item;
+	private CompatibilityManager.ReportInfo? CompatibilityReport;
+	private Package? LocalPackage;
+	private Rectangle buttonRect;
+
+	private PackageViewControl()
+	{
+		Anchor = AnchorStyles.Left | AnchorStyles.Right;
+	}
+
+	public PackageViewControl(SteamWorkshopItem item) : this()
+	{
+		SetWorkshopItem(item);
+
+		_isMod = item.Tags.Any("Mod");
+	}
+
+	public PackageViewControl(Profile.Asset package) : this()
+	{
+		_isLocal = package.SteamId == 0;
+		_isMod = package is Profile.Mod;
+		Text = package.Name;
+	}
+
+	public void SetWorkshopItem(SteamWorkshopItem item)
 	{
 		Item = item;
-		Anchor = AnchorStyles.Left | AnchorStyles.Right;
 
 		var steamId = ulong.Parse(item.PublishedFileID);
-		_compatibilityReport = CompatibilityManager.GetCompatibilityReport(steamId);
+
 		LocalPackage = CentralManager.Packages.FirstOrDefault(x => x.SteamId == steamId);
+		CompatibilityReport = CompatibilityManager.GetCompatibilityReport(steamId);
 
 		LoadImage(item.PreviewURL, ImageManager.GetImage);
 	}
-
-	public SteamWorkshopItem Item { get; }
-
-	private readonly CompatibilityManager.ReportInfo? _compatibilityReport;
-	private Rectangle buttonRect;
-
-	public Package? LocalPackage { get; }
 
 	protected override void UIChanged()
 	{
 		Padding = UI.Scale(new Padding(5), UI.FontScale);
 		Margin = UI.Scale(new Padding(3), UI.FontScale);
-		Height = (int)(75 * UI.FontScale);
+		Height = (int)(85 * UI.FontScale);
 		Font = UI.Font(9F, FontStyle.Bold);
 	}
 
@@ -75,9 +96,16 @@ internal class SteamPackageViewControl : SlickImageControl
 
 		if (iconRect.Contains(e.Location))
 		{
-			try
-			{ Process.Start($"https://steamcommunity.com/workshop/filedetails/?id={Item.PublishedFileID}"); }
-			catch { }
+			if (LocalPackage != null)
+			{
+				(FindForm() as BasePanelForm)?.PushPanel(null, new PC_PackagePage(LocalPackage));
+			}
+			else if (Item != null)
+			{
+				try
+				{ Process.Start($"https://steamcommunity.com/workshop/filedetails/?id={Item.PublishedFileID}"); }
+				catch { }
+			}
 		}
 
 		if (buttonRect.Contains(e.Location))
@@ -92,8 +120,10 @@ internal class SteamPackageViewControl : SlickImageControl
 	{
 		e.Graphics.SetUp(BackColor);
 
+		var iconRect = new Rectangle(Padding.Left, Padding.Top, Height - Padding.Vertical, Height - Padding.Vertical);
+
 		e.Graphics.FillRoundedRectangle(new SolidBrush(FormDesign.Design.BackColor), ClientRectangle.Pad(Padding), Padding.Left);
-		e.Graphics.DrawRoundedRectangle(new Pen(FormDesign.Design.AccentColor, (float)(1.5 * UI.FontScale)), ClientRectangle.Pad(Padding), Padding.Left);
+		e.Graphics.DrawRoundedRectangle(new Pen(iconRect.Contains(PointToClient(CursorLocation))? FormDesign.Design.ActiveColor: FormDesign.Design.AccentColor, (float)(1.5 * UI.FontScale)), ClientRectangle.Pad(Padding), Padding.Left);
 
 		if (HoverState.HasFlag(HoverState.Hovered))
 		{
@@ -101,54 +131,66 @@ internal class SteamPackageViewControl : SlickImageControl
 			e.Graphics.FillRoundedRectangle(brush, ClientRectangle.Pad(Padding), Padding.Left);
 		}
 
-		var iconRect = new Rectangle(Padding.Left, Padding.Top, Height - Padding.Vertical, Height - Padding.Vertical);
-
 		if (Loading)
 		{
 			DrawLoader(e.Graphics, iconRect.CenterR(UI.Scale(new Size(32, 32), UI.FontScale)));
 		}
 		else
 		{
-			e.Graphics.DrawRoundedImage(Image, iconRect, Padding.Left, FormDesign.Design.IconColor, topRight: false, botRight: false);
+			e.Graphics.DrawRoundedImage(Image ?? (_isMod ? Properties.Resources.I_ModIcon : Properties.Resources.I_AssetIcon).Color(FormDesign.Design.IconColor), iconRect, Padding.Left, Image is null ? null : FormDesign.Design.IconColor, topRight: false, botRight: false);
 		}
 
-		e.Graphics.DrawString(Item.Title.RemoveVersionText(), Font, new SolidBrush(ForeColor), ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, Padding.Top, 0, 0));
+		var text = (Item?.Title ?? Text).RemoveVersionText().IfEmpty(Text);
+		var textRect = ClientRectangle.Pad(Padding.Horizontal + iconRect.Width, Padding.Vertical, 0, 0);
+		e.Graphics.DrawString(text, Font, new SolidBrush(ForeColor), textRect);
 
 		var x = Padding.Left + iconRect.Width;
-		var y = (int)e.Graphics.Measure(Item.Title, Font).Height + Padding.Top;
+		var y = (int)e.Graphics.Measure(text, Font, textRect.Width).Height + Padding.Vertical;
 		var secondY = y;
 
-		if (Item.Tags is not null)
+		if (_isLocal)
 		{
-			foreach (var tag in Item.Tags)
-			{
-				var tagRect = DrawLabel(e, tag, null, FormDesign.Design.ButtonColor, ClientRectangle.Pad(x, y, 0, 0), ContentAlignment.TopLeft);
-				secondY = Math.Max(secondY, tagRect.Bottom);
-				x = tagRect.Right;
-			}
+			var localRect = DrawLabel(e, Locale.Local, Properties.Resources.I_Local_16, FormDesign.Design.ButtonColor.MergeColor(FormDesign.Design.ActiveColor, 50), ClientRectangle.Pad(x, y, 0, 0), ContentAlignment.TopLeft);
+
+			secondY = Math.Max(secondY, localRect.Bottom);
+			x = localRect.Right;
 		}
 
-		x = Padding.Left + iconRect.Width;
-
-		if (Item.Author is not null)
+		if (Item?.Author is not null)
 		{
-			var authorRect = DrawLabel(e, Item.Author.Name, Properties.Resources.I_Developer_16, FormDesign.Design.ButtonColor.MergeColor(FormDesign.Design.ActiveColor, 75), ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+			var authorRect = DrawLabel(e, Item.Author.Name, Properties.Resources.I_Developer_16, FormDesign.Design.ButtonColor.MergeColor(FormDesign.Design.ActiveColor, 75), ClientRectangle.Pad(x, y, 0, 0), ContentAlignment.TopLeft);
 
+			secondY = Math.Max(secondY, authorRect.Bottom);
 			x = authorRect.Right;
 		}
 
-		if (_compatibilityReport is not null)
+		if (CompatibilityReport is not null)
 		{
-			DrawLabel(e, LocaleHelper.GetGlobalText($"CR_{_compatibilityReport.Severity}"), Properties.Resources.I_CompatibilityReport_16, (_compatibilityReport.Severity switch
+			secondY = Math.Max(secondY, DrawLabel(e, LocaleHelper.GetGlobalText(CompatibilityReport.Severity == ReportSeverity.Unsubscribe ? Locale.ShouldNotBeSubscribed : $"CR_{CompatibilityReport.Severity}"), Properties.Resources.I_CompatibilityReport_16, (CompatibilityReport.Severity switch
 			{
 				ReportSeverity.MinorIssues => FormDesign.Design.YellowColor,
 				ReportSeverity.MajorIssues => FormDesign.Design.YellowColor.MergeColor(FormDesign.Design.RedColor),
 				ReportSeverity.Unsubscribe => FormDesign.Design.RedColor,
 				ReportSeverity.Remarks => FormDesign.Design.ButtonColor,
 				_ => FormDesign.Design.GreenColor
-			}).MergeColor(FormDesign.Design.BackColor, 60), ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+			}).MergeColor(FormDesign.Design.BackColor, 60), ClientRectangle.Pad(x, y, 0, 0), ContentAlignment.TopLeft).Bottom);
 		}
 
+		x = Padding.Left + iconRect.Width;
+
+		if (Item?.Tags is not null)
+		{
+			foreach (var tag in Item.Tags)
+			{
+				var tagRect = DrawLabel(e, tag, null, FormDesign.Design.ButtonColor, ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+				x = tagRect.Right;
+			}
+		}
+
+		if (_isLocal)
+		{
+			DrawLabel(e, _isMod ? "Mod" : "Asset", null, FormDesign.Design.ButtonColor, ClientRectangle.Pad(x, secondY, 0, 0), ContentAlignment.TopLeft);
+		}
 		//var buttonIcon = GetState() switch { State.Excluded => Locale.Include, State.Enabled  State.Unsubscribed => Locale.Subscribe}
 		var buttonSize = SlickButton.GetSize(e.Graphics, Properties.Resources.I_Add, "Subscribe", new Font(Font, FontStyle.Regular));
 		buttonRect = ClientRectangle.Pad(Padding).Pad(Padding).Align(buttonSize, ContentAlignment.BottomRight);

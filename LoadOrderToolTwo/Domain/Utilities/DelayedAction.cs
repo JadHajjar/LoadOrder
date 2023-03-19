@@ -52,23 +52,17 @@ public class DelayedAction
 
 	public void Run(Action action)
 	{
-		lock (this)
+		if (_timer != null)
 		{
-			if (_timer != null)
+			_timer.Change(_delayMilliseconds, Timeout.Infinite);
+		}
+		else
+		{
+			_timer = new Timer(_ =>
 			{
-				_timer.Change(_delayMilliseconds, Timeout.Infinite);
-			}
-			else
-			{
-				_timer = new Timer(_ =>
-				{
-					lock (this)
-					{
-						action();
-						_timer = null;
-					}
-				}, null, _delayMilliseconds, Timeout.Infinite);
-			}
+					action();
+					_timer = null;
+			}, null, _delayMilliseconds, Timeout.Infinite);
 		}
 	}
 }

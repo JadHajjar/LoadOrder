@@ -37,6 +37,8 @@ public partial class PC_MainPage : PanelContent
 	protected override void LocaleChanged()
 	{
 		Text = Locale.Dashboard;
+
+		SlickTip.SetTo(B_StartStop, "Use [Ctrl + S] anywhere in the app to launch/stop");
 	}
 
 	private void CitiesManager_MonitorTick(bool isAvailable, bool isRunning)

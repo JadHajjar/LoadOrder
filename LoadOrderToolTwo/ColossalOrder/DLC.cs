@@ -1,38 +1,8 @@
 using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace LoadOrderToolTwo.ColossalOrder;
-
-public static class Extensions
-{
-	public static DLCInfoAttribute GetDLCInfo(this DLC dlc)
-	{
-		var member = typeof(DLC).GetMember(dlc.ToString())[0];
-		return member.GetCustomAttribute<DLCInfoAttribute>();
-	}
-}
-
-[Flags]
-public enum DLCType
-{
-	//[Text("<DLC Type>")]
-	None = 0,
-	Main = 1,
-	//[Text("Content Creator")]
-	ContentCreator = 2,
-	Misc = 4,
-}
-
-public class DLCInfoAttribute : Attribute
-{
-	public string Text;
-	public DLCType Type;
-	public DLCInfoAttribute(string text, DLCType type)
-	{
-		Text = text;
-		Type = type;
-	}
-}
 
 public enum DLC
 {
@@ -136,4 +106,35 @@ public enum DLC
 
 	[DLCInfo("CCP: Map Pack 2", DLCType.ContentCreator)]
 	ModderPack15 = 2148903,
+}
+
+#if TOOL || TOOL2
+public static class Extensions
+{
+	public static DLCInfoAttribute GetDLCInfo(this DLC dlc)
+	{
+		var member = typeof(DLC).GetMember(dlc.ToString())[0];
+		return member.GetCustomAttribute<DLCInfoAttribute>();
+	}
+}
+#endif
+
+[Flags]
+public enum DLCType
+{
+	None = 0,
+	Main = 1,
+	ContentCreator = 2,
+	Misc = 4,
+}
+
+public class DLCInfoAttribute : Attribute
+{
+	public string Text;
+	public DLCType Type;
+	public DLCInfoAttribute(string text, DLCType type)
+	{
+		Text = text;
+		Type = type;
+	}
 }

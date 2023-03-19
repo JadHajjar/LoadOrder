@@ -533,6 +533,16 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_LSM {
+            get {
+                object obj = ResourceManager.GetObject("I_LSM", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_MajorIssues {
             get {
                 object obj = ResourceManager.GetObject("I_MajorIssues", resourceCulture);

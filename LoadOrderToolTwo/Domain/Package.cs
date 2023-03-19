@@ -70,12 +70,30 @@ public class Package : IPackage
 	public string[]? Tags { get; set; }
 	public string? SteamDescription { get; set; }
 	public bool IsRequired { get; set; }
-	public bool IsIncluded => (Mod?.IsIncluded ?? false) && (Assets?.All(x => x.IsIncluded) ?? false);
+	public bool IsIncluded { get => (Mod?.IsIncluded ?? true) && (Assets?.All(x => x.IsIncluded) ?? true); set => SetIncluded(value); }
+
 	Package IPackage.Package => this;
 
 	internal CompatibilityManager.ReportInfo? CompatibilityReport => CompatibilityManager.GetCompatibilityReport(this);
 	internal bool? ForAssetEditor => CompatibilityManager.IsForAssetEditor(this);
 	internal bool? ForNormalGame => CompatibilityManager.IsForNormalGame(this);
+	public long FileSize => Mod?.FileSize ?? Assets?.Sum(x => x.FileSize) ?? 0;
+
+	private void SetIncluded(bool value)
+	{
+		if (Mod is not null)
+		{
+			Mod.IsIncluded = value;
+		}
+
+		if (Assets is not null)
+		{
+			foreach (var asset in Assets)
+			{
+				asset.IsIncluded = value;
+			}
+		}
+	}
 
 	public override string ToString()
 	{

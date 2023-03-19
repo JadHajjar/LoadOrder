@@ -11,8 +11,7 @@ using IoPath = System.IO.Path;
 namespace LoadOrderToolTwo.Domain.Utilities;
 internal class PackageWatcher : FileSystemWatcher
 {
-	private readonly DelayedAction<string> _delayedPathAction = new(350);
-	private readonly DelayedAction<Package> _delayedPackageAction = new(350);
+	private readonly DelayedAction<string> _delayedUpdate = new(1500);
 
 	private PackageWatcher(string folder, bool builtIn, bool workshop)
 	{
@@ -45,7 +44,7 @@ internal class PackageWatcher : FileSystemWatcher
 
 		if (path != Path)
 		{
-			_delayedPathAction.Run(path, TriggerUpdate);
+			_delayedUpdate.Run(path, TriggerUpdate);
 		}
 	}
 

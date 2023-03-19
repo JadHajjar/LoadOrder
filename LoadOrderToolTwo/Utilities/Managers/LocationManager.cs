@@ -1,19 +1,22 @@
-﻿using LoadOrderToolTwo.Utilities.IO;
+﻿using LoadOrderToolTwo.Domain.Utilities;
 
 using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
 internal class LocationManager
 {
 	// Base Folders
-	public static string GamePath { get; set; } = ConfigurationManager.AppSettings[nameof(GamePath)].TrimEnd('/', '\\');
-	public static string AppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(AppDataPath)].TrimEnd('/', '\\');
-	public static string SteamPath { get; set; } = ConfigurationManager.AppSettings[nameof(SteamPath)].TrimEnd('/', '\\');
-	public static string VirtualGamePath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualGamePath)].TrimEnd('/', '\\');
-	public static string VirtualAppDataPath { get; set; } = ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)].TrimEnd('/', '\\');
+	public static string GamePath { get; set; }
+	public static string AppDataPath { get; set; }
+	public static string SteamPath { get; set; }
+	public static string VirtualGamePath { get; set; }
+	public static string VirtualAppDataPath { get; set; }
+	public static string CurrentDirectory { get; }
+	public static Platform Platform { get; }
 
 	public static string DataPath => Path.Combine(GamePath, "Cities_Data");
 	public static string ManagedDLL => Path.Combine(DataPath, "Managed");
@@ -59,7 +62,7 @@ internal class LocationManager
 	{
 		get
 		{
-			if (PlatformUtil.CurrentPlatform == PlatformUtil.Platform.MacOSX)
+			if (Platform == Platform.MacOSX)
 			{
 				return Path.Combine(Path.Combine(GamePath, "Resources"), "Files");
 			}
@@ -68,26 +71,87 @@ internal class LocationManager
 		}
 	}
 
-	public static string CitiesExe => PlatformUtil.CurrentPlatform switch
+	public static string CitiesExe => Platform switch
 	{
-		PlatformUtil.Platform.Windows => "Cities.exe",
-		PlatformUtil.Platform.MacOSX => "Cities",
-		PlatformUtil.Platform.WineOnLinux or PlatformUtil.Platform.Linux => "Cities.x64",
+		Platform.Windows => "Cities.exe",
+		Platform.MacOSX => "Cities",
+		Platform.Linux => "Cities.x64",
 		_ => "Cities",
 	};
 
-	public static string SteamExe => PlatformUtil.CurrentPlatform switch
+	public static string SteamExe => Platform switch
 	{
-		PlatformUtil.Platform.Windows => "Steam.exe",
-		PlatformUtil.Platform.MacOSX => "Steam",
-		PlatformUtil.Platform.WineOnLinux or PlatformUtil.Platform.Linux => "Steam",
+		Platform.Windows => "Steam.exe",
+		Platform.MacOSX => "Steam",
+		Platform.Linux => "Steam",
 		_ => "Steam",
 	};
 
-	public static string CurrentDirectory { get; } = Directory.GetParent(Application.ExecutablePath).FullName;
+	static LocationManager()
+	{
+		GamePath = ConfigurationManager.AppSettings[nameof(GamePath)].TrimEnd('/', '\\');
+		AppDataPath = ConfigurationManager.AppSettings[nameof(AppDataPath)].TrimEnd('/', '\\');
+		SteamPath = ConfigurationManager.AppSettings[nameof(SteamPath)].TrimEnd('/', '\\');
+		VirtualGamePath = ConfigurationManager.AppSettings[nameof(VirtualGamePath)].TrimEnd('/', '\\');
+		VirtualAppDataPath = ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)].TrimEnd('/', '\\');
+		CurrentDirectory = Directory.GetParent(Application.ExecutablePath).FullName;
+
+		Platform = Enum.TryParse(ConfigurationManager.AppSettings[nameof(Platform)], out Platform platform) ? platform : Platform.Windows;
+	}
 
 	internal static void RunFirstTimeSetup()
 	{
+		if (Platform == Platform.Windows)
+		{
+			return;
+		}
 
+		Log.Info("Checking Virtual Paths");
+
+		if (GamePath.StartsWith("/"))
+		{
+			Log.Info($"GamePath: {GamePath}");
+			foreach (var item in DriveInfo.GetDrives().Reverse())
+			{
+				var virtualPath = item.Name + GamePath.Substring(1);
+
+				if (Directory.Exists(virtualPath))
+				{
+					Log.Info($"GamePath Matched: {virtualPath}");
+					VirtualGamePath = GamePath;
+					GamePath = virtualPath;
+					break;
+				}
+				Log.Info($"GamePath Try Failed for: {virtualPath}");
+			}
+		}
+
+		if (AppDataPath.StartsWith("/"))
+		{
+			Log.Info($"AppDataPath: {AppDataPath}");
+
+			foreach (var item in DriveInfo.GetDrives().Reverse())
+			{
+				var virtualPath = item.Name + AppDataPath.Substring(1);
+
+				if (Directory.Exists(virtualPath))
+				{
+					Log.Info($"AppDataPath Matched: {virtualPath}");
+					VirtualAppDataPath = AppDataPath;
+					AppDataPath = virtualPath;
+					break;
+				}
+				Log.Info($"AppDataPath Try Failed for: {virtualPath}");
+			}
+		}
+	}
+
+	internal static void SetPaths(string gamePath, string appDataPath, string steamPath, string virtualGamePath, string virtualAppDataPath)
+	{
+		ConfigurationManager.AppSettings[nameof(GamePath)] = gamePath;
+		ConfigurationManager.AppSettings[nameof(AppDataPath)] = appDataPath;
+		ConfigurationManager.AppSettings[nameof(SteamPath)] = steamPath;
+		ConfigurationManager.AppSettings[nameof(VirtualGamePath)] = virtualGamePath;
+		ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)] = virtualAppDataPath;
 	}
 }

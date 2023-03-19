@@ -1,4 +1,9 @@
-﻿using LoadOrderToolTwo.Utilities.IO;
+﻿using Extensions;
+
+using LoadOrderShared;
+
+using LoadOrderToolTwo.Domain.Utilities;
+using LoadOrderToolTwo.Utilities.IO;
 
 using SlickControls;
 
@@ -8,6 +13,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace LoadOrderToolTwo.Utilities.Managers;
@@ -151,23 +158,68 @@ public static class CitiesManager
 			args.Add("-LHT");
 		}
 
-		if (CentralManager.CurrentProfile.LaunchSettings.LoadSave)
+		if (File.Exists(CentralManager.CurrentProfile.LaunchSettings.SaveToLoad))
 		{
-			var path = CentralManager.CurrentProfile.LaunchSettings.SaveToLoad;
-			if (string.IsNullOrEmpty(path))
-			{
-				args.Add("-continuelastsave");
-			}
-			else
-			{
-				args.Add("--loadSave=" + quote(path!));
-			}
+			args.Add("--loadSave=" + quote(CentralManager.CurrentProfile.LaunchSettings.SaveToLoad!));
 		}
 
 		//var extraArgs = textBoxExtraArgs.Text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		//args.AddRange(extraArgs);
 
 		return args.ToArray();
+	}
+
+	public static async Task<bool> Subscribe(IEnumerable<PublishedFileId> ids, bool unsub = false)
+	{
+		return await Subscribe(ids.Select(id => id.AsUInt64), unsub);
+	}
+
+	public static async Task<bool> Subscribe(IEnumerable<string> ids, bool unsub = false)
+	{
+		return await Subscribe(UGCListTransfer.ToNumber(ids), unsub);
+	}
+
+	public static async Task<bool> Subscribe(IEnumerable<ulong> ids, bool unsub = false)
+	{
+		if (!ids.Any())
+		{
+			return false;
+		}
+
+		UGCListTransfer.SendList(ids, false);
+
+		var command = unsub ?
+			$"-applaunch 255710 -unsubscribe" :
+			$"-applaunch 255710 -subscribe";
+
+		IOUtil.Execute(LocationManager.SteamPath, LocationManager.SteamExe, command);
+
+		Program.MainForm!.TryInvoke(() => Program.MainForm!.TopMost = true);
+
+		var stopwatch = Stopwatch.StartNew();
+
+		while (!IsRunning() && stopwatch.ElapsedMilliseconds < 60000)
+		{
+			await Task.Delay(100);
+		}
+
+		while (IsRunning() && stopwatch.ElapsedMilliseconds < 60000)
+		{
+			await Task.Delay(100);
+		}
+
+		await Task.Delay(1000);
+
+		if (unsub)
+		{
+			ContentUtil.DeleteAll(ids);
+		}
+		else
+		{
+			SteamUtil.ReDownload(ids.ToArray());
+		}
+
+		return true;
 	}
 
 	public static bool IsRunning()

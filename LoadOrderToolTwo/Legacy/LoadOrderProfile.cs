@@ -153,6 +153,7 @@ public class LoadOrderProfile
 			{
 				profile.Assets.Add(new Profile.Asset
 				{
+					SteamId = asset.IncludedPath?.StartsWith(WS_CONTENT_PATH) ?? false ? ulong.Parse(asset.IncludedPath?.Substring(WS_CONTENT_PATH.Length + 1) ?? "0") : 0,
 					Name = asset.DisplayText,
 					RelativePath = asset.IncludedPath
 				});
@@ -173,7 +174,9 @@ public class LoadOrderProfile
 			}
 		}
 
-		profile.LsmSkipFile = SkipFilePathFinal;
+		profile.LsmSettings.LoadEnabled = LoadEnabled;
+		profile.LsmSettings.LoadUsed = LoadUsed;
+		profile.LsmSettings.SkipFile = SkipFilePathFinal;
 
 		return profile;
 	}

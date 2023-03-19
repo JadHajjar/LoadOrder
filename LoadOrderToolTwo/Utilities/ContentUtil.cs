@@ -54,9 +54,10 @@ internal class ContentUtil
 		{
 			foreach (var filePAth in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
 			{
-				if (Path.GetFileName(path) != EXCLUDED_FILE_NAME)
+				if (Path.GetFileName(filePAth) != EXCLUDED_FILE_NAME)
 				{
 					var lastWriteTimeUtc = File.GetLastWriteTimeUtc(filePAth);
+
 					if (lastWriteTimeUtc > dateTime)
 					{
 						dateTime = lastWriteTimeUtc;
@@ -200,6 +201,18 @@ internal class ContentUtil
 
 	internal static void CreateShortcut()
 	{
-		ExtensionClass.CreateShortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOT 2.lnk"), System.Windows.Forms.Application.ExecutablePath);
+		try
+		{
+			ExtensionClass.CreateShortcut(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "LOT 2.lnk"), System.Windows.Forms.Application.ExecutablePath);
+		}
+		catch (Exception ex)
+		{
+			Log.Exception(ex, "Failed to create shortcut");
+		}
+	}
+
+	internal static void DeleteAll(IEnumerable<ulong> ids)
+	{
+		throw new NotImplementedException();
 	}
 }

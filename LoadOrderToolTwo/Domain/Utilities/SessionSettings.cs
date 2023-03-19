@@ -18,4 +18,6 @@ internal class SessionSettings : ISave
 	public bool WindowIsMaximized { get; set; }
 
 	public bool LinkModAssets { get; set; } = true;
+	public bool LargeItemOnHover { get; set; }
+	public bool ShowDatesRelatively { get; set; }
 }

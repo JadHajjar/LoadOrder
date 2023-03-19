@@ -13,7 +13,7 @@ namespace CompatibilityReport.CatalogData
         public ulong SteamID { get; set; }
         public string CustomUrl { get; set; } = "";
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         // Last seen is set to the most recent mod update and retirement is calculated from LastSeen. Both can be overruled through the FileImporter.
         public DateTime LastSeen { get; set; }
@@ -46,7 +46,7 @@ namespace CompatibilityReport.CatalogData
 
         /// <summary>Updates one or more author properties.</summary>
         /// <remarks>The Steam ID can only be added, not changed. Make sure to call Catalog.UpdateAuthorIndexes() after changing the Steam ID or custom URL.</remarks>
-        public void Update(ulong steamID = 0, string customUrl = null, string name = null, DateTime lastSeen = default, 
+        public void Update(ulong steamID = 0, string? customUrl = null, string? name = null, DateTime lastSeen = default, 
             bool? retired = null, bool? exclusionForRetired = null)
         {
             SteamID = SteamID == 0 ? steamID : SteamID;

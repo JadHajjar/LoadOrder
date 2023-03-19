@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace LoadOrderShared;
 public class ItemInfo
 {
-	public string Path; // included path
+	public string? Path; // included path
 }
 
 public class ModInfo : ItemInfo
@@ -23,9 +23,9 @@ public class LoadOrderConfig
 	public const int DefaultLoadOrder = 1000;
 	public const string FILE_NAME = "LoadOrderConfig.xml";
 
-	public string WorkShopContentPath;
-	public string GamePath;
-	public string SteamPath;
+	public string? WorkShopContentPath;
+	public string? GamePath;
+	public string? SteamPath;
 
 	public bool TurnOffSteamPanels = true;
 	public bool FastContentManager = true;
@@ -52,7 +52,7 @@ public class LoadOrderConfig
 		SharedUtil.Serialize(this, FilePath);
 	}
 
-	public static LoadOrderConfig Deserialize()
+	public static LoadOrderConfig? Deserialize()
 	{
 		try
 		{

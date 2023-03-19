@@ -42,6 +42,7 @@ public partial class PC_Profiles : PanelContent
 		Text = Locale.ProfileBubble;
 		L_TempProfile.Text = Locale.TemporaryProfileCanNotBeEdited;
 		TLP_LaunchSettings.Text = Locale.LaunchSettings;
+		TLP_LSM.Text = Locale.LoadingScreenMod;
 		TLP_GeneralSettings.Text = Locale.Settings;
 		L_ProfileUsage.Text = Locale.ProfileUsage;
 	}
@@ -50,7 +51,7 @@ public partial class PC_Profiles : PanelContent
 	{
 		base.OnCreateControl();
 
-		TB_SavePath.Image = Properties.Resources.I_FolderSearch;
+		TB_SavePath.Image = TB_SkipFile.Image = Properties.Resources.I_FolderSearch;
 	}
 
 	protected override void UIChanged()
@@ -62,7 +63,7 @@ public partial class PC_Profiles : PanelContent
 		L_TempProfile.Font = UI.Font(10.5F);
 		L_CurrentProfile.Font = UI.Font(12.75F, FontStyle.Bold);
 		B_ViewProfiles.Font = B_NewProfile.Font = B_Cancel.Font = UI.Font(9.75F);
-		TLP_GeneralSettings.Margin = TLP_LaunchSettings.Margin = UI.Scale(new Padding(10), UI.UIScale);
+		TLP_GeneralSettings.Margin = TLP_LaunchSettings.Margin = TLP_LSM.Margin = UI.Scale(new Padding(10), UI.UIScale);
 		T_ProfileUsage.Width = (int)(300 * UI.FontScale);
 	}
 
@@ -71,12 +72,17 @@ public partial class PC_Profiles : PanelContent
 		base.DesignChanged(design);
 
 		L_ProfileUsage.ForeColor = design.LabelColor;
-		TLP_LaunchSettings.BackColor = TLP_GeneralSettings.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
+		TLP_LaunchSettings.BackColor = TLP_GeneralSettings.BackColor = TLP_LSM.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
 		P_Profiles.BackColor = FormState.NormalFocused.Color();
 		P_Profiles2.BackColor = design.BackColor;
 		TLP_ProfileName.BackColor = design.ButtonColor;
 		L_TempProfile.ForeColor = design.YellowColor;
 		P_Options.BackColor = design.AccentBackColor;
+	}
+
+	public override bool CanExit(bool toBeDisposed)
+	{
+		return !TB_Name.Visible;
 	}
 
 	private void Ctrl_DisposeProfile(Profile obj)
@@ -86,22 +92,20 @@ public partial class PC_Profiles : PanelContent
 			Ctrl_LoadProfile(Profile.TemporaryProfile);
 		}
 
-		ProfileManager.DeleteProfile(obj);
+		ProfileManager.DeleteProfile(obj, Form);
 	}
 
 	private void Ctrl_ExcludeProfile(Profile obj)
 	{
 		I_ProfileIcon.Loading = true;
-		L_CurrentProfile.Text = obj.Name;
 		FLP_Options.Enabled = B_EditName.Visible = false;
-		ProfileManager.ExcludeProfile(obj, Form);
+		ProfileManager.ExcludeProfile(obj);
 		AnimationHandler.Animate(P_Profiles, Size.Empty, 2, AnimationOption.IgnoreHeight);
 	}
 
 	private void Ctrl_MergeProfile(Profile obj)
 	{
 		I_ProfileIcon.Loading = true;
-		L_CurrentProfile.Text = obj.Name;
 		FLP_Options.Enabled = B_EditName.Visible = false;
 		ProfileManager.MergeProfile(obj, Form);
 		AnimationHandler.Animate(P_Profiles, Size.Empty, 2, AnimationOption.IgnoreHeight);
@@ -133,8 +137,10 @@ public partial class PC_Profiles : PanelContent
 		CB_NoAssets.Checked = profile.LaunchSettings.NoAssets;
 		CB_NoMods.Checked = profile.LaunchSettings.NoMods;
 		CB_LHT.Checked = profile.LaunchSettings.LHT;
-		CB_LoadSave.Checked = profile.LaunchSettings.LoadSave;
 		TB_SavePath.Text = profile.LaunchSettings.SaveToLoad;
+		CB_LoadUsed.Checked = profile.LsmSettings.LoadUsed;
+		CB_LoadEnabled.Checked = profile.LsmSettings.LoadEnabled;
+		TB_SkipFile.Text = profile.LsmSettings.SkipFile;
 
 		if (profile.ForAssetEditor)
 		{
@@ -166,8 +172,10 @@ public partial class PC_Profiles : PanelContent
 		CentralManager.CurrentProfile.LaunchSettings.NoAssets = CB_NoAssets.Checked;
 		CentralManager.CurrentProfile.LaunchSettings.NoMods = CB_NoMods.Checked;
 		CentralManager.CurrentProfile.LaunchSettings.LHT = CB_LHT.Checked;
-		CentralManager.CurrentProfile.LaunchSettings.LoadSave = CB_LoadSave.Checked;
 		CentralManager.CurrentProfile.LaunchSettings.SaveToLoad = TB_SavePath.Text;
+		CentralManager.CurrentProfile.LsmSettings.SkipFile = TB_SkipFile.Text;
+		CentralManager.CurrentProfile.LsmSettings.LoadEnabled = CB_LoadEnabled.Checked;
+		CentralManager.CurrentProfile.LsmSettings.LoadUsed = CB_LoadUsed.Checked;
 
 		ProfileManager.Save(CentralManager.CurrentProfile);
 	}
@@ -321,6 +329,11 @@ public partial class PC_Profiles : PanelContent
 
 	private void T_ProfileUsage_SelectedValueChanged(object sender, EventArgs e)
 	{
+		if (loadingProfile)
+		{
+			return;
+		}
+
 		var invalidPackages = ProfileManager.GetInvalidPackages(T_ProfileUsage.SelectedValue == ThreeOptionToggle.Value.Option1, T_ProfileUsage.SelectedValue == ThreeOptionToggle.Value.Option2);
 
 		if (invalidPackages.Any())
@@ -336,5 +349,17 @@ public partial class PC_Profiles : PanelContent
 		ValueChanged(sender, e);
 
 		I_ProfileIcon.Image = CentralManager.CurrentProfile.GetIcon();
+	}
+
+	private void LsmSettingsChanged(object sender, EventArgs e)
+	{
+		if (loadingProfile)
+		{
+			return;
+		}
+
+		ValueChanged(sender, e);
+
+		ProfileManager.SaveLsmSettings(ProfileManager.CurrentProfile);
 	}
 }

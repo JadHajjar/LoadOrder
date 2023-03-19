@@ -9,6 +9,7 @@ using LoadOrderToolTwo.Utilities.Managers;
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -83,5 +84,24 @@ internal class AssetsUtil
 	internal static Asset GetAsset(string? v)
 	{
 		return CentralManager.Assets.FirstOrDefault(x => x.FileName.Equals(v, StringComparison.InvariantCultureIgnoreCase));
+	}
+
+	internal static Bitmap? GetIcon(Asset asset)
+	{
+		var fileName = Path.Combine(LocationManager.LotAppDataPath, "AssetPictures");
+
+		if (asset.SteamId > 0)
+		{
+			fileName=Path.Combine(fileName, asset.SteamId.ToString());
+		}
+
+		fileName = Path.Combine(fileName, Path.GetFileNameWithoutExtension(asset.FileName).Trim() + ".png");
+
+		if (File.Exists(fileName))
+		{
+			return (Bitmap)Image.FromFile(fileName);
+		}
+
+		return null;
 	}
 }

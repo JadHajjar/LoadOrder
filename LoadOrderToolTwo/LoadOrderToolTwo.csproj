@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build;Publish">
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build;Publish">
   <Import Project="../Version.props" />
   <PropertyGroup>
     <Company>T. D. W.</Company>
@@ -21,8 +21,10 @@
     <PathMap>$(MSBuildProjectDirectory)\=$(ProjectName)\</PathMap>
     <StartupObject>LoadOrderToolTwo.Program</StartupObject>
     <ApplicationIcon>Resources\LOT2.ico</ApplicationIcon>
-    <AssemblyVersion>2.0.0.*</AssemblyVersion>
     <FileVersion>2.0</FileVersion>
+    <SignAssembly>True</SignAssembly>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Title>Load Order Mod</Title>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Properties\Locale.csv" />
@@ -33,7 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="Mono.Cecil" Version="0.11.3" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,6 +72,9 @@
     <Compile Update="UserInterface\NewProfileOptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserInterface\SortingDropDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserInterface\StatusBubbles\CompatibilityReportBubble.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,6 +94,7 @@
 		<Compile Include="..\LoadOrder\Shared\LoadOrderConfig.cs" Link="Shared\LoadOrderConfig.cs" />
 		<Compile Include="..\LoadOrder\Shared\CSCache.cs" Link="Shared\CSCache.cs" />
 		<Compile Include="..\LoadOrder\Shared\SharedUtil.cs" Link="Shared\SharedUtil.cs" />
+		<Compile Include="..\LoadOrder\Shared\UGCListTransfer.cs" Link="Shared\UGCListTransfer.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -106,16 +112,18 @@
     </GetAssemblyIdentity>
     <Message Importance="high" Text="$(SolutionName)" />
     <PropertyGroup>
-      <DeployDir>$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\$(SolutionName)\Tool\</DeployDir>
-      <Now>$([System.DateTime]::Now.ToString("HH:mm:ss"))</Now>
+      <DeployDir>$(LOCALAPPDATA)\Colossal Order\Cities_Skylines\Addons\Mods\LoadOrder\Tool\</DeployDir>
     </PropertyGroup>
-    <ItemGroup>
-      <VersionNumber Include="@(Targets->'%(Version)')" />
-      <SideFiles Include="Resources\*._dll;" />
-    </ItemGroup>
-    <Copy SourceFiles="@(SideFiles)" DestinationFolder="$(DeployDir)" />
-    <Copy SourceFiles="@(SideFiles)" DestinationFolder="$(TargetDir)" />
-    <Message Importance="high" Text="AssemblyVersion=@(VersionNumber) time=$(Now)" />
+	  <RemoveDir Directories="$(DeployDir)" />
+	  <Copy SourceFiles="$(OutDir)\LoadOrderToolTwo.exe" DestinationFiles="$(DeployDir)\LoadOrderToolTwo_exe" />
+	  <Copy SourceFiles="$(OutDir)\LoadOrderToolTwo.exe.config" DestinationFiles="$(DeployDir)\LoadOrderToolTwo_exe_config" />
+	  <Copy SourceFiles="$(OutDir)\Extensions.dll" DestinationFiles="$(DeployDir)\Extensions_dll" />
+	  <Copy SourceFiles="$(OutDir)\SlickControls.dll" DestinationFiles="$(DeployDir)\SlickControls_dll" />
+	  <Copy SourceFiles="$(OutDir)\Newtonsoft.Json.dll" DestinationFiles="$(DeployDir)\Newtonsoft_Json_dll" />
+	  <Copy SourceFiles="$(OutDir)\Mono.Cecil.dll" DestinationFiles="$(DeployDir)\Mono_Cecil_dll" />
+	  <Copy SourceFiles="$(OutDir)\Mono.Cecil.Mdb.dll" DestinationFiles="$(DeployDir)\Mono_Cecil_Mdb_dll" />
+	  <Copy SourceFiles="$(OutDir)\Mono.Cecil.Pdb.dll" DestinationFiles="$(DeployDir)\Mono_Cecil_Pdb_dll" />
+	  <Copy SourceFiles="$(OutDir)\Mono.Cecil.Rocks.dll" DestinationFiles="$(DeployDir)\Mono_Cecil_Rocks_dll" />
   </Target>
 
 </Project>

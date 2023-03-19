@@ -33,13 +33,13 @@ public partial class PC_ImportCollection : PanelContent
 
 		foreach (var item in contents.Values)
 		{
-			if (Controls.Count % 2 == 0)
+			if (TLP_Contents.Controls.Count % 2 == 0)
 			{
 				TLP_Contents.RowCount++;
 				TLP_Contents.RowStyles.Add(new());
 			}
 
-			TLP_Contents.Controls.Add(new SteamPackageViewControl(item), Controls.Count % 2, TLP_Contents.RowCount - 1);
+			TLP_Contents.Controls.Add(new PackageViewControl(item), TLP_Contents.Controls.Count % 2, TLP_Contents.RowCount - 1);
 		}
 	}
 

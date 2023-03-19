@@ -36,12 +36,12 @@ partial class PC_Mods
 			this.TLP_Main = new System.Windows.Forms.TableLayoutPanel();
 			this.P_Actions = new SlickControls.RoundedGroupPanel();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-			this.B_ReDownload = new SlickControls.SlickButton();
 			this.P_Filters = new SlickControls.RoundedGroupPanel();
 			this.I_ClearFilters = new SlickControls.SlickIcon();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.TB_Search = new SlickControls.SlickTextBox();
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
+			this.L_Counts = new System.Windows.Forms.Label();
 			this.B_ExInclude = new LoadOrderToolTwo.UserInterface.DoubleButton();
 			this.B_DisEnable = new LoadOrderToolTwo.UserInterface.DoubleButton();
 			this.OT_Included = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
@@ -49,6 +49,7 @@ partial class PC_Mods
 			this.DD_PackageStatus = new LoadOrderToolTwo.UserInterface.PackageStatusDropDown();
 			this.DD_ReportSeverity = new LoadOrderToolTwo.UserInterface.ReportSeverityDropDown();
 			this.OT_Enabled = new LoadOrderToolTwo.UserInterface.ThreeOptionToggle();
+			this.DD_Sorting = new LoadOrderToolTwo.UserInterface.SortingDropDown();
 			this.TLP_Main.SuspendLayout();
 			this.P_Actions.SuspendLayout();
 			this.tableLayoutPanel2.SuspendLayout();
@@ -90,7 +91,7 @@ partial class PC_Mods
 			this.P_Actions.Location = new System.Drawing.Point(3, 179);
 			this.P_Actions.Name = "P_Actions";
 			this.P_Actions.Padding = new System.Windows.Forms.Padding(7);
-			this.P_Actions.Size = new System.Drawing.Size(889, 60);
+			this.P_Actions.Size = new System.Drawing.Size(889, 88);
 			this.P_Actions.TabIndex = 4;
 			// 
 			// tableLayoutPanel2
@@ -103,29 +104,14 @@ partial class PC_Mods
 			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 			this.tableLayoutPanel2.Controls.Add(this.B_ExInclude, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.B_DisEnable, 1, 0);
-			this.tableLayoutPanel2.Controls.Add(this.B_ReDownload, 2, 0);
+			this.tableLayoutPanel2.Controls.Add(this.DD_Sorting, 2, 0);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Top;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(7, 7);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 1;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel2.Size = new System.Drawing.Size(875, 46);
+			this.tableLayoutPanel2.Size = new System.Drawing.Size(875, 74);
 			this.tableLayoutPanel2.TabIndex = 0;
-			// 
-			// B_ReDownload
-			// 
-			this.B_ReDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.B_ReDownload.ColorShade = null;
-			this.B_ReDownload.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_ReDownload.Location = new System.Drawing.Point(585, 3);
-			this.B_ReDownload.Name = "B_ReDownload";
-			this.B_ReDownload.Size = new System.Drawing.Size(287, 40);
-			this.B_ReDownload.SpaceTriggersClick = true;
-			this.B_ReDownload.TabIndex = 1;
-			this.B_ReDownload.Text = "RedownloadMods";
-			this.B_ReDownload.Click += new System.EventHandler(this.B_ReDownload_Click);
 			// 
 			// P_Filters
 			// 
@@ -134,6 +120,7 @@ partial class PC_Mods
 			this.P_Filters.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.P_Filters.Controls.Add(this.I_ClearFilters);
 			this.P_Filters.Controls.Add(this.tableLayoutPanel1);
+			this.P_Filters.Controls.Add(this.L_Counts);
 			this.P_Filters.Dock = System.Windows.Forms.DockStyle.Top;
 			this.P_Filters.Image = ((System.Drawing.Image)(resources.GetObject("P_Filters.Image")));
 			this.P_Filters.Location = new System.Drawing.Point(3, 3);
@@ -202,13 +189,23 @@ partial class PC_Mods
 			// slickSpacer1
 			// 
 			this.slickSpacer1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.slickSpacer1.Location = new System.Drawing.Point(0, 242);
+			this.slickSpacer1.Location = new System.Drawing.Point(0, 270);
 			this.slickSpacer1.Margin = new System.Windows.Forms.Padding(0);
 			this.slickSpacer1.Name = "slickSpacer1";
 			this.slickSpacer1.Size = new System.Drawing.Size(895, 2);
 			this.slickSpacer1.TabIndex = 5;
 			this.slickSpacer1.TabStop = false;
 			this.slickSpacer1.Text = "slickSpacer1";
+			// 
+			// L_Counts
+			// 
+			this.L_Counts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.L_Counts.AutoSize = true;
+			this.L_Counts.Location = new System.Drawing.Point(744, 17);
+			this.L_Counts.Name = "L_Counts";
+			this.L_Counts.Size = new System.Drawing.Size(55, 23);
+			this.L_Counts.TabIndex = 1;
+			this.L_Counts.Text = "label1";
 			// 
 			// B_ExInclude
 			// 
@@ -286,7 +283,6 @@ partial class PC_Mods
 			this.DD_PackageStatus.Padding = new System.Windows.Forms.Padding(7);
 			this.DD_PackageStatus.Size = new System.Drawing.Size(277, 60);
 			this.DD_PackageStatus.TabIndex = 6;
-			this.DD_PackageStatus.Text = "packageStatusDropDown1";
 			this.DD_PackageStatus.SelectedItemChanged += new System.EventHandler(this.FilterChanged);
 			// 
 			// DD_ReportSeverity
@@ -301,7 +297,6 @@ partial class PC_Mods
 			this.DD_ReportSeverity.Padding = new System.Windows.Forms.Padding(7);
 			this.DD_ReportSeverity.Size = new System.Drawing.Size(279, 60);
 			this.DD_ReportSeverity.TabIndex = 4;
-			this.DD_ReportSeverity.Text = "reportSeverityDropDown1";
 			this.DD_ReportSeverity.SelectedItemChanged += new System.EventHandler(this.FilterChanged);
 			// 
 			// OT_Enabled
@@ -319,12 +314,26 @@ partial class PC_Mods
 			this.OT_Enabled.TabIndex = 1;
 			this.OT_Enabled.SelectedValueChanged += new System.EventHandler(this.FilterChanged);
 			// 
+			// DD_Sorting
+			// 
+			this.DD_Sorting.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.DD_Sorting.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_Sorting.Font = new System.Drawing.Font("Nirmala UI", 15F);
+			this.DD_Sorting.Location = new System.Drawing.Point(589, 7);
+			this.DD_Sorting.Margin = new System.Windows.Forms.Padding(7);
+			this.DD_Sorting.Name = "DD_Sorting";
+			this.DD_Sorting.Padding = new System.Windows.Forms.Padding(7);
+			this.DD_Sorting.Size = new System.Drawing.Size(279, 60);
+			this.DD_Sorting.TabIndex = 4;
+			this.DD_Sorting.SelectedItemChanged += new System.EventHandler(this.DD_Sorting_SelectedItemChanged);
+			// 
 			// PC_Mods
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.TLP_Main);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
-			this.LabelBounds = new System.Drawing.Point(-2, 3);
+			
 			this.Name = "PC_Mods";
 			this.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
 			this.Size = new System.Drawing.Size(895, 516);
@@ -361,5 +370,6 @@ partial class PC_Mods
 	private SlickControls.SlickSpacer slickSpacer1;
 	private DoubleButton B_ExInclude;
 	private DoubleButton B_DisEnable;
-	private SlickControls.SlickButton B_ReDownload;
+	private System.Windows.Forms.Label L_Counts;
+	private SortingDropDown DD_Sorting;
 }

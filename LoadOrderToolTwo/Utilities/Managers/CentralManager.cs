@@ -1,13 +1,10 @@
 ﻿using Extensions;
 
-using LoadOrderShared;
-
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Utilities;
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -76,9 +73,15 @@ internal static class CentralManager
 	{
 		if (!SessionSettings.FirstTimeSetupCompleted)
 		{
-			ContentUtil.CreateShortcut();
-
 			LocationManager.RunFirstTimeSetup();
+
+			if (LocationManager.Platform is Platform.Windows)
+			{
+				ContentUtil.CreateShortcut();
+			}
+
+			SessionSettings.FirstTimeSetupCompleted = true;
+			SessionSettings.Save();
 		}
 
 		var content = ContentUtil.LoadContents();
@@ -118,7 +121,7 @@ internal static class CentralManager
 
 		ConnectionHandler.WhenConnected(async () =>
 		{
-			var result = await SteamUtil.LoadDataAsync(Packages.Where(x => x.Workshop).Select(x => x.SteamId).ToArray());
+			var result = await SteamUtil.GetWorkshopInfoAsync(Packages.Where(x => x.Workshop).Select(x => x.SteamId).ToArray());
 
 			foreach (var package in Packages)
 			{
@@ -135,13 +138,17 @@ internal static class CentralManager
 				if (!string.IsNullOrWhiteSpace(package.IconUrl))
 				{
 					if (ImageManager.Ensure(package.IconUrl))
+					{
 						InformationUpdate(package);
+					}
 				}
 
 				if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
 				{
 					if (ImageManager.Ensure(package.Author?.AvatarUrl))
+					{
 						InformationUpdate(package);
+					}
 				}
 			});
 
@@ -152,7 +159,7 @@ internal static class CentralManager
 	private static void AnalyzePackages(List<Package> content)
 	{
 		Package? compatibilityReport = null, harmony = null, harmonyAlpha = null, lom = null, lomAlpha = null, plm = null;
-		
+
 		foreach (var package in content)
 		{
 			switch (package.SteamId)
@@ -259,7 +266,7 @@ internal static class CentralManager
 		{
 			CompatibilityManager.LoadCompatibilityReport(package);
 		}
-		
+
 		var cachedSteamInfo = SteamUtil.GetCachedInfo();
 
 		if (cachedSteamInfo != null && cachedSteamInfo.ContainsKey(package.SteamId))
@@ -272,7 +279,9 @@ internal static class CentralManager
 			packages = new List<Package>() { package };
 		}
 		else
+		{
 			packages.Add(package);
+		}
 
 		RefreshSteamInfo(package);
 		ContentLoaded?.Invoke();
@@ -287,7 +296,7 @@ internal static class CentralManager
 
 		ConnectionHandler.WhenConnected(async () =>
 		{
-			var result = await SteamUtil.LoadDataAsync(new ulong[] { package.SteamId });
+			var result = await SteamUtil.GetWorkshopInfoAsync(new ulong[] { package.SteamId });
 
 			if (result.ContainsKey(package.SteamId))
 			{
@@ -299,13 +308,17 @@ internal static class CentralManager
 			if (!string.IsNullOrWhiteSpace(package.IconUrl))
 			{
 				if (ImageManager.Ensure(package.IconUrl))
+				{
 					InformationUpdate(package);
+				}
 			}
 
 			if (!string.IsNullOrWhiteSpace(package.Author?.AvatarUrl))
 			{
 				if (ImageManager.Ensure(package.Author?.AvatarUrl))
+				{
 					InformationUpdate(package);
+				}
 			}
 
 			WorkshopInfoUpdated?.Invoke();

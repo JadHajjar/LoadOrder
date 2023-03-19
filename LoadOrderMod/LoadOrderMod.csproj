@@ -36,6 +36,7 @@
     <Reference Include="Assembly-CSharp" />
     <Reference Include="ColossalManaged" />
     <Reference Include="ICities" />
+    <Reference Include="System.Configuration" />
     <Reference Include="UnityEngine" />
     <Reference Include="UnityEngine.UI" />
   </ItemGroup>
@@ -49,6 +50,7 @@
     <Compile Include="..\LoadOrder\Shared\LoadOrderConfig.cs" Link="Shared\LoadOrderConfig.cs" />
     <Compile Include="..\LoadOrder\Shared\CSCache.cs" Link="Shared\CSCache.cs" />
     <Compile Include="..\LoadOrder\Shared\SharedUtil.cs" Link="Shared\SharedUtil.cs" />
+    <Compile Include="..\LoadOrderToolTwo\ColossalOrder\DLC.cs" Link="Shared\DLC.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="KianCommons\KianCommons\Backport\**" />

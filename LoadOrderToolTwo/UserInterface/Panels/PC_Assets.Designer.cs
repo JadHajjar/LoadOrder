@@ -184,7 +184,7 @@ partial class PC_Assets
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.TLP_Main);
-			this.LabelBounds = new System.Drawing.Point(-2, 3);
+			
 			this.Name = "PC_Assets";
 			this.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
 			this.Controls.SetChildIndex(this.base_Text, 0);

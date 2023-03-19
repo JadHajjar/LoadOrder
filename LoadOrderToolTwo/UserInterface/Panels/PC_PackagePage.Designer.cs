@@ -249,7 +249,7 @@ partial class PC_PackagePage
 			this.Controls.Add(this.P_Content);
 			this.Controls.Add(this.TLP_Top);
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
-			this.LabelBounds = new System.Drawing.Point(-2, 3);
+			
 			this.Name = "PC_PackagePage";
 			this.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
 			this.Text = "Back";

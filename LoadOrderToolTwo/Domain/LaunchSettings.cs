@@ -15,6 +15,5 @@ public class LaunchSettings
 	public bool NoAssets { get; set; }
 	public bool NoMods { get; set; }
 	public bool LHT { get; set; }
-	public bool LoadSave { get; set; }
 	public string? SaveToLoad { get; set; }
 }

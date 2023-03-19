@@ -18,8 +18,9 @@ namespace LoadOrderMod.Data {
     using static ColossalFramework.Plugins.PluginManager;
     using static KianCommons.ReflectionHelpers;
     using System.Threading;
+	using LoadOrderToolTwo.ColossalOrder;
 
-    public class CacheUtil {
+	public class CacheUtil {
         public CSCache Cache;
         public Package.Asset[] CachedAssets;
         public PluginInfo[] CachedPlugins;
@@ -104,7 +105,6 @@ namespace LoadOrderMod.Data {
 
                     cache.Name = asset.name;
 
-
                     List<string> tags = new List<string>(asset.type.Tags());
                     tags.AddRange(asset.package.Tags());
 
@@ -172,16 +172,31 @@ namespace LoadOrderMod.Data {
 
             try {
                 Caching = true;
-                AquirePathDetails();
-                Save();
+                //AquirePathDetails();
+                //Save();
                 AquireModsDetails();
                 Save();
                 AquireMissingItems();
                 Save();
                 AquireAssetsDetails();
                 Save();
+                AquireDlcs();
+                Save();
             } catch (Exception ex) { Log.Exception(ex); }
             finally { Caching = false; }
         }
-    }
+
+		private void AquireDlcs()
+		{
+            var dic = new List<uint>();
+
+            foreach (DLC dlc in Enum.GetValues(typeof(DLC)))
+            {
+                if( PlatformService.IsDlcInstalled((uint)dlc))
+                    dic.Add((uint)dlc);
+			}
+
+            Cache.Dlcs = dic.ToArray();
+		}
+	}
 }

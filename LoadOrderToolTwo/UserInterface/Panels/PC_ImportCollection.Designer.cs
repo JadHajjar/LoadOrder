@@ -31,6 +31,7 @@ partial class PC_ImportCollection
 			this.TLP_Top = new System.Windows.Forms.TableLayoutPanel();
 			this.slickSpacer1 = new SlickControls.SlickSpacer();
 			this.panel2 = new System.Windows.Forms.TableLayoutPanel();
+			this.B_ExInclude = new LoadOrderToolTwo.UserInterface.DoubleButton();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.PB_Icon = new LoadOrderToolTwo.UserInterface.PackageIcon();
 			this.L_Title = new System.Windows.Forms.Label();
@@ -39,7 +40,6 @@ partial class PC_ImportCollection
 			this.panel = new System.Windows.Forms.Panel();
 			this.slickScroll1 = new SlickControls.SlickScroll();
 			this.TLP_Contents = new System.Windows.Forms.TableLayoutPanel();
-			this.B_ExInclude = new LoadOrderToolTwo.UserInterface.DoubleButton();
 			this.TLP_Top.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.panel.SuspendLayout();
@@ -100,6 +100,20 @@ partial class PC_ImportCollection
 			this.panel2.Size = new System.Drawing.Size(651, 40);
 			this.panel2.TabIndex = 6;
 			// 
+			// B_ExInclude
+			// 
+			this.B_ExInclude.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.B_ExInclude.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.B_ExInclude.Image1 = "I_X";
+			this.B_ExInclude.Image2 = "I_Check";
+			this.B_ExInclude.Location = new System.Drawing.Point(362, 3);
+			this.B_ExInclude.Name = "B_ExInclude";
+			this.B_ExInclude.Option1 = "ExcludeAll";
+			this.B_ExInclude.Option2 = "IncludeAll";
+			this.B_ExInclude.Size = new System.Drawing.Size(286, 40);
+			this.B_ExInclude.TabIndex = 1;
+			// 
 			// panel1
 			// 
 			this.TLP_Top.SetColumnSpan(this.panel1, 4);
@@ -125,9 +139,9 @@ partial class PC_ImportCollection
 			// 
 			this.L_Title.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.L_Title.AutoSize = true;
-			this.L_Title.Location = new System.Drawing.Point(135, 21);
+			this.L_Title.Location = new System.Drawing.Point(135, 17);
 			this.L_Title.Name = "L_Title";
-			this.L_Title.Size = new System.Drawing.Size(45, 19);
+			this.L_Title.Size = new System.Drawing.Size(55, 23);
 			this.L_Title.TabIndex = 1;
 			this.L_Title.Text = "label1";
 			// 
@@ -168,9 +182,9 @@ partial class PC_ImportCollection
 			// 
 			this.slickScroll1.Dock = System.Windows.Forms.DockStyle.Right;
 			this.slickScroll1.LinkedControl = this.TLP_Contents;
-			this.slickScroll1.Location = new System.Drawing.Point(777, 0);
+			this.slickScroll1.Location = new System.Drawing.Point(776, 0);
 			this.slickScroll1.Name = "slickScroll1";
-			this.slickScroll1.Size = new System.Drawing.Size(6, 308);
+			this.slickScroll1.Size = new System.Drawing.Size(7, 308);
 			this.slickScroll1.Style = SlickControls.StyleType.Vertical;
 			this.slickScroll1.TabIndex = 0;
 			this.slickScroll1.TabStop = false;
@@ -191,26 +205,12 @@ partial class PC_ImportCollection
 			this.TLP_Contents.Size = new System.Drawing.Size(0, 0);
 			this.TLP_Contents.TabIndex = 1;
 			// 
-			// B_ExInclude
-			// 
-			this.B_ExInclude.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.B_ExInclude.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.B_ExInclude.Image1 = "I_X";
-			this.B_ExInclude.Image2 = "I_Check";
-			this.B_ExInclude.Location = new System.Drawing.Point(362, 3);
-			this.B_ExInclude.Name = "B_ExInclude";
-			this.B_ExInclude.Option1 = "ExcludeAll";
-			this.B_ExInclude.Option2 = "IncludeAll";
-			this.B_ExInclude.Size = new System.Drawing.Size(286, 35);
-			this.B_ExInclude.TabIndex = 1;
-			// 
 			// PC_ImportCollection
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.Controls.Add(this.panel);
 			this.Controls.Add(this.TLP_Top);
-			this.LabelBounds = new System.Drawing.Point(-2, 3);
+			
 			this.Name = "PC_ImportCollection";
 			this.Padding = new System.Windows.Forms.Padding(0, 30, 0, 0);
 			this.Controls.SetChildIndex(this.base_Text, 0);

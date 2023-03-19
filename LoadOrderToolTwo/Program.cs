@@ -5,14 +5,18 @@ using LoadOrderToolTwo.Utilities;
 using SlickControls;
 
 using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 using static System.Environment;
 
 namespace LoadOrderToolTwo;
+#nullable disable
 internal static class Program
 {
 	internal static bool IsRunning { get; private set; }
+	internal static MainForm MainForm { get; private set; }
 
 	/// <summary>
 	///  The main entry point for the application.
@@ -22,6 +26,13 @@ internal static class Program
 	{
 		try
 		{
+			if (args.Contains("-stub"))
+			{
+				Process.Start(Application.ExecutablePath);
+
+				return;
+			}
+
 			IsRunning = true;
 
 			SlickCursors.Initialize();
@@ -41,7 +52,7 @@ internal static class Program
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainForm());
+			Application.Run(MainForm = new MainForm());
 		}
 		catch (Exception ex)
 		{
@@ -53,3 +64,4 @@ internal static class Program
 	[System.Runtime.InteropServices.DllImport("user32.dll")]
 	private static extern bool SetProcessDPIAware();
 }
+#nullable enable

@@ -1,4 +1,6 @@
-﻿using LoadOrderToolTwo.Utilities;
+﻿using LoadOrderToolTwo.Domain;
+using LoadOrderToolTwo.Utilities;
+using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 
@@ -24,6 +26,8 @@ public partial class PC_ModUtilities : PanelContent
 	{
 		base.UIChanged();
 
+		B_ReDownload.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ReDownload));
+		B_ReDownload.Margin = UI.Scale(new Padding(5), UI.FontScale);
 		P_Filters.Margin = roundedGroupPanel1.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
 		TB_CollectionLink.Margin = B_LoadCollection.Margin = UI.Scale(new Padding(5), UI.FontScale);
 	}
@@ -35,7 +39,7 @@ public partial class PC_ModUtilities : PanelContent
 			B_LoadCollection.Loading = true;
 
 			var collectionId = Regex.Match(TB_CollectionLink.Text, TB_CollectionLink.ValidationRegex).Groups[1].Value;
-			var contents = await SteamUtil.LoadCollectionContentsAsync(collectionId);
+			var contents = await SteamUtil.GetCollectionContentsAsync(collectionId);
 
 			if (contents?.Any() ?? false)
 			{
@@ -47,5 +51,10 @@ public partial class PC_ModUtilities : PanelContent
 
 			B_LoadCollection.Loading = false;
 		}
+	}
+
+	private void B_ReDownload_Click(object sender, EventArgs e)
+	{
+		SteamUtil.ReDownload(CentralManager.Mods.Where(x => x.Status is DownloadStatus.OutOfDate or DownloadStatus.PartiallyDownloaded).Select(x => x.SteamId).ToArray());
 	}
 }

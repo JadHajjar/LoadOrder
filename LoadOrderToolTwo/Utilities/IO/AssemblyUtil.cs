@@ -118,7 +118,6 @@ public static class AssemblyUtil
 			}
 			catch (AssemblyResolutionException)
 			{
-				Log.Info($"[harmless] GetAllInterfaces({type}) could not resolve {type?.BaseType}.", false);
 				type = null;
 			}
 			catch (Exception ex)
@@ -145,7 +144,7 @@ public static class AssemblyUtil
 		}
 	}
 
-	internal static Assembly ResolveInterface(object sender, ResolveEventArgs args)
+	internal static Assembly? ResolveInterface(object sender, ResolveEventArgs args)
 	{
 		var name = new AssemblyName(args.Name).Name + ".dll";
 		var managedPath = Path.Combine(LocationManager.ManagedDLL, name);
@@ -158,7 +157,7 @@ public static class AssemblyUtil
 		return null;
 	}
 
-	internal static Assembly ReflectionResolveInterface(object sender, ResolveEventArgs args)
+	internal static Assembly? ReflectionResolveInterface(object sender, ResolveEventArgs args)
 	{
 		var name = new AssemblyName(args.Name).Name + ".dll";
 		var path = Path.Combine(Directory.GetParent(args.RequestingAssembly.Location).FullName, name);
@@ -187,7 +186,7 @@ public static class AssemblyUtil
 		"MoneyPanel"
 	};
 
-	internal static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+	internal static Assembly? CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
 	{
 		Log.Called();
 		var name0 = args.Name;
@@ -197,7 +196,7 @@ public static class AssemblyUtil
 		}
 
 		var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-		Assembly ret = null;
+		Assembly? ret = null;
 		foreach (var asm in assemblies)
 		{
 			var name = asm.GetName().Name;
