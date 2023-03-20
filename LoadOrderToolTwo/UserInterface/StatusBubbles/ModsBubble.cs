@@ -63,7 +63,11 @@ internal class ModsBubble : StatusBubbleBase
 		var modsIncomplete = CentralManager.Mods.Count(x => x.IsIncluded && x.Status == Domain.DownloadStatus.PartiallyDownloaded);
 		var multipleModsIncluded = ModsUtil.GetDuplicateMods().Any();
 
-		if (modsIncluded == modsEnabled)
+		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
+		{
+			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural);
+		}
+		else if (modsIncluded == modsEnabled)
 		{
 			DrawValue(e, ref targetHeight, modsIncluded.ToString(), modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural);
 		}

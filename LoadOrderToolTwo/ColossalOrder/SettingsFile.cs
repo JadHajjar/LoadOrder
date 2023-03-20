@@ -9,6 +9,8 @@ namespace LoadOrderToolTwo.ColossalOrder;
 
 public class SettingsFile
 {
+	public static readonly string extension = ".cgs";
+
 	private readonly char[] settingsIdentifier = new char[]
 	{
 					'C',
@@ -47,7 +49,7 @@ public class SettingsFile
 	public string fileName
 	{
 		get => Path.GetFileNameWithoutExtension(m_PathName);
-		set => m_PathName = Path.Combine(LocationManager.AppDataPath, Path.ChangeExtension(value, GameSettings.extension));
+		set => m_PathName = Path.Combine(LocationManager.AppDataPath, Path.ChangeExtension(value, extension));
 	}
 
 	public string systemFileName
@@ -55,7 +57,7 @@ public class SettingsFile
 		get => Path.GetFileNameWithoutExtension(m_PathName);
 		set
 		{
-			m_PathName = Path.Combine(LocationManager.GamePath, Path.ChangeExtension(value, GameSettings.extension));
+			m_PathName = Path.Combine(LocationManager.GamePath, Path.ChangeExtension(value, extension));
 			isSystem = true;
 		}
 	}
@@ -63,7 +65,7 @@ public class SettingsFile
 	public string? pathName
 	{
 		get => m_PathName;
-		set => m_PathName = Path.ChangeExtension(value, GameSettings.extension);
+		set => m_PathName = Path.ChangeExtension(value, extension);
 	}
 
 	//public string cloudName

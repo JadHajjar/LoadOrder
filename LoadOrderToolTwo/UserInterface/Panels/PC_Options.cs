@@ -44,7 +44,7 @@ public partial class PC_Options : PanelContent
 		folderPathsChanged = false;
 
 		DD_Language.Items = LocaleHelper.GetAvailableLanguages().Select(lang => new CultureInfo(lang)).ToArray();
-		DD_Language.SelectedItem = Thread.CurrentThread.CurrentUICulture;
+		DD_Language.SelectedItem = DD_Language.Items.FirstOrDefault(x => x.IetfLanguageTag == Thread.CurrentThread.CurrentUICulture.IetfLanguageTag);
 		DD_Language.SelectedItemChanged += DD_Language_SelectedItemChanged;
 	}
 
@@ -59,7 +59,7 @@ public partial class PC_Options : PanelContent
 	{
 		base.UIChanged();
 
-		DD_Language.Width = (int)(200 * UI.FontScale);
+		DD_Language.Width = (int)(220 * UI.FontScale);
 		TLP_GeneralSettings.Margin = TLP_Folders.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
 
@@ -91,7 +91,6 @@ public partial class PC_Options : PanelContent
 		foreach (var tb in TLP_Folders.GetControls<SlickPathTextBox>())
 		{
 			tb.Image = Properties.Resources.I_FolderSearch;
-			tb.Width = (int)(450 * UI.UIScale);
 		}
 	}
 

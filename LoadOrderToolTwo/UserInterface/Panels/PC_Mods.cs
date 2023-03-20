@@ -56,6 +56,10 @@ public partial class PC_Mods : PanelContent
 		var modsIncluded = CentralManager.Mods.Count(x => x.IsIncluded);
 		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled && x.IsIncluded);
 
+		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
+		{
+			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+		}
 		if (modsIncluded == modsEnabled)
 		{
 			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";

@@ -1,6 +1,5 @@
 ﻿using Extensions;
 
-using LoadOrderToolTwo.ColossalOrder;
 using LoadOrderToolTwo.Domain;
 using LoadOrderToolTwo.Domain.Interfaces;
 using LoadOrderToolTwo.Domain.Utilities;
@@ -11,8 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
 using System.Text.RegularExpressions;
 
 namespace LoadOrderToolTwo.Utilities;
@@ -20,7 +17,6 @@ internal static class ModsUtil
 {
 	private static readonly CachedSaveLibrary<CachedModInclusion, Mod, bool> _includedLibrary = new();
 	private static readonly CachedSaveLibrary<CachedModEnabled, Mod, bool> _enabledLibrary = new();
-	private static readonly Dictionary<Mod, SavedBool> _enabledValues = new();
 
 	static ModsUtil()
 	{
@@ -65,8 +61,15 @@ internal static class ModsUtil
 
 	internal static void SavePendingValues()
 	{
+		var saveSettings = _enabledLibrary.Any();
+
 		_includedLibrary.Save();
 		_enabledLibrary.Save();
+
+		if (saveSettings)
+		{
+			ColossalOrderUtil.SaveSettings();
+		}
 	}
 
 	internal static bool IsIncluded(Mod mod)
@@ -86,12 +89,7 @@ internal static class ModsUtil
 
 	internal static bool IsLocallyEnabled(Mod mod)
 	{
-		if (_enabledValues.ContainsKey(mod))
-		{
-			return _enabledValues[mod];
-		}
-
-		return _enabledValues[mod] = GetEnabledSetting(mod);
+		return ColossalOrderUtil.IsEnabled(mod);
 	}
 
 	internal static void SetIncluded(Mod mod, bool value)
@@ -105,6 +103,12 @@ internal static class ModsUtil
 			SetLocallyIncluded(mod, value);
 		}
 
+		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
+		{
+			SetEnabled(mod, value);
+			return;
+		}
+
 		CentralManager.InformationUpdate(mod.Package);
 		ProfileManager.TriggerAutoSave();
 	}
@@ -115,15 +119,22 @@ internal static class ModsUtil
 
 		for (var i = 0; i < list.Count; i++)
 		{
-			if (i == list.Count - 1)
-			{
-				SetIncluded(list[i], value);
-			}
-			else
-			{
-				_includedLibrary.SetValue(list[i], value);
-			}
+			_includedLibrary.SetValue(list[i], value);
+			CentralManager.InformationUpdate(list[i].Package);
 		}
+
+		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
+		{
+			SetEnabled(list, value);
+			return;
+		}
+
+		if (!ProfileManager.ApplyingProfile && !CitiesManager.IsRunning())
+		{
+			SavePendingValues();
+		}
+
+		ProfileManager.TriggerAutoSave();
 	}
 
 	internal static void SetLocallyIncluded(Mod mod, bool value)
@@ -146,7 +157,7 @@ internal static class ModsUtil
 		}
 	}
 
-	internal static void SetEnabled(Mod mod, bool value)
+	internal static void SetEnabled(Mod mod, bool value, bool save = true)
 	{
 		if (ProfileManager.ApplyingProfile || CitiesManager.IsRunning())
 		{
@@ -154,7 +165,7 @@ internal static class ModsUtil
 		}
 		else
 		{
-			SetLocallyEnabled(mod, value);
+			SetLocallyEnabled(mod, value, save);
 		}
 
 		CentralManager.InformationUpdate(mod.Package);
@@ -167,61 +178,31 @@ internal static class ModsUtil
 
 		for (var i = 0; i < list.Count; i++)
 		{
-			if (i == list.Count - 1)
-			{
-				SetEnabled(list[i], value);
-			}
-			else
-			{
-				_enabledLibrary.SetValue(list[i], value);
-			}
+			_enabledLibrary.SetValue(list[i], value);
+
+			CentralManager.InformationUpdate(list[i]);
 		}
+
+		if (!ProfileManager.ApplyingProfile && !CitiesManager.IsRunning())
+		{
+			SavePendingValues();
+		}
+
+		ProfileManager.TriggerAutoSave();
 	}
 
-	internal static void SetLocallyEnabled(Mod mod, bool value)
+	internal static void SetLocallyEnabled(Mod mod, bool value, bool save)
 	{
 		if (mod.IsRequired)
 		{
 			value = true;
 		}
 
-		if (_enabledValues.ContainsKey(mod))
-		{
-			_enabledValues[mod].value = value;
-		}
-		else
-		{
-			(_enabledValues[mod] = GetEnabledSetting(mod)).value = value;
-		}
-	}
+		ColossalOrderUtil.SetEnabled(mod, value);
 
-	private static SavedBool GetEnabledSetting(Mod mod)
-	{
-		var savedEnabledKey_ = $"{Path.GetFileNameWithoutExtension(mod.Folder)}{GetLegacyHashCode(mod.VirtualFolder ?? mod.Folder)}.enabled";
-
-		return new SavedBool(savedEnabledKey_, "userGameState", def: false, autoUpdate: true);
-	}
-
-	[ReliabilityContract(Consistency.WillNotCorruptState, Cer.MayFail)]
-	public static unsafe int GetLegacyHashCode(string str)
-	{
-		fixed (char* ptr = str + (RuntimeHelpers.OffsetToStringData / 2))
+		if (save)
 		{
-			var ptr2 = ptr;
-			var ptr3 = ptr2 + str.Length - 1;
-			var num = 0;
-			while (ptr2 < ptr3)
-			{
-				num = (num << 5) - num + *ptr2;
-				num = (num << 5) - num + ptr2[1];
-				ptr2 += 2;
-			}
-			ptr3++;
-			if (ptr2 < ptr3)
-			{
-				num = (num << 5) - num + *ptr2;
-			}
-			return num;
+			ColossalOrderUtil.SaveSettings();
 		}
 	}
 

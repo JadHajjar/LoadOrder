@@ -12,7 +12,7 @@ public abstract class SavedValue
 
 	protected bool m_AutoUpdate;
 
-	private SettingsFile? m_SettingsFile;
+	private static SettingsFile? m_SettingsFile;
 
 	public bool exists
 	{
@@ -27,17 +27,20 @@ public abstract class SavedValue
 
 	public ushort version => settingsFile.version;
 
-	protected SettingsFile settingsFile
+	public SettingsFile settingsFile
 	{
 		get
 		{
-			if (m_SettingsFile == null && !m_Synced)
-			{
-				m_SettingsFile = GameSettings.FindSettingsFileByName(m_FileName);
-			}
+			//if (m_SettingsFile == null && !m_Synced)
+			//{
+			//	m_SettingsFile = new SettingsFile() { fileName = m_FileName };
+			//	m_SettingsFile.Load();
+			//	///m_SettingsFile = GameSettings.FindSettingsFileByName(m_FileName);
+			//}
 
 			return m_SettingsFile!;
 		}
+		set { m_SettingsFile = value; }
 	}
 
 	protected void Sync()

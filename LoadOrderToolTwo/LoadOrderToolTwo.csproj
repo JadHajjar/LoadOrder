@@ -27,6 +27,9 @@
     <Title>Load Order Mod</Title>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="ColossalOrder\GameSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Properties\Locale.csv" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +110,10 @@
 	<ItemGroup>
 	  <Folder Include="Domain\CompatibilityReport\" />
 	  <Folder Include="Domain\Steam\Markdown\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="ColossalOrder\GameSettings.cs" />
 	</ItemGroup>
 
   <Target Name="DeployToModDirectory" AfterTargets="Build">

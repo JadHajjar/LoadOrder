@@ -11,6 +11,6 @@ internal class CachedModEnabled : CachedSaveItem<Mod, bool>
 
 	protected override void OnSave()
 	{
-		ModsUtil.SetEnabled(Key, ValueToSave);
+		ModsUtil.SetEnabled(Key, ValueToSave, false);
 	}
 }

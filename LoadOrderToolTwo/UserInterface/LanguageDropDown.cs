@@ -34,13 +34,18 @@ internal class LanguageDropDown : SlickSelectionDropDown<CultureInfo>
 		Height = (int)(42 * UI.UIScale);
 	}
 
+	protected override IEnumerable<DrawableItem<CultureInfo>> OrderItems(IEnumerable<DrawableItem<CultureInfo>> items)
+	{
+		return items.OrderByDescending(x => x.Item.IetfLanguageTag == "en").ThenBy(x => x.Item.EnglishName);
+	}
+
 	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, CultureInfo item)
 	{
 		if (item == null)
 			return;
 
 		var text = $"{item.EnglishName} / {item.NativeName.ToCapital()}";
-		using var icon = (Bitmap)Properties.Resources.ResourceManager.GetObject("Lang_" + item.TwoLetterISOLanguageName.ToUpper(), Properties.Resources.Culture);
+		using var icon = (Bitmap)Properties.Resources.ResourceManager.GetObject("Lang_" + item.IetfLanguageTag.ToUpper(), Properties.Resources.Culture);
 
 		if (icon != null)
 		{

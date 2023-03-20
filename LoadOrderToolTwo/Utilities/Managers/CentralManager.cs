@@ -160,8 +160,23 @@ internal static class CentralManager
 	{
 		Package? compatibilityReport = null, harmony = null, harmonyAlpha = null, lom = null, lomAlpha = null, plm = null;
 
+		var firstTime = UpdateManager.IsFirstTime();
+
 		foreach (var package in content)
 		{
+			if (!firstTime)
+			{
+				HandleNewPackage(package);
+			}
+
+			if (!SessionSettings.AdvancedIncludeEnable && package.Mod is not null)
+			{
+				if (package.Mod.IsIncluded && !package.Mod.IsEnabled)
+				{
+					package.Mod.IsEnabled = true;
+				}
+			}
+
 			switch (package.SteamId)
 			{
 				case LOM_STEAM_ID:
@@ -231,6 +246,28 @@ internal static class CentralManager
 		}
 	}
 
+	private static void HandleNewPackage(Package package)
+	{
+		if (UpdateManager.IsPackageKnown(package))
+			return;
+
+		if (package.Mod is not null)
+		{
+			package.Mod.IsIncluded = !SessionSettings.DisableNewModsByDefault;
+
+			if (SessionSettings.AdvancedIncludeEnable)
+				package.Mod.IsEnabled = !SessionSettings.DisableNewModsByDefault;
+		}
+
+		if (package.Assets is not null)
+		{
+			foreach (var asset in package.Assets)
+			{
+				asset.IsIncluded = !SessionSettings.DisableNewAssetsByDefault;
+			}
+		}
+	}
+
 	public static void InformationUpdate(IPackage iPackage)
 	{
 		if (iPackage is Package package)
@@ -282,6 +319,8 @@ internal static class CentralManager
 		{
 			packages.Add(package);
 		}
+
+		HandleNewPackage(package);
 
 		RefreshSteamInfo(package);
 		ContentLoaded?.Invoke();

@@ -20,4 +20,8 @@ internal class SessionSettings : ISave
 	public bool LinkModAssets { get; set; } = true;
 	public bool LargeItemOnHover { get; set; }
 	public bool ShowDatesRelatively { get; set; }
+    public bool AdvancedIncludeEnable { get; set; }
+	public bool DisableNewModsByDefault { get; set; } = true;
+	public bool DisableNewAssetsByDefault { get; set; } = true;
+	public bool OverrideGameChanges { get; set; } = true;
 }
