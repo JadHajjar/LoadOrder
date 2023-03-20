@@ -37,13 +37,19 @@ partial class PC_Options
 			this.TB_AppDataPath = new SlickControls.SlickPathTextBox();
 			this.TB_GamePath = new SlickControls.SlickPathTextBox();
 			this.TLP_GeneralSettings = new SlickControls.RoundedGroupTableLayoutPanel();
+			this.slickCheckbox2 = new SlickControls.SlickCheckbox();
 			this.slickCheckbox1 = new SlickControls.SlickCheckbox();
 			this.CB_LinkModAssets = new SlickControls.SlickCheckbox();
-			this.slickCheckbox2 = new SlickControls.SlickCheckbox();
+			this.DD_Language = new LoadOrderToolTwo.UserInterface.LanguageDropDown();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.TLP_Folders.SuspendLayout();
 			this.TLP_GeneralSettings.SuspendLayout();
 			this.SuspendLayout();
+			// 
+			// base_Text
+			// 
+			this.base_Text.Size = new System.Drawing.Size(77, 26);
+			this.base_Text.Text = "Language";
 			// 
 			// tableLayoutPanel1
 			// 
@@ -72,8 +78,9 @@ partial class PC_Options
 			this.TLP_Folders.Controls.Add(this.TB_SteamPath, 0, 2);
 			this.TLP_Folders.Controls.Add(this.TB_AppDataPath, 0, 1);
 			this.TLP_Folders.Controls.Add(this.TB_GamePath, 0, 0);
+			this.TLP_Folders.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TLP_Folders.Image = ((System.Drawing.Image)(resources.GetObject("TLP_Folders.Image")));
-			this.TLP_Folders.Location = new System.Drawing.Point(3, 195);
+			this.TLP_Folders.Location = new System.Drawing.Point(3, 183);
 			this.TLP_Folders.Name = "TLP_Folders";
 			this.TLP_Folders.Padding = new System.Windows.Forms.Padding(7, 38, 7, 7);
 			this.TLP_Folders.RowCount = 5;
@@ -82,7 +89,7 @@ partial class PC_Options
 			this.TLP_Folders.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Folders.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_Folders.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_Folders.Size = new System.Drawing.Size(524, 275);
+			this.TLP_Folders.Size = new System.Drawing.Size(767, 275);
 			this.TLP_Folders.TabIndex = 19;
 			// 
 			// TB_VirtualAppDataPath
@@ -180,11 +187,14 @@ partial class PC_Options
 			this.TLP_GeneralSettings.AddOutline = true;
 			this.TLP_GeneralSettings.AutoSize = true;
 			this.TLP_GeneralSettings.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.TLP_GeneralSettings.ColumnCount = 1;
+			this.TLP_GeneralSettings.ColumnCount = 2;
+			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.TLP_GeneralSettings.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.TLP_GeneralSettings.Controls.Add(this.DD_Language, 1, 0);
 			this.TLP_GeneralSettings.Controls.Add(this.slickCheckbox2, 0, 2);
 			this.TLP_GeneralSettings.Controls.Add(this.slickCheckbox1, 0, 1);
 			this.TLP_GeneralSettings.Controls.Add(this.CB_LinkModAssets, 0, 0);
+			this.TLP_GeneralSettings.Dock = System.Windows.Forms.DockStyle.Top;
 			this.TLP_GeneralSettings.Image = ((System.Drawing.Image)(resources.GetObject("TLP_GeneralSettings.Image")));
 			this.TLP_GeneralSettings.Location = new System.Drawing.Point(3, 3);
 			this.TLP_GeneralSettings.Name = "TLP_GeneralSettings";
@@ -193,8 +203,34 @@ partial class PC_Options
 			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.TLP_GeneralSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.TLP_GeneralSettings.Size = new System.Drawing.Size(263, 186);
+			this.TLP_GeneralSettings.Size = new System.Drawing.Size(767, 174);
 			this.TLP_GeneralSettings.TabIndex = 18;
+			// 
+			// slickCheckbox2
+			// 
+			this.slickCheckbox2.ActiveColor = null;
+			this.slickCheckbox2.AutoSize = true;
+			this.slickCheckbox2.Center = false;
+			this.slickCheckbox2.Checked = false;
+			this.slickCheckbox2.CheckedText = null;
+			this.slickCheckbox2.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.slickCheckbox2.DefaultValue = false;
+			this.slickCheckbox2.EnterTriggersClick = false;
+			this.slickCheckbox2.HideText = false;
+			this.slickCheckbox2.IconSize = 16;
+			this.slickCheckbox2.Image = ((System.Drawing.Image)(resources.GetObject("slickCheckbox2.Image")));
+			this.slickCheckbox2.Location = new System.Drawing.Point(10, 134);
+			this.slickCheckbox2.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
+			this.slickCheckbox2.Name = "slickCheckbox2";
+			this.slickCheckbox2.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
+			this.slickCheckbox2.Selected = false;
+			this.slickCheckbox2.Size = new System.Drawing.Size(175, 30);
+			this.slickCheckbox2.SpaceTriggersClick = true;
+			this.slickCheckbox2.TabIndex = 2;
+			this.slickCheckbox2.Tag = "ShowDatesRelatively";
+			this.slickCheckbox2.Text = "ShowDatesRelatively";
+			this.slickCheckbox2.UncheckedText = null;
+			this.slickCheckbox2.CheckChanged += new System.EventHandler(this.CB_CheckChanged);
 			// 
 			// slickCheckbox1
 			// 
@@ -209,12 +245,12 @@ partial class PC_Options
 			this.slickCheckbox1.HideText = false;
 			this.slickCheckbox1.IconSize = 16;
 			this.slickCheckbox1.Image = ((System.Drawing.Image)(resources.GetObject("slickCheckbox1.Image")));
-			this.slickCheckbox1.Location = new System.Drawing.Point(10, 95);
+			this.slickCheckbox1.Location = new System.Drawing.Point(10, 91);
 			this.slickCheckbox1.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
 			this.slickCheckbox1.Name = "slickCheckbox1";
 			this.slickCheckbox1.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.slickCheckbox1.Selected = false;
-			this.slickCheckbox1.Size = new System.Drawing.Size(243, 34);
+			this.slickCheckbox1.Size = new System.Drawing.Size(207, 30);
 			this.slickCheckbox1.SpaceTriggersClick = true;
 			this.slickCheckbox1.TabIndex = 1;
 			this.slickCheckbox1.Tag = "LargeItemOnHover";
@@ -240,7 +276,7 @@ partial class PC_Options
 			this.CB_LinkModAssets.Name = "CB_LinkModAssets";
 			this.CB_LinkModAssets.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
 			this.CB_LinkModAssets.Selected = false;
-			this.CB_LinkModAssets.Size = new System.Drawing.Size(161, 34);
+			this.CB_LinkModAssets.Size = new System.Drawing.Size(140, 30);
 			this.CB_LinkModAssets.SpaceTriggersClick = true;
 			this.CB_LinkModAssets.TabIndex = 0;
 			this.CB_LinkModAssets.Tag = "LinkModAssets";
@@ -248,31 +284,18 @@ partial class PC_Options
 			this.CB_LinkModAssets.UncheckedText = null;
 			this.CB_LinkModAssets.CheckChanged += new System.EventHandler(this.CB_CheckChanged);
 			// 
-			// slickCheckbox2
+			// DD_Language
 			// 
-			this.slickCheckbox2.ActiveColor = null;
-			this.slickCheckbox2.AutoSize = true;
-			this.slickCheckbox2.Center = false;
-			this.slickCheckbox2.Checked = false;
-			this.slickCheckbox2.CheckedText = null;
-			this.slickCheckbox2.Cursor = System.Windows.Forms.Cursors.Hand;
-			this.slickCheckbox2.DefaultValue = false;
-			this.slickCheckbox2.EnterTriggersClick = false;
-			this.slickCheckbox2.HideText = false;
-			this.slickCheckbox2.IconSize = 16;
-			this.slickCheckbox2.Image = ((System.Drawing.Image)(resources.GetObject("slickCheckbox2.Image")));
-			this.slickCheckbox2.Location = new System.Drawing.Point(10, 142);
-			this.slickCheckbox2.Margin = new System.Windows.Forms.Padding(3, 10, 3, 3);
-			this.slickCheckbox2.Name = "slickCheckbox2";
-			this.slickCheckbox2.Padding = new System.Windows.Forms.Padding(7, 5, 7, 5);
-			this.slickCheckbox2.Selected = false;
-			this.slickCheckbox2.Size = new System.Drawing.Size(204, 34);
-			this.slickCheckbox2.SpaceTriggersClick = true;
-			this.slickCheckbox2.TabIndex = 2;
-			this.slickCheckbox2.Tag = "ShowDatesRelatively";
-			this.slickCheckbox2.Text = "ShowDatesRelatively";
-			this.slickCheckbox2.UncheckedText = null;
-			this.slickCheckbox2.CheckChanged += new System.EventHandler(this.CB_CheckChanged);
+			this.DD_Language.Cursor = System.Windows.Forms.Cursors.Hand;
+			this.DD_Language.Font = new System.Drawing.Font("Segoe UI", 12.75F);
+			this.DD_Language.Location = new System.Drawing.Point(604, 44);
+			this.DD_Language.Margin = new System.Windows.Forms.Padding(6);
+			this.DD_Language.Name = "DD_Language";
+			this.DD_Language.Padding = new System.Windows.Forms.Padding(6);
+			this.TLP_GeneralSettings.SetRowSpan(this.DD_Language, 3);
+			this.DD_Language.Size = new System.Drawing.Size(150, 53);
+			this.DD_Language.TabIndex = 14;
+			this.DD_Language.Text = "Language";
 			// 
 			// PC_Options
 			// 
@@ -281,6 +304,7 @@ partial class PC_Options
 			this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(58)))), ((int)(((byte)(69)))));
 			this.Name = "PC_Options";
 			this.Size = new System.Drawing.Size(783, 579);
+			this.Text = "Language";
 			this.Controls.SetChildIndex(this.base_Text, 0);
 			this.Controls.SetChildIndex(this.tableLayoutPanel1, 0);
 			this.tableLayoutPanel1.ResumeLayout(false);
@@ -306,4 +330,5 @@ partial class PC_Options
 	private SlickControls.SlickPathTextBox TB_GamePath;
 	private SlickControls.SlickCheckbox slickCheckbox1;
 	private SlickControls.SlickCheckbox slickCheckbox2;
+	private LanguageDropDown DD_Language;
 }

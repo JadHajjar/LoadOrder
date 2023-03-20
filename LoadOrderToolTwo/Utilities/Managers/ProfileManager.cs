@@ -366,6 +366,8 @@ public static class ProfileManager
 
 		try
 		{
+			Directory.CreateDirectory(LocationManager.LotProfilesAppDataPath);
+
 			File.WriteAllText(
 				Path.Combine(LocationManager.LotProfilesAppDataPath, $"{profile.Name}.json"),
 				Newtonsoft.Json.JsonConvert.SerializeObject(profile, Newtonsoft.Json.Formatting.Indented));

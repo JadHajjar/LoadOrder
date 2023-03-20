@@ -48,7 +48,7 @@ internal class ProfileBubble : StatusBubbleBase
 
 		if (CentralManager.CurrentProfile.Temporary)
 		{
-			DrawText(e, ref targetHeight, "Create a new profile by clicking here", FormDesign.Design.YellowColor);
+			DrawText(e, ref targetHeight, Locale.CreateProfileHere, FormDesign.Design.YellowColor);
 		}
 		else
 		{

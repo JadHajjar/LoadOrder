@@ -177,4 +177,7 @@ internal class Locale : LocaleHelper
 	public static string Sorting => _instance.GetText(nameof(Sorting));
 	public static string FolderSettings => _instance.GetText(nameof(FolderSettings));
 	public static string ChangingFoldersRequiresRestart => _instance.GetText(nameof(ChangingFoldersRequiresRestart));
+	public static string CreateProfileHere => _instance.GetText(nameof(CreateProfileHere));
+	public static string TemporaryProfile => _instance.GetText(nameof(TemporaryProfile));
+	public static string CouldNotCreateProfile => _instance.GetText(nameof(CouldNotCreateProfile));
 }

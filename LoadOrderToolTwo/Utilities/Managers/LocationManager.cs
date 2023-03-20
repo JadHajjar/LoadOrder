@@ -148,10 +148,15 @@ internal class LocationManager
 
 	internal static void SetPaths(string gamePath, string appDataPath, string steamPath, string virtualGamePath, string virtualAppDataPath)
 	{
-		ConfigurationManager.AppSettings[nameof(GamePath)] = gamePath;
-		ConfigurationManager.AppSettings[nameof(AppDataPath)] = appDataPath;
-		ConfigurationManager.AppSettings[nameof(SteamPath)] = steamPath;
-		ConfigurationManager.AppSettings[nameof(VirtualGamePath)] = virtualGamePath;
-		ConfigurationManager.AppSettings[nameof(VirtualAppDataPath)] = virtualAppDataPath;
+		var externalConfig = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+		var appSettings = externalConfig.AppSettings;
+
+		appSettings.Settings[nameof(GamePath)].Value = gamePath;
+		appSettings.Settings[nameof(AppDataPath)].Value = appDataPath;
+		appSettings.Settings[nameof(SteamPath)].Value = steamPath;
+		appSettings.Settings[nameof(VirtualGamePath)].Value = virtualGamePath;
+		appSettings.Settings[nameof(VirtualAppDataPath)].Value = virtualAppDataPath;
+
+		externalConfig.Save();
 	}
 }

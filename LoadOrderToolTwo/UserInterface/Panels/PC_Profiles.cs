@@ -98,7 +98,7 @@ public partial class PC_Profiles : PanelContent
 	private void Ctrl_ExcludeProfile(Profile obj)
 	{
 		I_ProfileIcon.Loading = true;
-		FLP_Options.Enabled = B_EditName.Visible = false;
+		FLP_Options.Enabled = B_EditName.Visible = B_Save.Visible = false;
 		ProfileManager.ExcludeProfile(obj);
 		AnimationHandler.Animate(P_Profiles, Size.Empty, 2, AnimationOption.IgnoreHeight);
 	}
@@ -106,7 +106,7 @@ public partial class PC_Profiles : PanelContent
 	private void Ctrl_MergeProfile(Profile obj)
 	{
 		I_ProfileIcon.Loading = true;
-		FLP_Options.Enabled = B_EditName.Visible = false;
+		FLP_Options.Enabled = B_EditName.Visible = B_Save.Visible = false;
 		ProfileManager.MergeProfile(obj, Form);
 		AnimationHandler.Animate(P_Profiles, Size.Empty, 2, AnimationOption.IgnoreHeight);
 	}
@@ -115,7 +115,7 @@ public partial class PC_Profiles : PanelContent
 	{
 		I_ProfileIcon.Loading = true;
 		L_CurrentProfile.Text = obj.Name;
-		FLP_Options.Enabled = B_EditName.Visible = false;
+		FLP_Options.Enabled = B_EditName.Visible = B_Save.Visible = false;
 		ProfileManager.SetProfile(obj, Form);
 		AnimationHandler.Animate(P_Profiles, Size.Empty, 2, AnimationOption.IgnoreHeight);
 	}
@@ -128,7 +128,7 @@ public partial class PC_Profiles : PanelContent
 		L_TempProfile.Visible = I_TempProfile.Visible = profile.Temporary;
 		FLP_Options.Enabled = !profile.Temporary;
 
-		B_EditName.Visible = !profile.Temporary && !TB_Name.Visible;
+		B_EditName.Visible = B_Save.Visible = !profile.Temporary && !TB_Name.Visible;
 
 		I_ProfileIcon.Loading = false;
 		L_CurrentProfile.Text = profile.Name;
@@ -216,7 +216,7 @@ public partial class PC_Profiles : PanelContent
 	private void B_EditName_Click(object sender, EventArgs e)
 	{
 		TB_Name.Visible = true;
-		B_EditName.Visible = false;
+		B_EditName.Visible = B_Save.Visible = false;
 		L_CurrentProfile.Visible = false;
 		TB_Name.Text = L_CurrentProfile.Text;
 
@@ -231,7 +231,11 @@ public partial class PC_Profiles : PanelContent
 	{
 		var newProfile = new Profile() { Name = ProfileManager.GetNewProfileName() };
 
-		ProfileManager.Save(newProfile);
+		if (!ProfileManager.Save(newProfile))
+		{
+			ShowPrompt("Could not create a new profile, make sure your folder settings are set up correctly in the options panel", icon: PromptIcons.Error);
+			return;
+		}
 
 		ProfileManager.SetProfile(newProfile, Form);
 
@@ -249,7 +253,11 @@ public partial class PC_Profiles : PanelContent
 		var newProfile = CentralManager.CurrentProfile.Clone();
 		newProfile.Name = ProfileManager.GetNewProfileName();
 
-		newProfile.Save();
+		if (!newProfile.Save())
+		{
+			ShowPrompt(Locale.CouldNotCreateProfile, icon: PromptIcons.Error);
+			return;
+		}
 
 		ProfileManager.SetProfile(newProfile, Form);
 
@@ -310,7 +318,7 @@ public partial class PC_Profiles : PanelContent
 		if (string.IsNullOrWhiteSpace(TB_Name.Text))
 		{
 			TB_Name.Visible = false;
-			B_EditName.Visible = true;
+			B_EditName.Visible = B_Save.Visible = true;
 			L_CurrentProfile.Visible = true;
 			return;
 		}
@@ -323,7 +331,7 @@ public partial class PC_Profiles : PanelContent
 
 		L_CurrentProfile.Text = ProfileManager.CurrentProfile.Name;
 		TB_Name.Visible = false;
-		B_EditName.Visible = true;
+		B_EditName.Visible = B_Save.Visible = true;
 		L_CurrentProfile.Visible = true;
 	}
 
@@ -361,5 +369,10 @@ public partial class PC_Profiles : PanelContent
 		ValueChanged(sender, e);
 
 		ProfileManager.SaveLsmSettings(ProfileManager.CurrentProfile);
+	}
+
+	private void B_Save_Click(object sender, EventArgs e)
+	{
+		ProfileManager.CurrentProfile.Save();
 	}
 }

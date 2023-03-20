@@ -8,7 +8,10 @@ using SlickControls;
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface.Panels;
@@ -39,6 +42,10 @@ public partial class PC_Options : PanelContent
 		TB_VirtualGamePath.Text = LocationManager.VirtualGamePath;
 
 		folderPathsChanged = false;
+
+		DD_Language.Items = LocaleHelper.GetAvailableLanguages().Select(lang => new CultureInfo(lang)).ToArray();
+		DD_Language.SelectedItem = Thread.CurrentThread.CurrentUICulture;
+		DD_Language.SelectedItemChanged += DD_Language_SelectedItemChanged;
 	}
 
 	protected override void LocaleChanged()
@@ -52,6 +59,7 @@ public partial class PC_Options : PanelContent
 	{
 		base.UIChanged();
 
+		DD_Language.Width = (int)(200 * UI.FontScale);
 		TLP_GeneralSettings.Margin = TLP_Folders.Margin = UI.Scale(new Padding(10), UI.UIScale);
 	}
 
@@ -108,5 +116,10 @@ public partial class PC_Options : PanelContent
 	private void TB_FolderPath_TextChanged(object sender, EventArgs e)
 	{
 		folderPathsChanged = true;
+	}
+
+	private void DD_Language_SelectedItemChanged(object sender, EventArgs e)
+	{
+		LocaleHelper.SetLanguage(DD_Language.SelectedItem);
 	}
 }

@@ -72,6 +72,9 @@
     <Compile Update="UserInterface\NewProfileOptionControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="UserInterface\LanguageDropDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="UserInterface\SortingDropDown.cs">
       <SubType>UserControl</SubType>
     </Compile>

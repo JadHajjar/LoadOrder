@@ -1,6 +1,7 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.Domain.Utilities;
+using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using Newtonsoft.Json;
@@ -11,7 +12,7 @@ using System.Collections.Generic;
 namespace LoadOrderToolTwo.Domain;
 public class Profile
 {
-	public static readonly Profile TemporaryProfile = new("Temporary Profile") { Temporary = true, AutoSave = false };
+	public static readonly Profile TemporaryProfile = new(Locale.TemporaryProfile) { Temporary = true, AutoSave = false };
 
 	[JsonIgnore, CloneIgnore] public bool Temporary { get; private set; }
 	[JsonIgnore, CloneIgnore] public bool IsMissingItems { get; set; }
@@ -31,10 +32,11 @@ public class Profile
 		AutoSave = true;
 	}
 
-	public void Save()
+	public bool Save()
 	{
 		ProfileManager.GatherInformation(this);
-		ProfileManager.Save(this);
+		
+		return ProfileManager.Save(this);
 	}
 
 	[CloneIgnore] public List<Asset> Assets { get; set; }

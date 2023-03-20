@@ -409,4 +409,67 @@
   <data name="I_LSM" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\I_LSM.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="I_Save" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\I_Save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_AR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_AR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_BN" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_BN.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_CS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_CS.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_EN" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_EN.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_ES" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_ES.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_FI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_FI.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_FR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_FR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_HI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_HI.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_ID" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_ID.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_IT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_IT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_JA" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_JA.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_KO" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_KO.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_NL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_NL.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_PL" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_PL.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_PT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_PT.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_RO" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_RO.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_RU" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_RU.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_TR" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_TR.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_VI" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_VI.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Lang_ZH" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Lang_ZH.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
