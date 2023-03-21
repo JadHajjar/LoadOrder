@@ -8,6 +8,7 @@ using SlickControls;
 
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -20,6 +21,9 @@ public partial class PC_Profiles : PanelContent
 		InitializeComponent();
 
 		LoadProfile(CentralManager.CurrentProfile);
+
+		TB_SavePath.StartingFolder = Path.Combine(LocationManager.AppDataPath, "Saves");
+		TB_SkipFile.StartingFolder = LocationManager.AppDataPath;
 
 		foreach (var profile in ProfileManager.Profiles)
 		{
