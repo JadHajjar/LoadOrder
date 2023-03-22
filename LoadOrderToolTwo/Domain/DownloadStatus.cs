@@ -10,3 +10,15 @@ public enum DownloadStatus
 	PartiallyDownloaded,
 	Removed,
 }
+
+public enum DownloadStatusFilter
+{
+	Any,
+	None,
+	OK,
+	Unknown,
+	OutOfDate,
+	NotDownloaded,
+	PartiallyDownloaded,
+	Removed,
+}

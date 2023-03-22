@@ -21,7 +21,6 @@ internal class ProfilePreviewControl : SlickControl
 	public ProfilePreviewControl(Profile profile)
 	{
 		Profile = profile;
-		Text = profile.Name;
 	}
 
 	public Profile Profile { get; }
@@ -118,7 +117,7 @@ internal class ProfilePreviewControl : SlickControl
 		using var backBrush = ClientRectangle.Gradient(Color.FromArgb(220, back), 0.5F);
 		e.Graphics.FillRoundedRectangle(backBrush, ClientRectangle.Pad(1), Padding.Left);
 
-		var titleHeight = Math.Max(24, (int)e.Graphics.Measure(Text, UI.Font(9.75F, FontStyle.Bold), Width - Padding.Horizontal).Height);
+		var titleHeight = Math.Max(24, (int)e.Graphics.Measure(Profile.Name, UI.Font(9.75F, FontStyle.Bold), Width - Padding.Horizontal).Height);
 		var iconRectangle = new Rectangle(Padding.Left, Padding.Top + ((titleHeight - 24) / 2), 24, 24);
 
 		if (Loading)
@@ -132,7 +131,7 @@ internal class ProfilePreviewControl : SlickControl
 			e.Graphics.DrawImage(image.Color(FormDesign.Design.IconColor), iconRectangle);
 		}
 
-		e.Graphics.DrawString(Text, UI.Font(9.75F, FontStyle.Bold), new SolidBrush(FormDesign.Design.ForeColor), new Rectangle(24 + (Padding.Left * 2), Padding.Top, Width - Padding.Horizontal, titleHeight), new StringFormat { LineAlignment = StringAlignment.Center });
+		e.Graphics.DrawString(Profile.Name, UI.Font(9.75F, FontStyle.Bold), new SolidBrush(FormDesign.Design.ForeColor), new Rectangle(24 + (Padding.Left * 2), Padding.Top, Width - Padding.Horizontal, titleHeight), new StringFormat { LineAlignment = StringAlignment.Center });
 
 		var y = titleHeight + Padding.Vertical;
 

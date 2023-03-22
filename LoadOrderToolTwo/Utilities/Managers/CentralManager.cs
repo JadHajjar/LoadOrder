@@ -27,6 +27,11 @@ internal static class CentralManager
 	public static event Action<Mod>? ModInformationUpdated;
 	public static event Action<Asset>? AssetInformationUpdated;
 
+	private static DelayedAction _delayedWorkshopInfoUpdated = new(300, () => WorkshopInfoUpdated?.Invoke());
+	private static DelayedAction<Package> _delayedPackageInformationUpdated = new(300, (p) => PackageInformationUpdated?.Invoke(p));
+	private static DelayedAction<Mod> _delayedModInformationUpdated = new(300, (m) => ModInformationUpdated?.Invoke(m));
+	private static DelayedAction<Asset> _delayedAssetInformationUpdated = new(300, (a) => AssetInformationUpdated?.Invoke(a));
+
 	public static Profile CurrentProfile => ProfileManager.CurrentProfile;
 	public static bool IsContentLoaded { get; private set; }
 	public static SessionSettings SessionSettings { get; set; } = ISave.Load<SessionSettings>(nameof(SessionSettings) + ".tf");
@@ -108,7 +113,7 @@ internal static class CentralManager
 				}
 			}
 
-			WorkshopInfoUpdated?.Invoke();
+			_delayedWorkshopInfoUpdated.Run();
 
 			Parallel.ForEach(Packages.OrderBy(x => x.Mod == null), (package, state) =>
 			{
@@ -131,7 +136,7 @@ internal static class CentralManager
 				}
 			}
 
-			WorkshopInfoUpdated?.Invoke();
+			_delayedWorkshopInfoUpdated.Run();
 
 			Parallel.ForEach(Packages.OrderBy(x => x.Mod == null).ThenBy(x => x.Name), (package, state) =>
 			{
@@ -152,7 +157,7 @@ internal static class CentralManager
 				}
 			});
 
-			WorkshopInfoUpdated?.Invoke();
+			_delayedWorkshopInfoUpdated.Run();
 		});
 	}
 
@@ -272,28 +277,28 @@ internal static class CentralManager
 	{
 		if (iPackage is Package package)
 		{
-			PackageInformationUpdated?.Invoke(package);
+			_delayedPackageInformationUpdated.Run(package);
 
 			if (package.Mod != null)
 			{
-				ModInformationUpdated?.Invoke(package.Mod);
+				_delayedModInformationUpdated.Run(package.Mod);
 			}
 
 			if (package.Assets != null)
 			{
 				foreach (var asset in package.Assets)
 				{
-					AssetInformationUpdated?.Invoke(asset);
+					_delayedAssetInformationUpdated.Run(asset);
 				}
 			}
 		}
 		else if (iPackage is Mod mod)
 		{
-			ModInformationUpdated?.Invoke(mod);
+			_delayedModInformationUpdated.Run(mod);
 		}
 		else if (iPackage is Asset asset)
 		{
-			AssetInformationUpdated?.Invoke(asset);
+			_delayedAssetInformationUpdated.Run(asset);
 		}
 	}
 
@@ -342,7 +347,7 @@ internal static class CentralManager
 				package.SetSteamInformation(result[package.SteamId], false);
 			}
 
-			WorkshopInfoUpdated?.Invoke();
+			_delayedWorkshopInfoUpdated.Run();
 
 			if (!string.IsNullOrWhiteSpace(package.IconUrl))
 			{
@@ -360,7 +365,7 @@ internal static class CentralManager
 				}
 			}
 
-			WorkshopInfoUpdated?.Invoke();
+			_delayedWorkshopInfoUpdated.Run();
 		});
 	}
 
@@ -370,6 +375,6 @@ internal static class CentralManager
 
 		package.Status = DownloadStatus.NotDownloaded;
 		ContentLoaded?.Invoke();
-		WorkshopInfoUpdated?.Invoke();
+		_delayedWorkshopInfoUpdated.Run();
 	}
 }

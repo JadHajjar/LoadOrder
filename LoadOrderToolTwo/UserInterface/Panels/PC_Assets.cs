@@ -78,15 +78,15 @@ public partial class PC_Assets : PanelContent
 			e.DoNotDraw = OT_Included.SelectedValue == ThreeOptionToggle.Value.Option1 == e.Item.IsIncluded;
 		}
 
-		if (!e.DoNotDraw && (int)DD_PackageStatus.SelectedItem != -1)
+		if (!e.DoNotDraw && DD_PackageStatus.SelectedItem != DownloadStatusFilter.Any)
 		{
-			if (DD_PackageStatus.SelectedItem == DownloadStatus.None)
+			if (DD_PackageStatus.SelectedItem == DownloadStatusFilter.None)
 			{
 				e.DoNotDraw = e.Item.Workshop;
 			}
 			else
 			{
-				e.DoNotDraw = DD_PackageStatus.SelectedItem != e.Item.Status;
+				e.DoNotDraw = ((int)DD_PackageStatus.SelectedItem - 1) != (int)e.Item.Status;
 			}
 		}
 

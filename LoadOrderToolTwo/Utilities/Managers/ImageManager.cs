@@ -149,12 +149,16 @@ public static class ImageManager
 				}
 				else
 				{
-					if (ConnectionHandler.IsConnected)
+					try
 					{
-						_badURLs.Add(url);
+						if (ConnectionHandler.IsConnected)
+						{
+							_badURLs.Add(url);
 
-						ISave.Save(_badURLs.ToArray(), "BadSteamURLs.tf");
+							ISave.Save(_badURLs.ToList(), "BadSteamURLs.tf");
+						}
 					}
+					catch (Exception ex2) { Log.Exception(ex2, "Too many images are failing to load"); }
 
 					return false;
 				}

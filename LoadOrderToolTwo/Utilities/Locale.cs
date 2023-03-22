@@ -180,4 +180,6 @@ internal class Locale : LocaleHelper
 	public static string CreateProfileHere => _instance.GetText(nameof(CreateProfileHere));
 	public static string TemporaryProfile => _instance.GetText(nameof(TemporaryProfile));
 	public static string CouldNotCreateProfile => _instance.GetText(nameof(CouldNotCreateProfile));
+	public static string ProfileNameChangedIllegalChars => _instance.GetText(nameof(ProfileNameChangedIllegalChars));
+	public static string ProfileSaveInfo => _instance.GetText(nameof(ProfileSaveInfo));
 }

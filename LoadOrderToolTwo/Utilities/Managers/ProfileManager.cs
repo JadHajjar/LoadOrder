@@ -301,12 +301,18 @@ public static class ProfileManager
 			// Load Legacy Profiles
 			foreach (var profile in Directory.EnumerateFiles(LocationManager.LotProfilesAppDataPath, "*.xml"))
 			{
+				var newName = Path.Combine(LocationManager.LotProfilesAppDataPath, $"{Path.GetFileNameWithoutExtension(profile)}.json");
+
+				if (File.Exists(newName))
+					continue;
+
 				var legacyProfile = LoadOrderTool.Legacy.LoadOrderProfile.Deserialize(profile);
 				var newProfile = legacyProfile.ToLot2Profile(Path.GetFileNameWithoutExtension(profile));
 
 				if (newProfile != null)
 				{
 					newProfile.LastEditDate = File.GetLastWriteTime(profile);
+					Save(newProfile);
 
 					profiles.Add(newProfile);
 				}
@@ -528,5 +534,10 @@ public static class ProfileManager
 		current.skipPrefabs = File.Exists(profile.LsmSettings.SkipFile);
 
 		current.SyncAndSerialize();
+	}
+
+	internal static void AddProfile(Profile newProfile)
+	{
+		_profiles.Add(newProfile);
 	}
 }

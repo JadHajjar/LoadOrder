@@ -201,9 +201,6 @@ public class LoadOrderUserMod : IUserMod
 				case "AppDataPath":
 					appSettings.Settings[key].Value = DataLocation.localApplicationData;
 					break;
-				case "SteamPath":
-					appSettings.Settings[key].Value = Directory.GetParent(DataLocation.applicationBase).Parent.Parent.FullName;
-					break;
 				case "Platform":
 					if (Application.platform is RuntimePlatform.OSXEditor or RuntimePlatform.OSXPlayer)
 					{
@@ -257,6 +254,20 @@ public class LoadOrderUserMod : IUserMod
 	private void MainMenuLoaded(Scene arg0, LoadSceneMode arg1)
 	{
 		var centerPanel = GameObject.Find("MenuContainer")?.GetComponent<UIPanel>().Find<UISlicedSprite>("CenterPart")?.Find<UIPanel>("MenuArea")?.Find<UIPanel>("Menu");
+
+		if ((int)arg1 == -1)
+		{
+			var lotButton = centerPanel?.Find<UIButton>("LOTBUTTON");
+
+			if (lotButton != null)
+			{
+				(GameObject.Find("MenuContainer")?.GetComponent<UIPanel>().Find<UISlicedSprite>("CenterPart")).height -= lotButton.height;
+
+				lotButton.OnDestroy();
+			}
+			return;
+		}
+		
 		var continueButton = centerPanel?.Find<UIButton>("Exit");
 
 		if (continueButton != null)
@@ -265,7 +276,7 @@ public class LoadOrderUserMod : IUserMod
 
 			continueButton.ShalowClone(newButton, true);
 			newButton.text = "LOAD ORDER TOOL";
-			newButton.cachedName = "";
+			newButton.name = newButton.cachedName = "LOTBUTTON";
 			newButton.stringUserData = "";
 			newButton.atlas = continueButton.atlas;
 			newButton.font = continueButton.font;

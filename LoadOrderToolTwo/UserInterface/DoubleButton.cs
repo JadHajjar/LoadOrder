@@ -77,8 +77,8 @@ public class DoubleButton : SlickControl
 		var textColor1 = (option1Hovered && HoverState.HasFlag(HoverState.Pressed)) ? FormDesign.Design.ActiveForeColor : FormDesign.Design.ForeColor;
 		var textColor2 = (option2Hovered && HoverState.HasFlag(HoverState.Pressed)) ? FormDesign.Design.ActiveForeColor : FormDesign.Design.ForeColor;
 
-		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(FormDesign.Design.ButtonColor, 0.5F), ClientRectangle, Padding.Left);
-
+		e.Graphics.FillRoundedRectangle(ClientRectangle.Gradient(FormDesign.Design.ButtonColor, 0.5F), ClientRectangle.Pad(1, 1, 2, 2), Padding.Left);
+		
 		// Option 1
 		if (option1Hovered)
 		{

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
-internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
+internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatusFilter>
 {
 	protected override void OnHandleCreated(EventArgs e)
 	{
@@ -24,7 +24,7 @@ internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 
 		if (Live)
 		{
-			Items = new[] { (DownloadStatus)(-1) }.Concat(Enum.GetValues(typeof(DownloadStatus)).Cast<DownloadStatus>()).ToArray();
+			Items = Enum.GetValues(typeof(DownloadStatusFilter)).Cast<DownloadStatusFilter>().ToArray();
 		}
 	}
 
@@ -42,7 +42,7 @@ internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 		Height = (int)(42 * UI.UIScale);
 	}
 
-	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, DownloadStatus item)
+	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, DownloadStatusFilter item)
 	{
 		GetStatusDescriptors(item, out var text, out var icon, out var color);
 
@@ -58,44 +58,42 @@ internal class PackageStatusDropDown : SlickSelectionDropDown<DownloadStatus>
 		}
 	}
 
-	private void GetStatusDescriptors(DownloadStatus status, out string text, out Bitmap icon, out Color color)
+	private void GetStatusDescriptors(DownloadStatusFilter status, out string text, out Bitmap icon, out Color color)
 	{
-		if ((int)status == -1)
-		{
-			text = Locale.AnyStatus;
-			icon = ImageManager.GetIcon("I_Slash");
-			color = FormDesign.Design.ForeColor;
-			return;
-		}
-
 		switch (status)
 		{
-			case DownloadStatus.OK:
+			case DownloadStatusFilter.Any:
+				text = Locale.AnyStatus;
+				icon = ImageManager.GetIcon("I_Slash");
+				color = FormDesign.Design.ForeColor;
+				return;
+
+			case DownloadStatusFilter.OK:
 				text = Locale.UpToDate;
 				icon = ImageManager.GetIcon("I_Ok");
 				color = FormDesign.Design.GreenColor;
 				return;
-			case DownloadStatus.Unknown:
+			case DownloadStatusFilter.Unknown:
 				text = Locale.StatusUnknown;
 				icon = ImageManager.GetIcon("I_Question");
 				color = FormDesign.Design.YellowColor;
 				return;
-			case DownloadStatus.OutOfDate:
+			case DownloadStatusFilter.OutOfDate:
 				text = Locale.OutOfDate;
 				icon = ImageManager.GetIcon("I_OutOfDate");
 				color = FormDesign.Design.YellowColor;
 				return;
-			case DownloadStatus.NotDownloaded:
+			case DownloadStatusFilter.NotDownloaded:
 				text = Locale.ModIsNotDownloaded;
 				icon = ImageManager.GetIcon("I_Question");
 				color = FormDesign.Design.RedColor;
 				return;
-			case DownloadStatus.PartiallyDownloaded:
+			case DownloadStatusFilter.PartiallyDownloaded:
 				text = Locale.PartiallyDownloaded;
 				icon = ImageManager.GetIcon("I_Broken");
 				color = FormDesign.Design.RedColor;
 				return;
-			case DownloadStatus.Removed:
+			case DownloadStatusFilter.Removed:
 				text = Locale.ModIsRemoved;
 				icon = ImageManager.GetIcon("I_ContentRemoved");
 				color = FormDesign.Design.RedColor;

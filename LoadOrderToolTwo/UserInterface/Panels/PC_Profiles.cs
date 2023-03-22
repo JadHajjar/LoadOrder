@@ -27,18 +27,25 @@ public partial class PC_Profiles : PanelContent
 
 		foreach (var profile in ProfileManager.Profiles)
 		{
-			var ctrl = new ProfilePreviewControl(profile);
-
-			FLP_Profiles.Controls.Add(ctrl);
-			FLP_Profiles.SetFlowBreak(ctrl, true);
-
-			ctrl.LoadProfile += Ctrl_LoadProfile;
-			ctrl.MergeProfile += Ctrl_MergeProfile;
-			ctrl.ExcludeProfile += Ctrl_ExcludeProfile;
-			ctrl.DisposeProfile += Ctrl_DisposeProfile;
+			AddProfile(profile);
 		}
 
 		ProfileManager.ProfileChanged += (p) => this.TryInvoke(() => LoadProfile(p));
+	}
+
+	private ProfilePreviewControl AddProfile(Profile profile)
+	{
+		var ctrl = new ProfilePreviewControl(profile);
+
+		FLP_Profiles.Controls.Add(ctrl);
+		FLP_Profiles.SetFlowBreak(ctrl, true);
+
+		ctrl.LoadProfile += Ctrl_LoadProfile;
+		ctrl.MergeProfile += Ctrl_MergeProfile;
+		ctrl.ExcludeProfile += Ctrl_ExcludeProfile;
+		ctrl.DisposeProfile += Ctrl_DisposeProfile;
+
+		return ctrl;
 	}
 
 	protected override void LocaleChanged()
@@ -49,6 +56,7 @@ public partial class PC_Profiles : PanelContent
 		TLP_LSM.Text = Locale.LoadingScreenMod;
 		TLP_GeneralSettings.Text = Locale.Settings;
 		L_ProfileUsage.Text = Locale.ProfileUsage;
+		L_Info.Text = Locale.ProfileSaveInfo;
 	}
 
 	protected override void OnCreateControl()
@@ -233,13 +241,16 @@ public partial class PC_Profiles : PanelContent
 
 	private void NewProfile_Click(object sender, EventArgs e)
 	{
-		var newProfile = new Profile() { Name = ProfileManager.GetNewProfileName() };
+		var newProfile = new Profile() { Name = ProfileManager.GetNewProfileName(), LastEditDate = DateTime.Now };
 
 		if (!ProfileManager.Save(newProfile))
 		{
 			ShowPrompt("Could not create a new profile, make sure your folder settings are set up correctly in the options panel", icon: PromptIcons.Error);
 			return;
 		}
+
+		FLP_Profiles.Controls.SetChildIndex(AddProfile(newProfile), 1);
+		ProfileManager.AddProfile(newProfile);
 
 		ProfileManager.SetProfile(newProfile, Form);
 
@@ -256,12 +267,16 @@ public partial class PC_Profiles : PanelContent
 	{
 		var newProfile = CentralManager.CurrentProfile.Clone();
 		newProfile.Name = ProfileManager.GetNewProfileName();
+		newProfile.LastEditDate = DateTime.Now;
 
 		if (!newProfile.Save())
 		{
 			ShowPrompt(Locale.CouldNotCreateProfile, icon: PromptIcons.Error);
 			return;
 		}
+
+		FLP_Profiles.Controls.SetChildIndex(AddProfile(newProfile), 1);
+		ProfileManager.AddProfile(newProfile);
 
 		ProfileManager.SetProfile(newProfile, Form);
 
@@ -333,6 +348,12 @@ public partial class PC_Profiles : PanelContent
 			return;
 		}
 
+		if (ProfileManager.CurrentProfile.Name != TB_Name.Text)
+		{
+			Notification.Create(Locale.ProfileNameChangedIllegalChars, null, PromptIcons.Info, null)
+				.Show(Form, 15);
+		}
+
 		L_CurrentProfile.Text = ProfileManager.CurrentProfile.Name;
 		TB_Name.Visible = false;
 		B_EditName.Visible = B_Save.Visible = true;
@@ -377,6 +398,18 @@ public partial class PC_Profiles : PanelContent
 
 	private void B_Save_Click(object sender, EventArgs e)
 	{
-		ProfileManager.CurrentProfile.Save();
+		if (ProfileManager.CurrentProfile.Save())
+		{
+			B_Save.Image = Properties.Resources.I_Check;
+
+			new BackgroundAction(() =>
+			{
+				B_Save.Image = Properties.Resources.I_Save;
+			}).RunIn(2000);
+		}
+		else
+		{
+			ShowPrompt(Locale.CouldNotCreateProfile, icon: PromptIcons.Error);
+		}
 	}
 }

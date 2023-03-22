@@ -8,11 +8,21 @@ public class DelayedAction<TKey>
 {
 	private readonly Dictionary<TKey, Timer> _timers;
 	private readonly int _delayMilliseconds;
+	private readonly Action<TKey>? _defaultAction;
 
-	public DelayedAction(int delayMilliseconds)
+	public DelayedAction(int delayMilliseconds, Action<TKey>? defaultAction = null)
 	{
 		_timers = new Dictionary<TKey, Timer>();
 		_delayMilliseconds = delayMilliseconds;
+		_defaultAction = defaultAction;
+	}
+
+	public void Run(TKey key)
+	{
+		if (_defaultAction != null)
+		{
+			Run(key, _defaultAction);
+		}
 	}
 
 	public void Run(TKey key, Action<TKey> action)
@@ -44,10 +54,20 @@ public class DelayedAction
 {
 	private Timer? _timer;
 	private readonly int _delayMilliseconds;
+	private readonly Action? _defaultAction;
 
-	public DelayedAction(int delayMilliseconds)
+	public DelayedAction(int delayMilliseconds, Action? defaultAction = null)
 	{
 		_delayMilliseconds = delayMilliseconds;
+		_defaultAction = defaultAction;
+	}
+
+	public void Run()
+	{
+		if (_defaultAction != null)
+		{
+			Run(_defaultAction);
+		}
 	}
 
 	public void Run(Action action)
@@ -60,8 +80,8 @@ public class DelayedAction
 		{
 			_timer = new Timer(_ =>
 			{
-					action();
-					_timer = null;
+				action();
+				_timer = null;
 			}, null, _delayMilliseconds, Timeout.Infinite);
 		}
 	}

@@ -107,15 +107,15 @@ public partial class PC_Packages : PanelContent
 			//doNotDraw = OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsEnabled;
 		}
 
-		if (!doNotDraw && (int)DD_PackageStatus.SelectedItem != -1)
+		if (!doNotDraw && DD_PackageStatus.SelectedItem != DownloadStatusFilter.Any)
 		{
-			if (DD_PackageStatus.SelectedItem == DownloadStatus.None)
+			if (DD_PackageStatus.SelectedItem == DownloadStatusFilter.None)
 			{
 				doNotDraw = mod.Workshop;
 			}
 			else
 			{
-				doNotDraw = DD_PackageStatus.SelectedItem != mod.Status;
+				doNotDraw = ((int)DD_PackageStatus.SelectedItem - 1) != (int)mod.Status;
 			}
 		}
 

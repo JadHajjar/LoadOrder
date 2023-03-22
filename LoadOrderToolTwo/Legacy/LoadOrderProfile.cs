@@ -153,7 +153,7 @@ public class LoadOrderProfile
 			{
 				profile.Assets.Add(new Profile.Asset
 				{
-					SteamId = asset.IncludedPath?.StartsWith(WS_CONTENT_PATH) ?? false ? ulong.Parse(asset.IncludedPath?.Substring(WS_CONTENT_PATH.Length + 1) ?? "0") : 0,
+					SteamId = (asset.IncludedPath?.StartsWith(WS_CONTENT_PATH) ?? false) && ulong.TryParse(asset.IncludedPath?.Substring(WS_CONTENT_PATH.Length + 1) ?? "0", out var steamId1) ? steamId1 : 0,
 					Name = asset.DisplayText,
 					RelativePath = asset.IncludedPath
 				});
@@ -167,7 +167,7 @@ public class LoadOrderProfile
 				profile.Mods.Add(new Profile.Mod
 				{
 					Name = mod.DisplayText,
-					SteamId = mod.IncludedPath?.StartsWith(WS_CONTENT_PATH) ?? false ? ulong.Parse(mod.IncludedPath?.Substring(WS_CONTENT_PATH.Length + 1) ?? "0") : 0,
+					SteamId = (mod.IncludedPath?.StartsWith(WS_CONTENT_PATH) ?? false) && ulong.TryParse(mod.IncludedPath?.Substring(WS_CONTENT_PATH.Length + 1) ?? "0", out var steamId2) ? steamId2 : 0,
 					RelativePath = mod.IncludedPath,
 					Enabled = mod.IsEnabled
 				});

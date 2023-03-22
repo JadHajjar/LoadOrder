@@ -1,5 +1,7 @@
 ﻿using LoadOrderToolTwo.Domain.Utilities;
 
+using Microsoft.Win32;
+
 using System;
 using System.Configuration;
 using System.IO;
@@ -97,6 +99,22 @@ internal class LocationManager
 		CurrentDirectory = Directory.GetParent(Application.ExecutablePath).FullName;
 
 		Platform = Enum.TryParse(ConfigurationManager.AppSettings[nameof(Platform)], out Platform platform) ? platform : Platform.Windows;
+	
+		if (Platform is Platform.Windows && !Directory.Exists(SteamPath))
+		{
+			const string steamPathSubKey_ = @"Software\Valve\Steam";
+			const string steamPathKey_ = "SteamPath";
+
+			using var key = Registry.CurrentUser.OpenSubKey(steamPathSubKey_);
+			var path = key?.GetValue(steamPathKey_) as string;
+
+			if (!string.IsNullOrWhiteSpace(path) && Directory.Exists(path))
+			{
+				SteamPath = path!;
+
+				SetPaths(GamePath, AppDataPath, SteamPath, VirtualGamePath, VirtualAppDataPath);
+			}
+		}
 	}
 
 	internal static void RunFirstTimeSetup()

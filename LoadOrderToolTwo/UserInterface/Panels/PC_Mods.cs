@@ -18,11 +18,14 @@ public partial class PC_Mods : PanelContent
 
 	public PC_Mods()
 	{
-		InitializeComponent();
-
 		LC_Mods = new() { Dock = DockStyle.Fill, Margin = new() };
 
-		TLP_Main.Controls.Add(LC_Mods, 0, 3);
+		InitializeComponent();
+
+		B_Filters.Height = B_Actions.Height = DD_Sorting.Height = TB_Search.Height = 0;
+
+		TLP_Main.Controls.Add(LC_Mods, 0, 6);
+		TLP_Main.SetColumnSpan(LC_Mods, 4);
 
 		OT_Workshop.Visible = !CentralManager.CurrentProfile.LaunchSettings.NoWorkshop;
 
@@ -36,12 +39,26 @@ public partial class PC_Mods : PanelContent
 		{
 			LC_Mods.SetItems(CentralManager.Mods);
 		}
-		
+
+		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
+		{
+			B_DisEnable.Dispose();
+			TLP_Main.SetColumnSpan(B_ExInclude, 2);
+		}
+
 		RefreshCounts();
 
 		CentralManager.ContentLoaded += CentralManager_ContentLoaded;
 		CentralManager.WorkshopInfoUpdated += CentralManager_WorkshopInfoUpdated;
 		CentralManager.ModInformationUpdated += _ => this.TryInvoke(RefreshCounts);
+	}
+
+	protected override void OnCreateControl()
+	{
+		base.OnCreateControl();
+
+		P_FiltersContainer.Height = P_ActionsContainer.Height = 0;
+		P_FiltersContainer.Visible = P_ActionsContainer.Visible = true;
 	}
 
 	private void CentralManager_WorkshopInfoUpdated()
@@ -55,21 +72,27 @@ public partial class PC_Mods : PanelContent
 	{
 		var modsIncluded = CentralManager.Mods.Count(x => x.IsIncluded);
 		var modsEnabled = CentralManager.Mods.Count(x => x.IsEnabled && x.IsIncluded);
+		var text = string.Empty;
 
 		if (!CentralManager.SessionSettings.AdvancedIncludeEnable)
 		{
-			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+			text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
 		}
 		if (modsIncluded == modsEnabled)
 		{
-			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+			text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncludedAndEnabled : Locale.ModIncludedAndEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
 		}
 		else
 		{
-			L_Counts.Text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)} && {modsEnabled} {(modsEnabled == 1 ? Locale.ModEnabled : Locale.ModEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
+			text = $"{modsIncluded} {(modsIncluded == 1 ? Locale.ModIncluded : Locale.ModIncludedPlural)} && {modsEnabled} {(modsEnabled == 1 ? Locale.ModEnabled : Locale.ModEnabledPlural)}, {CentralManager.Mods.Count()} {Locale.Total.ToLower()}";
 		}
 
-		L_Counts.Location = new(I_ClearFilters.Left - P_Filters.Padding.Right - L_Counts.Width, P_Filters.Padding.Bottom + (I_ClearFilters.Height - L_Counts.Height) / 2);
+		if (L_Counts.Text != text)
+		{
+			L_Counts.Text = text;
+		}
+
+		L_Duplicates.Visible = ModsUtil.GetDuplicateMods().Any();
 	}
 
 	protected override void LocaleChanged()
@@ -77,37 +100,47 @@ public partial class PC_Mods : PanelContent
 		Text = $"{Locale.Mods} - {ProfileManager.CurrentProfile.Name}";
 		DD_PackageStatus.Text = Locale.ModStatus;
 		DD_ReportSeverity.Text = Locale.ReportSeverity;
-		DD_Sorting.Text = Locale.Sorting;
+		L_Duplicates.Text = Locale.MultipleModsIncluded;
 	}
 
 	protected override void UIChanged()
 	{
 		base.UIChanged();
 
-		TB_Search.Margin = UI.Scale(new Padding(5), UI.FontScale);
-		TB_Search.Height = 1;
-		P_Filters.Margin = P_Actions.Margin = UI.Scale(new Padding(10, 0, 10, 10), UI.FontScale);
-		P_Filters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Filter));
+		P_FiltersContainer.Padding = P_ActionsContainer.Padding = TB_Search.Margin = L_Duplicates.Margin = L_Counts.Margin
+			= B_ExInclude.Margin = B_DisEnable.Margin = B_Filters.Margin = B_Actions.Margin = UI.Scale(new Padding(5), UI.FontScale);
+		B_Filters.Image = P_Filters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Filter));
+		B_Actions.Image = P_Actions.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_Actions));
 		I_ClearFilters.Image = ImageManager.GetIcon(nameof(Properties.Resources.I_ClearFilter));
 		I_ClearFilters.Size = UI.FontScale >= 1.25 ? new(32, 32) : new(24, 24);
 		I_ClearFilters.Location = new(P_Filters.Width - P_Filters.Padding.Right - I_ClearFilters.Width, P_Filters.Padding.Bottom);
-		L_Counts.Font = UI.Font(7.5F, FontStyle.Bold);
-		L_Counts.Location = new(I_ClearFilters.Left - P_Filters.Padding.Right - L_Counts.Width, P_Filters.Padding.Bottom + (I_ClearFilters.Height - L_Counts.Height) / 2);
+		L_Duplicates.Font = L_Counts.Font = UI.Font(7.5F, FontStyle.Bold);
+		DD_Sorting.Width = (int)(180 * UI.FontScale);
+		TB_Search.Width = (int)(400 * UI.FontScale);
 	}
 
 	protected override void DesignChanged(FormDesign design)
 	{
 		base.DesignChanged(design);
 
-		P_Filters.BackColor = P_Actions.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
-		BackColor = design.AccentBackColor;
+		tableLayoutPanel3.BackColor = design.AccentBackColor;
+		P_Filters.BackColor = design.BackColor.Tint(Lum: design.Type.If(FormDesignType.Dark, 1, -1));
 		LC_Mods.BackColor = design.BackColor;
 		L_Counts.ForeColor = design.InfoColor;
+		L_Duplicates.ForeColor = design.RedColor;
 	}
 
-	public override Color GetTopBarColor()
+	public override bool KeyPressed(ref Message msg, Keys keyData)
 	{
-		return FormDesign.Design.AccentBackColor;
+		if (keyData is (Keys.Control | Keys.F))
+		{
+			TB_Search.Focus();
+			TB_Search.SelectAll();
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private void LC_Mods_CanDrawItem(object sender, CanDrawItemEventArgs<Domain.Mod> e)
@@ -149,15 +182,15 @@ public partial class PC_Mods : PanelContent
 			doNotDraw = OT_Enabled.SelectedValue == ThreeOptionToggle.Value.Option1 == mod.IsEnabled;
 		}
 
-		if (!doNotDraw && (int)DD_PackageStatus.SelectedItem != -1)
+		if (!doNotDraw && DD_PackageStatus.SelectedItem != DownloadStatusFilter.Any)
 		{
-			if (DD_PackageStatus.SelectedItem == DownloadStatus.None)
+			if (DD_PackageStatus.SelectedItem == DownloadStatusFilter.None)
 			{
 				doNotDraw = mod.Workshop;
 			}
 			else
 			{
-				doNotDraw = DD_PackageStatus.SelectedItem != mod.Status;
+				doNotDraw = ((int)DD_PackageStatus.SelectedItem - 1) != (int)mod.Status;
 			}
 		}
 
@@ -222,5 +255,17 @@ public partial class PC_Mods : PanelContent
 	private void DD_Sorting_SelectedItemChanged(object sender, EventArgs e)
 	{
 		LC_Mods.SetSorting(DD_Sorting.SelectedItem);
+	}
+
+	private void B_Filters_Click(object sender, EventArgs e)
+	{
+		B_Filters.Text = P_FiltersContainer.Height == 0 ? "HideFilters" : "ShowFilters";
+		AnimationHandler.Animate(P_FiltersContainer, P_FiltersContainer.Height == 0? new Size(0, P_FiltersContainer.Padding.Vertical+P_Filters.Height) :Size.Empty, 3, AnimationOption.IgnoreWidth);
+	}
+
+	private void B_Actions_Click(object sender, EventArgs e)
+	{
+		B_Actions.Text = P_ActionsContainer.Height == 0 ? "HideActions" : "ShowActions";
+		AnimationHandler.Animate(P_ActionsContainer, P_ActionsContainer.Height == 0 ? new Size(0, P_ActionsContainer.Padding.Vertical + P_Actions.Height) : Size.Empty, 3, AnimationOption.IgnoreWidth);
 	}
 }

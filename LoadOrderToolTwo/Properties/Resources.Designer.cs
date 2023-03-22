@@ -63,6 +63,26 @@ namespace LoadOrderToolTwo.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap I_Actions {
+            get {
+                object obj = ResourceManager.GetObject("I_Actions", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Actions_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Actions_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap I_Add {
             get {
                 object obj = ResourceManager.GetObject("I_Add", resourceCulture);
@@ -846,6 +866,26 @@ namespace LoadOrderToolTwo.Properties {
         internal static System.Drawing.Bitmap I_Slash_16 {
             get {
                 object obj = ResourceManager.GetObject("I_Slash_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Sort {
+            get {
+                object obj = ResourceManager.GetObject("I_Sort", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap I_Sort_16 {
+            get {
+                object obj = ResourceManager.GetObject("I_Sort_16", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

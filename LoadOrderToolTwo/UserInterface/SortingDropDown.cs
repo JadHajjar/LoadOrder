@@ -1,18 +1,14 @@
 ﻿using Extensions;
 
 using LoadOrderToolTwo.Domain;
-using LoadOrderToolTwo.Utilities;
 using LoadOrderToolTwo.Utilities.Managers;
 
 using SlickControls;
 using SlickControls.Controls.Form;
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LoadOrderToolTwo.UserInterface;
@@ -39,7 +35,7 @@ internal class SortingDropDown : SlickSelectionDropDown<PackageSorting>
 	{
 		base.OnSizeChanged(e);
 
-		Height = (int)(42 * UI.UIScale);
+		//Height = (int)(42 * UI.UIScale);
 	}
 
 	protected override void PaintItem(PaintEventArgs e, Rectangle rectangle, Color foreColor, HoverState hoverState, PackageSorting item)
@@ -47,11 +43,11 @@ internal class SortingDropDown : SlickSelectionDropDown<PackageSorting>
 		var text = LocaleHelper.GetGlobalText($"Sorting_{item}");
 		var color = FormDesign.Design.ForeColor;
 
-		using var icon = ImageManager.GetIcon( GetIcon(item));
+		using var icon = ImageManager.GetIcon(GetIcon(item)).Color(foreColor);
 
-		e.Graphics.DrawImage(icon.Color(color), rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
+		e.Graphics.DrawImage(icon, rectangle.Align(icon.Size, ContentAlignment.MiddleLeft));
 
-		var textRect = new Rectangle(rectangle.X + icon.Width + Padding.Left, rectangle.Y + (rectangle.Height - Font.Height)/2,0,Font.Height);
+		var textRect = new Rectangle(rectangle.X + icon.Width + Padding.Left, rectangle.Y + ((rectangle.Height - Font.Height) / 2), 0, Font.Height);
 
 		textRect.Width = rectangle.Width - textRect.X;
 
@@ -60,6 +56,6 @@ internal class SortingDropDown : SlickSelectionDropDown<PackageSorting>
 
 	private string GetIcon(PackageSorting item)
 	{
-		return nameof(Properties.Resources.I_Filter);
+		return nameof(Properties.Resources.I_Sort);
 	}
 }
